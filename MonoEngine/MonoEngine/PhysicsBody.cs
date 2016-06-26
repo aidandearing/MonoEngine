@@ -7,7 +7,7 @@ namespace MonoEngine
 {
     namespace Physics2D
     {
-        public class PhysicsBody : GameObject, IGameObjectUpdatable
+        public class PhysicsBody : GameObject
         {
             public enum BodyType { physics_rigidbody = 0x00, physics_static = 0x01, physics_kinematic = 0x02, physics_trigger = 0x04 };
 
@@ -32,8 +32,9 @@ namespace MonoEngine
                 PhysicsEngine.AddPhysicsBody(this);
             }
 
-            void IGameObjectUpdatable.Update()
+            public override void Update()
             {
+                base.Update();
                 // TODO physics
             }
 

@@ -6,7 +6,7 @@ namespace MonoEngine
 {
     namespace Render
     {
-        public class ModelRenderer : GameObject, IGameObjectRenderable
+        public class ModelRenderer : GameObject
         {
             private static Dictionary<string, Model> models = new Dictionary<string, Model>();
 
@@ -17,10 +17,10 @@ namespace MonoEngine
                 this.model = model;
             }
 
-            void IGameObjectRenderable.Render()
+            public override void Render()
             {
                 //model.Draw(Physics.WorldToRender(Camera.Transformation.Transformation + parent.transform.Transformation), Camera.View, Camera.Projection);
-                model.Draw(Camera.MainCamera.transform.Transformation + parent.transform.Transformation, Camera.MainCamera.View, Camera.MainCamera.Projection);
+                model.Draw((Camera.MainCamera.transform.Transformation + transform.Transformation) * 200.0f, Camera.MainCamera.View, Camera.MainCamera.Projection);
             }
 
             /// <summary>

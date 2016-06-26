@@ -51,8 +51,6 @@
     <Compile Include="GameObject.cs" />
     <Compile Include="GameObjectManager.cs" />
     <Compile Include="GraphicsHelper.cs" />
-    <Compile Include="IGameObjectRenderable.cs" />
-    <Compile Include="IGameObjectUpdatable.cs" />
     <Compile Include="PhysicsEngine.cs" />
     <Compile Include="PhysicsBody.cs" />
     <Compile Include="PhysicsBoundingChunk.cs" />

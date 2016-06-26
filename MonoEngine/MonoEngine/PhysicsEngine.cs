@@ -151,8 +151,8 @@ namespace MonoEngine
                         instance.bounds_hashtable = new Dictionary<int, PhysicsBoundingChunk>();
 
                         // TODO allow PhysicsBoundingChunks to be more adaptable, not so hard coded for our specific games case (maybe?)
-                        float x = (int)Math.Floor(body.parent.transform.Position.X / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
-                        float z = (int)Math.Floor(body.parent.transform.Position.Z / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
+                        float x = (int)Math.Floor(body.transform.Position.X / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
+                        float z = (int)Math.Floor(body.transform.Position.Z / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
 
                         instance.bounds_transform = new Transform();
                         instance.bounds_transform.Position = new Vector3(x, 0, z);
@@ -199,10 +199,10 @@ namespace MonoEngine
                     }
                     else
                     {
-                        int index = CalculateBoundsIndex(body.parent.transform);
+                        int index = CalculateBoundsIndex(body.transform);
 
-                        float x = (int)Math.Floor(body.parent.transform.Position.X / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
-                        float z = (int)Math.Floor(body.parent.transform.Position.Z / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
+                        float x = (int)Math.Floor(body.transform.Position.X / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
+                        float z = (int)Math.Floor(body.transform.Position.Z / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
 
                         instance.bounds_transform = new Transform();
                         instance.bounds_transform.Position = new Vector3(x, 0, z);
@@ -283,8 +283,8 @@ namespace MonoEngine
                 AABB boundingBox = body.shape.GetBoundingBox();
                 int dimension = (int)Math.Max(boundingBox.Dimensions().X, boundingBox.Dimensions().Z) / 4;
 
-                int x = (int)Math.Floor(body.parent.transform.Position.X / PhysicsSettings.BOUNDINGBOX_LARGEST);
-                int z = (int)Math.Floor(body.parent.transform.Position.Z / PhysicsSettings.BOUNDINGBOX_LARGEST);
+                int x = (int)Math.Floor(body.transform.Position.X / PhysicsSettings.BOUNDINGBOX_LARGEST);
+                int z = (int)Math.Floor(body.transform.Position.Z / PhysicsSettings.BOUNDINGBOX_LARGEST);
 
                 indices.Add((x - (int)instance.bounds_transform.Position.X) + (z - (int)instance.bounds_transform.Position.Z) * (int)Math.Sqrt(int.MaxValue / 2));
 

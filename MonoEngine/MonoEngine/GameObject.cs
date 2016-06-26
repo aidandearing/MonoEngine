@@ -6,14 +6,11 @@ namespace MonoEngine
     {
         public class GameObject
         {
-            public GameObject parent;
             /// <summary>
             /// This is the list of all components this GameObject has
             /// Components are where GameObjects get their behaviours
             /// </summary>
             private List<GameObject> components;
-            private List<IGameObjectUpdatable> components_updatable;
-            private List<IGameObjectRenderable> components_renderable;
 
             /// <summary>
             /// Adds a component to the GameObject
@@ -22,13 +19,7 @@ namespace MonoEngine
             public void AddComponent(GameObject component)
             {
                 components.Add(component);
-                component.parent = this;
-
-                if (component is IGameObjectUpdatable)
-                    components_updatable.Add(component as IGameObjectUpdatable);
-
-                if (component is IGameObjectRenderable)
-                    components_renderable.Add(component as IGameObjectRenderable);
+                component.transform.parent = this.transform;
             }
 
             public Transform transform;
@@ -41,21 +32,19 @@ namespace MonoEngine
                 Name = name;
 
                 components = new List<GameObject>();
-                components_updatable = new List<IGameObjectUpdatable>();
-                components_renderable = new List<IGameObjectRenderable>();
             }
 
-            public void Update()
+            public virtual void Update()
             {
-                foreach (IGameObjectUpdatable component in components_updatable)
+                foreach (GameObject component in components)
                 {
                     component.Update();
                 }
             }
 
-            public void Render()
+            public virtual void Render()
             {
-                foreach (IGameObjectRenderable component in components_renderable)
+                foreach (GameObject component in components)
                 {
                     component.Render();
                 }

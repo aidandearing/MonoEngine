@@ -6,7 +6,7 @@ namespace MonoEngine
 {
     namespace Game
     {
-        public class Camera : GameObject, IGameObjectUpdatable
+        public class Camera : GameObject
         {
             // TODO A variety of safer static methods to handle main camera and other camera based stuff
             public static Camera MainCamera;
@@ -41,11 +41,6 @@ namespace MonoEngine
                 {
                     return projection;
                 }
-            }
-
-            void IGameObjectUpdatable.Update()
-            {
-
             }
 
             // TODO probably want to build raycast stuff for cameras at some point in the eventual future

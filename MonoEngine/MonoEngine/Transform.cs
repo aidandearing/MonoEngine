@@ -5,13 +5,22 @@ namespace MonoEngine
 {
     public class Transform
     {
+        public Transform parent;
+
         private Matrix transformation;
 
         public Matrix Transformation
         {
             get
             {
-                return transformation;
+                if (parent == null)
+                {
+                    return transformation;
+                }
+                else
+                {
+                    return parent.Transformation + transformation;
+                }
             }
             set
             {
@@ -23,7 +32,14 @@ namespace MonoEngine
         {
             get
             {
-                return transformation.Translation;
+                if (parent == null)
+                {
+                    return transformation.Translation;
+                }
+                else
+                {
+                    return parent.Position + transformation.Translation;
+                }
             }
             set
             {
@@ -35,7 +51,14 @@ namespace MonoEngine
         {
             get
             {
-                return transformation.Rotation;
+                if (parent == null)
+                {
+                    return transformation.Rotation;
+                }
+                else
+                {
+                    return parent.Rotation + transformation.Rotation;
+                }
             }
         }
         
@@ -43,7 +66,14 @@ namespace MonoEngine
         {
             get
             {
-                return transformation.Forward;
+                if (parent == null)
+                {
+                    return transformation.Forward;
+                }
+                else
+                {
+                    return transformation.Forward;
+                }
             }
             set
             {
@@ -89,12 +119,26 @@ namespace MonoEngine
 
         public Vector3 WorldToLocal(Vector3 vector)
         {
-            return transformation.Translation - vector;
+            if (parent == null)
+            {
+                return transformation.Translation - vector;
+            }
+            else
+            {
+                return parent.WorldToLocal(transformation.Translation - vector);
+            }
         }
 
         public Vector3 LocalToWorld(Vector3 vector)
         {
-            return transformation.Translation + vector;
+            if (parent == null)
+            {
+                return transformation.Translation + vector;
+            }
+            else
+            {
+                return parent.LocalToWorld(transformation.Translation + vector);
+            }
         }
 
         public void Translate(Vector3 vector)
