@@ -2,83 +2,86 @@
 
 namespace MonoEngine
 {
-    public class GameObject
+    namespace Game
     {
-        /// <summary>
-        /// This is the list of all components this GameObject has
-        /// Components are where GameObjects get their behaviours
-        /// </summary>
-        private List<GameObjectComponent> components;
-        private List<IGameObjectUpdatable> components_updatable;
-        private List<IGameObjectRenderable> components_renderable;
-
-        /// <summary>
-        /// Adds a component to the GameObject
-        /// </summary>
-        /// <param name="component">The component to be added</param>
-        public void AddComponent(GameObjectComponent component)
+        public class GameObject
         {
-            components.Add(component);
+            /// <summary>
+            /// This is the list of all components this GameObject has
+            /// Components are where GameObjects get their behaviours
+            /// </summary>
+            private List<GameObjectComponent> components;
+            private List<IGameObjectUpdatable> components_updatable;
+            private List<IGameObjectRenderable> components_renderable;
 
-            if (component is IGameObjectUpdatable)
-                components_updatable.Add(component as IGameObjectUpdatable);
-
-            if (component is IGameObjectRenderable)
-                components_renderable.Add(component as IGameObjectRenderable);
-        }
-
-        public Transform transform;
-
-        public string Name { get; set; }
-
-        public GameObject(string name)
-        {
-            transform = new Transform();
-            Name = name;
-
-            components = new List<GameObjectComponent>();
-            components_updatable = new List<IGameObjectUpdatable>();
-            components_renderable = new List<IGameObjectRenderable>();
-        }
-
-        public void Update()
-        {
-            foreach (IGameObjectUpdatable component in components_updatable)
+            /// <summary>
+            /// Adds a component to the GameObject
+            /// </summary>
+            /// <param name="component">The component to be added</param>
+            public void AddComponent(GameObjectComponent component)
             {
-                component.Update();
-            }
-        }
+                components.Add(component);
 
-        public void Render()
-        {
-            foreach (IGameObjectRenderable component in components_renderable)
-            {
-                component.Render();
-            }
-        }
+                if (component is IGameObjectUpdatable)
+                    components_updatable.Add(component as IGameObjectUpdatable);
 
-        public GameObjectComponent GetComponent<T>()
-        {
-            foreach (GameObjectComponent component in components)
-            {
-                if (component is T)
-                    return component;
+                if (component is IGameObjectRenderable)
+                    components_renderable.Add(component as IGameObjectRenderable);
             }
 
-            return null;
-        }
+            public Transform transform;
 
-        public List<GameObjectComponent> GetComponents<T>()
-        {
-            List<GameObjectComponent> returnComponents = new List<GameObjectComponent>();
+            public string Name { get; set; }
 
-            foreach (GameObjectComponent component in components)
+            public GameObject(string name)
             {
-                if (component is T)
-                    returnComponents.Add(component);
+                transform = new Transform();
+                Name = name;
+
+                components = new List<GameObjectComponent>();
+                components_updatable = new List<IGameObjectUpdatable>();
+                components_renderable = new List<IGameObjectRenderable>();
             }
 
-            return returnComponents;
+            public void Update()
+            {
+                foreach (IGameObjectUpdatable component in components_updatable)
+                {
+                    component.Update();
+                }
+            }
+
+            public void Render()
+            {
+                foreach (IGameObjectRenderable component in components_renderable)
+                {
+                    component.Render();
+                }
+            }
+
+            public GameObjectComponent GetComponent<T>()
+            {
+                foreach (GameObjectComponent component in components)
+                {
+                    if (component is T)
+                        return component;
+                }
+
+                return null;
+            }
+
+            public List<GameObjectComponent> GetComponents<T>()
+            {
+                List<GameObjectComponent> returnComponents = new List<GameObjectComponent>();
+
+                foreach (GameObjectComponent component in components)
+                {
+                    if (component is T)
+                        returnComponents.Add(component);
+                }
+
+                return returnComponents;
+            }
         }
     }
 }

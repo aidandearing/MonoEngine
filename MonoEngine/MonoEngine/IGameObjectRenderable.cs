@@ -1,7 +1,10 @@
 ﻿namespace MonoEngine
 {
-    public interface IGameObjectRenderable
+    namespace Game
     {
-        void Render();
+        public interface IGameObjectRenderable
+        {
+            void Render();
+        }
     }
 }

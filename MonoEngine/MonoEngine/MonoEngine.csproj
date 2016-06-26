@@ -47,7 +47,7 @@
     <Compile Include="Collision.cs" />
     <Compile Include="ContentHelper.cs" />
     <Compile Include="GameAudioListener.cs" />
-    <Compile Include="GameModel.cs" />
+    <Compile Include="ModelRenderer.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="GameObjectComponent.cs" />
     <Compile Include="GameObjectManager.cs" />

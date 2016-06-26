@@ -1,66 +1,65 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace MonoEngine
 {
-    public class GameObjectManager : DrawableGameComponent
+    namespace Game
     {
-        private List<GameObject> gameObjects;
-        private List<GameObject> gameObjectsDead;
-
-        private static GameObjectManager instance;
-        public static GameObjectManager Instance(Game game)
+        public class GameObjectManager : DrawableGameComponent
         {
+            private List<GameObject> gameObjects;
+            private List<GameObject> gameObjectsDead;
 
-            instance = (instance == null) ? new GameObjectManager(game) : instance;
-
-            return instance;
-        }
-        private GameObjectManager(Game game) : base(game)
-        {
-           
-        }
-        public static void AddGameObject(GameObject obj)
-        {
-            instance.gameObjects.Add(obj);
-        }
-        public static void RemoveGameObject(GameObject obj)
-        {
-            instance.gameObjectsDead.Add(obj);
-        }
-        public override void Initialize()
-        {
-            base.Initialize();
-
-            gameObjects = new List<GameObject>();
-
-            gameObjectsDead = new List<GameObject>();
-        }
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-
-            foreach (GameObject obj in gameObjects)
+            private static GameObjectManager instance;
+            public static GameObjectManager Instance(Microsoft.Xna.Framework.Game game)
             {
-                obj.Update();
+
+                instance = (instance == null) ? new GameObjectManager(game) : instance;
+
+                return instance;
             }
-            foreach (GameObject obj in gameObjectsDead)
+            private GameObjectManager(Microsoft.Xna.Framework.Game game) : base(game)
             {
-                gameObjects.Remove(obj);
-            }
-            gameObjectsDead.Clear();
-        }
-        public override void Draw(GameTime gameTime)
-        {
-            base.Draw(gameTime);
 
-            foreach (GameObject obj in gameObjects)
+            }
+            public static void AddGameObject(GameObject obj)
             {
-                obj.Render();
+                instance.gameObjects.Add(obj);
+            }
+            public static void RemoveGameObject(GameObject obj)
+            {
+                instance.gameObjectsDead.Add(obj);
+            }
+            public override void Initialize()
+            {
+                base.Initialize();
+
+                gameObjects = new List<GameObject>();
+
+                gameObjectsDead = new List<GameObject>();
+            }
+            public override void Update(GameTime gameTime)
+            {
+                base.Update(gameTime);
+
+                foreach (GameObject obj in gameObjects)
+                {
+                    obj.Update();
+                }
+                foreach (GameObject obj in gameObjectsDead)
+                {
+                    gameObjects.Remove(obj);
+                }
+                gameObjectsDead.Clear();
+            }
+            public override void Draw(GameTime gameTime)
+            {
+                base.Draw(gameTime);
+
+                foreach (GameObject obj in gameObjects)
+                {
+                    obj.Render();
+                }
             }
         }
     }

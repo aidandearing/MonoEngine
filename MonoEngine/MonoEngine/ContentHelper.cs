@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-
-namespace MonoEngine
+﻿namespace MonoEngine
 {
     public class ContentHelper
     {

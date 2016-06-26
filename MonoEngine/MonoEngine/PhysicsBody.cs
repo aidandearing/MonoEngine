@@ -1,57 +1,62 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using MonoEngine.Shapes;
+using MonoEngine.Game;
 
 namespace MonoEngine
 {
-    public class PhysicsBody : GameObjectComponent, IGameObjectUpdatable
+    namespace Physics
     {
-        public enum BodyType { physics_rigidbody = 0x00, physics_static = 0x01, physics_kinematic = 0x02, physics_trigger = 0x04 };
-
-        public BodyType flagBodyType = 0;
-        public short flagLayer = 0;
-
-        public Shape shape;
-
-        /// <summary>
-        /// transform stores all the physics forces acting on the body in matrix form
-        /// </summary>
-        private Matrix transform;
-
-        // This list is referenced in Physic's callback registery
-        public List<Collision.OnCollision> collisionCallbacks;
-        // This list is referenced in Physic's collision registery
-        public List<Collision> collisions;
-
-        public PhysicsBody(GameObject parent, Shape shape, BodyType bodyType) : base(parent)
+        public class PhysicsBody : GameObjectComponent, IGameObjectUpdatable
         {
-            this.shape = shape;
-            this.flagBodyType = bodyType;
+            public enum BodyType { physics_rigidbody = 0x00, physics_static = 0x01, physics_kinematic = 0x02, physics_trigger = 0x04 };
 
-            collisionCallbacks = new List<Collision.OnCollision>();
-            collisions = new List<Collision>();
+            public BodyType flagBodyType = 0;
+            public short flagLayer = 0;
 
-            Physics.AddPhysicsBody(this);
-        }
+            public Shape shape;
 
-        void IGameObjectUpdatable.Update()
-        {
-            // I need to construct the transform for this
-            parent.transform.Transformation += transform;
-        }
+            /// <summary>
+            /// transform stores all the physics forces acting on the body in matrix form
+            /// </summary>
+            private Matrix transform;
 
-        public void RegisterCollisionCallback(Collision.OnCollision callback)
-        {
-            Physics.RegisterCollisionCallback(callback, this);
-        }
+            // This list is referenced in Physic's callback registery
+            public List<Collision.OnCollision> collisionCallbacks;
+            // This list is referenced in Physic's collision registery
+            public List<Collision> collisions;
 
-        public void UnregisterCollisionCallback(Collision.OnCollision callback)
-        {
-            Physics.UnregisterCollisionCallback(callback, this);
-        }
+            public PhysicsBody(GameObject parent, Shape shape, BodyType bodyType) : base(parent)
+            {
+                this.shape = shape;
+                this.flagBodyType = bodyType;
 
-        public void Remove()
-        {
-            Physics.RemovePhysicsBody(this);
+                collisionCallbacks = new List<Collision.OnCollision>();
+                collisions = new List<Collision>();
+
+                PhysicsEngine.AddPhysicsBody(this);
+            }
+
+            void IGameObjectUpdatable.Update()
+            {
+                // I need to construct the transform for this
+                parent.transform.Transformation += transform;
+            }
+
+            public void RegisterCollisionCallback(Collision.OnCollision callback)
+            {
+                PhysicsEngine.RegisterCollisionCallback(callback, this);
+            }
+
+            public void UnregisterCollisionCallback(Collision.OnCollision callback)
+            {
+                PhysicsEngine.UnregisterCollisionCallback(callback, this);
+            }
+
+            public void Remove()
+            {
+                PhysicsEngine.RemovePhysicsBody(this);
+            }
         }
     }
 }

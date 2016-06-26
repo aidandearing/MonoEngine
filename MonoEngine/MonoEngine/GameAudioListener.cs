@@ -1,25 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using MonoEngine.Game;
 using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Media;
 
 namespace MonoEngine
 {
-    public class GameAudioListener : GameObjectComponent
+    namespace Audio
     {
-
-        public AudioListener audioListener;
-
-        private GameAudioListener(GameObject parent) : base(parent)
+        public class GameAudioListener : GameObjectComponent
         {
-            audioListener = new AudioListener();
-            audioListener.Position = parent.transform.Position;
 
-            SoundManager.AddAudioListener(this);
+            public AudioListener audioListener;
+
+            private GameAudioListener(GameObject parent) : base(parent)
+            {
+                audioListener = new AudioListener();
+                audioListener.Position = parent.transform.Position;
+
+                SoundManager.AddAudioListener(this);
+            }
         }
     }
 }

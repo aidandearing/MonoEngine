@@ -1,15 +1,18 @@
 ﻿namespace MonoEngine
 {
-    /// <summary>
-    /// The abstract base class for all GameObjectComponents
-    /// </summary>
-    public abstract class GameObjectComponent
+    namespace Game
     {
-        public GameObject parent;
-
-        public GameObjectComponent(GameObject parent)
+        /// <summary>
+        /// The abstract base class for all GameObjectComponents
+        /// </summary>
+        public abstract class GameObjectComponent
         {
-            this.parent = parent;
+            public GameObject parent;
+
+            public GameObjectComponent(GameObject parent)
+            {
+                this.parent = parent;
+            }
         }
     }
 }
