@@ -7,7 +7,7 @@ namespace MonoEngine
 {
     namespace Physics2D
     {
-        public class PhysicsBody : GameObject
+        public class PhysicsBody2D : GameObject
         {
             public enum BodyType { physics_rigidbody = 0x00, physics_static = 0x01, physics_kinematic = 0x02, physics_trigger = 0x04 };
 
@@ -17,19 +17,19 @@ namespace MonoEngine
             public Shape shape;
 
             // This list is referenced in Physic's callback registery
-            public List<Collision.OnCollision> collisionCallbacks;
+            public List<Collision2D.OnCollision> collisionCallbacks;
             // This list is referenced in Physic's collision registery
-            public List<Collision> collisions;
+            public List<Collision2D> collisions;
 
-            public PhysicsBody(string name, Shape shape, BodyType bodyType) : base(name)
+            public PhysicsBody2D(string name, Shape shape, BodyType bodyType) : base(name)
             {
                 this.shape = shape;
                 this.flagBodyType = bodyType;
 
-                collisionCallbacks = new List<Collision.OnCollision>();
-                collisions = new List<Collision>();
+                collisionCallbacks = new List<Collision2D.OnCollision>();
+                collisions = new List<Collision2D>();
 
-                PhysicsEngine.AddPhysicsBody(this);
+                PhysicsEngine2D.AddPhysicsBody(this);
             }
 
             public override void Update()
@@ -38,19 +38,19 @@ namespace MonoEngine
                 // TODO physics
             }
 
-            public void RegisterCollisionCallback(Collision.OnCollision callback)
+            public void RegisterCollisionCallback(Collision2D.OnCollision callback)
             {
-                PhysicsEngine.RegisterCollisionCallback(callback, this);
+                PhysicsEngine2D.RegisterCollisionCallback(callback, this);
             }
 
-            public void UnregisterCollisionCallback(Collision.OnCollision callback)
+            public void UnregisterCollisionCallback(Collision2D.OnCollision callback)
             {
-                PhysicsEngine.UnregisterCollisionCallback(callback, this);
+                PhysicsEngine2D.UnregisterCollisionCallback(callback, this);
             }
 
             public void Remove()
             {
-                PhysicsEngine.RemovePhysicsBody(this);
+                PhysicsEngine2D.RemovePhysicsBody(this);
             }
         }
     }

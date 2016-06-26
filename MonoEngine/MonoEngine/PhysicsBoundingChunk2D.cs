@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using static MonoEngine.Physics2D.PhysicsEngine;
+using static MonoEngine.Physics2D.PhysicsEngine2D;
 using MonoEngine.Shapes;
 
 namespace MonoEngine
@@ -13,23 +13,23 @@ namespace MonoEngine
         /// Follows some basic rules:
         /// Every PhysicsBoundingChunk is 8x8 physics units
         /// </summary>
-        public class PhysicsBoundingChunk
+        public class PhysicsBoundingChunk2D
         {
             private AABB[] bounds;
             private Transform transform;
-            private Dictionary<AABB, List<PhysicsBody>> statics;
+            private Dictionary<AABB, List<PhysicsBody2D>> statics;
             private Dictionary<int, int> indexToOrder;
             private Dictionary<int, List<AABB>> orderToIndex;
             private int sum;
             private int[] bound_dim;
 
-            public PhysicsBoundingChunk(Transform transform)
+            public PhysicsBoundingChunk2D(Transform transform)
             {
                 // Place the bounding chunk centered at the passed transform (which is placed on a grid of points rounded to the nearest point at the dimensions of the chunk (so no chunks overlap))
                 this.transform = transform;
 
                 // Instantiate all the dictionaries
-                statics = new Dictionary<AABB, List<PhysicsBody>>();
+                statics = new Dictionary<AABB, List<PhysicsBody2D>>();
                 indexToOrder = new Dictionary<int, int>();
                 orderToIndex = new Dictionary<int, List<AABB>>();
 
@@ -75,7 +75,7 @@ namespace MonoEngine
                         // Instantiate the bounding box with the transform, and the dimensions necessary
                         bounds[index] = new AABB(trans, bound_dim[i], bound_dim[i]);
                         // Add the bounding box to the dictionary of bounding box | list of bodies
-                        statics.Add(bounds[index], new List<PhysicsBody>());
+                        statics.Add(bounds[index], new List<PhysicsBody2D>());
 
                         // Add the bounding box to the list of boxes at this depth
                         orderList.Add(bounds[index]);
@@ -85,7 +85,7 @@ namespace MonoEngine
                 }
             }
 
-            public bool BoundsTest(PhysicsBody body)
+            public bool BoundsTest(PhysicsBody2D body)
             {
                 if (!bounds[0].OverlapTest(body.shape))
                     return false;
@@ -100,9 +100,9 @@ namespace MonoEngine
             /// </summary>
             /// <param name="body">The body to add</param>
             /// <returns>True on success, False on failure</returns>
-            public bool AddBody(PhysicsBody body)
+            public bool AddBody(PhysicsBody2D body)
             {
-                if (body.flagBodyType.HasFlag(PhysicsBody.BodyType.physics_static))
+                if (body.flagBodyType.HasFlag(PhysicsBody2D.BodyType.physics_static))
                 {
                     if (BoundsTest(body))
                     {
@@ -154,9 +154,9 @@ namespace MonoEngine
             /// </summary>
             /// <param name="body">The body to get neighbours of</param>
             /// <returns>Either a list of bodies, if the body is within this bounding chunk, or an empty list, if it is not</returns>
-            public List<PhysicsBody> GetNearbyBodies(PhysicsBody body)
+            public List<PhysicsBody2D> GetNearbyBodies(PhysicsBody2D body)
             {
-                List<PhysicsBody> bodies = new List<PhysicsBody>();
+                List<PhysicsBody2D> bodies = new List<PhysicsBody2D>();
 
                 // TODO Once a better AddBody() system is in place this can change to a faster format
                 // Instead of having to check the smallest bounds, it should be able to backout if the body is too big, and opt for assuming it wants to know about the smaller bounds list of bodies.

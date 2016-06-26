@@ -2,17 +2,17 @@
 {
     namespace Physics2D
     {
-        public class Collision
+        public class Collision2D
         {
-            public delegate void OnCollision(Collision collision);
+            public delegate void OnCollision(Collision2D collision);
 
             public enum CollisionType { start, stay, stop, none };
 
-            public PhysicsBody BodyA;
-            public PhysicsBody BodyB;
+            public PhysicsBody2D BodyA;
+            public PhysicsBody2D BodyB;
             public CollisionType type;
 
-            private Collision(PhysicsBody A, PhysicsBody B)
+            private Collision2D(PhysicsBody2D A, PhysicsBody2D B)
             {
                 BodyA = A;
                 BodyB = B;
@@ -25,19 +25,19 @@
             /// <param name="BodyA">The first body</param>
             /// <param name="BodyB">The second body</param>
             /// <returns>An instance of Collision</returns>
-            public static Collision Evaluate(PhysicsBody bodyA, PhysicsBody bodyB)
+            public static Collision2D Evaluate(PhysicsBody2D bodyA, PhysicsBody2D bodyB)
             {
                 // This needs to evaluate whether these 2 bodies already have a Collision between them, if so, evaluate it, and return it
                 // If they don't it needs to make one, if they are colliding
                 // If they aren't colliding return a new Collision with CollisionType none
 
-                Collision collision;
+                Collision2D collision;
 
                 // Neither body has any collisions
                 if (bodyA.collisions.Count == bodyB.collisions.Count && bodyA.collisions.Count == 0)
                 {
                     // A new collision should be made
-                    collision = new Collision(bodyA, bodyB);
+                    collision = new Collision2D(bodyA, bodyB);
                 }
 
                 // An optimisation here is to check the smaller list of collisions
@@ -57,9 +57,9 @@
                 return collision;
             }
 
-            private static Collision Helper_EvaluateCollisions(PhysicsBody bodyA, PhysicsBody bodyB)
+            private static Collision2D Helper_EvaluateCollisions(PhysicsBody2D bodyA, PhysicsBody2D bodyB)
             {
-                foreach (Collision collision in bodyA.collisions)
+                foreach (Collision2D collision in bodyA.collisions)
                 {
                     if (collision.BodyB == bodyB)
                     {
@@ -67,7 +67,7 @@
                     }
                 }
 
-                return new Collision(bodyA, bodyB);
+                return new Collision2D(bodyA, bodyB);
             }
 
             /// <summary>

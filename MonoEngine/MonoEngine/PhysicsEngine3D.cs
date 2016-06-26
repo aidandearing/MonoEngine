@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework;
 using System;
-using Microsoft.Xna.Framework;
-using MonoEngine.Shapes;
 
 namespace MonoEngine
 {
-    namespace Physics2D
+    namespace Physics3D
     {
-        public class PhysicsEngine : GameComponent
+        public class PhysicsEngine3D : GameComponent
         {
             public class PhysicsSettings
             {
@@ -16,29 +14,43 @@ namespace MonoEngine
                 public static int BOUNDINGBOX_LARGEST = (int)Math.Pow(BOUNDINGBOX_SMALLEST, BOUNDINGBOX_ORDERS);
             }
 
+            private Matrix worldToRender;
+            private Matrix renderToWorld;
+
+            public static Matrix WorldToRender(Matrix matrix)
+            {
+                return new Matrix(matrix.M11, matrix.M12, matrix.M13, matrix.M14, matrix.M21, matrix.M22, matrix.M23, matrix.M24, matrix.M31, matrix.M32, matrix.M33, matrix.M34, matrix.M41 * instance.worldToRender.M11, matrix.M42 * instance.worldToRender.M22, matrix.M43 * instance.worldToRender.M33, matrix.M44 * instance.worldToRender.M44);
+            }
+
+            public static Matrix RenderToWorld(Matrix matrix)
+            {
+                return new Matrix(matrix.M11, matrix.M12, matrix.M13, matrix.M14, matrix.M21, matrix.M22, matrix.M23, matrix.M24, matrix.M31, matrix.M32, matrix.M33, matrix.M34, matrix.M41 * instance.renderToWorld.M11, matrix.M42 * instance.renderToWorld.M22, matrix.M43 * instance.renderToWorld.M33, matrix.M44 * instance.renderToWorld.M44);
+            }
+
             #region Singleton
             // Singleton ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // This region contains all the singleton methods and variables
 
-            private static PhysicsEngine instance;
+            private static PhysicsEngine3D instance;
             /// <summary>
             /// DO NOT USE THIS
             /// Unless you are stupid, or doing something sweet
             /// </summary>
             /// <param name="game">The Game instance running</param>
             /// <returns>The Physics instance running</returns>
-            public static PhysicsEngine Instance(Microsoft.Xna.Framework.Game game)
+            public static PhysicsEngine3D Instance(Microsoft.Xna.Framework.Game game)
             {
-                instance = (instance == null) ? new PhysicsEngine(game) : instance;
+                instance = (instance == null) ? new PhysicsEngine3D(game) : instance;
                 return instance;
             }
-            private PhysicsEngine(Microsoft.Xna.Framework.Game game) : base(game)
-        {
+            private PhysicsEngine3D(Microsoft.Xna.Framework.Game game) : base(game)
+            {
 
             }
             // End of Singleton ////////////////////////////////////////////////////////////////////////////////////////////////////////
             #endregion
-
+            
+            /*
             #region Registries
             // Registries //////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // This region contains all the registry add and remove methods as well as the registry variables
@@ -98,7 +110,9 @@ namespace MonoEngine
             }
             // End of Registries ////////////////////////////////////////////////////////////////////////////////////////////////////////
             #endregion
+    */
 
+            /*
             #region Bodies
             // Bodies ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // This region contains all the body methods as well as the body variables
@@ -113,14 +127,15 @@ namespace MonoEngine
             }
             // End of Bodies ////////////////////////////////////////////////////////////////////////////////////////////////////////////
             #endregion
+    */
 
+            /*
             #region Broad Phase
             // Broad Phase //////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // This region contains all the broad phase members and functions
-            
+
             // Use a list of BoundingChunks, for on the fly behaviour, but enable them to bind themselves to a dictionary of int -> boundingchunks
             // Store the first bounds position, assume it is index 0, then make every other bound calculate its index based around that position, and force all bodies that want to quickly check the bounds around themselves to do the same
-            //PhysicsBoundingChunk[] bounds;
             List<PhysicsBoundingChunk> bounds;
             Dictionary<int, PhysicsBoundingChunk> bounds_hashtable;
             Transform bounds_transform;
@@ -309,6 +324,7 @@ namespace MonoEngine
 
             // End of Broad Phase ////////////////////////////////////////////////////////////////////////////////////////////////////////
             #endregion
+    */
 
             #region GameComponent
             // GameComponent ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -321,12 +337,16 @@ namespace MonoEngine
             /// </summary>
             public override void Initialize()
             {
-                registery_CollisionCallbacks = new Dictionary<PhysicsBody, List<Collision.OnCollision>>();
-                registery_ActiveCollisions = new Dictionary<PhysicsBody, List<Collision>>();
+                //registery_CollisionCallbacks = new Dictionary<PhysicsBody, List<Collision.OnCollision>>();
+                //registery_ActiveCollisions = new Dictionary<PhysicsBody, List<Collision>>();
 
-                bodies_All = new List<PhysicsBody>();
-                bodies_Active = new List<PhysicsBody>();
-                bodies_Dead = new List<PhysicsBody>();
+                //bodies_All = new List<PhysicsBody>();
+                //bodies_Active = new List<PhysicsBody>();
+                //bodies_Dead = new List<PhysicsBody>();
+
+                // Jenky as magic numbers, sorry. Works out this way for the scale we decided on in 3DSMax.
+                worldToRender = Matrix.CreateScale(200f);
+                renderToWorld = Matrix.CreateScale(1 / 200.0f);
 
                 base.Initialize();
             }
@@ -336,17 +356,17 @@ namespace MonoEngine
                 base.Update(gameTime);
 
                 // Remove all dead bodies
-                foreach (PhysicsBody body in bodies_Dead)
-                {
-                    bodies_All.Remove(body);
-                    bodies_Active.Remove(body);
+                //foreach (PhysicsBody body in bodies_Dead)
+                //{
+                //    bodies_All.Remove(body);
+                //    bodies_Active.Remove(body);
 
-                    // If they have registered callbacks remove them
-                    if (registery_CollisionCallbacks.ContainsKey(body))
-                    {
-                        registery_CollisionCallbacks.Remove(body);
-                    }
-                }
+                //    // If they have registered callbacks remove them
+                //    if (registery_CollisionCallbacks.ContainsKey(body))
+                //    {
+                //        registery_CollisionCallbacks.Remove(body);
+                //    }
+                //}
             }
             // End of GameComponent /////////////////////////////////////////////////////////////////////////////////////////////////////
             #endregion
