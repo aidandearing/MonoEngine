@@ -1,4 +1,4 @@
-﻿namespace Capstone
+﻿namespace MonoEngine
 {
     class Collision
     {

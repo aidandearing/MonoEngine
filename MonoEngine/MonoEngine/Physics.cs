@@ -2,7 +2,7 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace Capstone
+namespace MonoEngine
 {
     class Physics : GameComponent
     {

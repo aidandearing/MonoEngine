@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
-namespace Capstone
+namespace MonoEngine
 {
     /// <summary>
     /// Contains an array of Bounding Boxes that partition the worldspace in order to narrow the total number of collision checks any one non-static body must check against
@@ -31,24 +31,24 @@ namespace Capstone
             statics = new Dictionary<AABB, List<PhysicsBody>>();
             indexToOrder = new Dictionary<int, int>();
             orderToIndex = new Dictionary<int, List<AABB>>();
-            
+
             // Calculate the sum of powers for the bounding box array
             // This is the total number of bounding boxes that will be present
-            sum = ((int)Math.Pow(4, Properties.Physics.Default.BoundingBox_order) - 1) / (4 - 1);
+            sum = ((int)Math.Pow(4, PhysicsSettings.BOUNDINGBOX_ORDERS) - 1) / (4 - 1);
             // Instantiate the bounds array
             bounds = new AABB[sum];
             // Instantiate the bounds dimensions array
-            bound_dim = new int[Properties.Physics.Default.BoundingBox_order];
-            for (int i = Properties.Physics.Default.BoundingBox_order; i > 0; i--)
+            bound_dim = new int[PhysicsSettings.BOUNDINGBOX_ORDERS];
+            for (int i = PhysicsSettings.BOUNDINGBOX_ORDERS; i > 0; i--)
             {
                 // Assign the dimension values for each order of bounding boxes to the array of dimensions
-                bound_dim[Properties.Physics.Default.BoundingBox_order - i] = (int)Math.Pow(2, i);
+                bound_dim[PhysicsSettings.BOUNDINGBOX_ORDERS - i] = (int)Math.Pow(PhysicsSettings.BOUNDINGBOX_SMALLEST, i);
             }
 
             // Store the current index in the array of bounds
             int index = 0;
             // Iterate the depth of the bounds
-            for (int i = 0; i < Properties.Physics.Default.BoundingBox_order; ++i)
+            for (int i = 0; i < PhysicsSettings.BOUNDINGBOX_ORDERS; ++i)
             {
                 // Prepare a list of all bounds at this depth
                 List<AABB> orderList = new List<AABB>();
@@ -117,13 +117,13 @@ namespace Capstone
 
                     // This is still slower than it can be. There are better ways of doing this.
                     // Go through the depths
-                    for (int depth = 0; depth < Properties.Physics.Default.BoundingBox_order; ++depth)
+                    for (int depth = 0; depth < PhysicsSettings.BOUNDINGBOX_ORDERS; ++depth)
                     {
                         // If the body is bigger than the current depth's bounds check it against the current depth
                         if (body.shape.GetBoundingBox().Diagonal() >= orderToIndex[depth][0].Diagonal())
                         {
                             // Foreach bound at the current depth
-                            foreach(AABB bound in orderToIndex[depth])
+                            foreach (AABB bound in orderToIndex[depth])
                             {
                                 // Check if the object overlaps and add it if it does
                                 if (bound.OverlapTest(body.shape))
@@ -131,10 +131,10 @@ namespace Capstone
                             }
                         }
                         // If the body is not larger than the current bounds and we are at the end of the depths
-                        else if (depth >= Properties.Physics.Default.BoundingBox_order)
+                        else if (depth >= PhysicsSettings.BOUNDINGBOX_ORDERS)
                         {
                             // Go through each bound at this depth (the final depth)
-                            foreach(AABB bound in orderToIndex[depth])
+                            foreach (AABB bound in orderToIndex[depth])
                             {
                                 // Check if the object overlaps and add it if it does
                                 if (bound.OverlapTest(body.shape))

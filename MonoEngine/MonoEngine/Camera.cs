@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 
-namespace Capstone
+namespace MonoEngine
 {
     class Camera : GameObjectComponent, IGameObjectUpdatable
     {

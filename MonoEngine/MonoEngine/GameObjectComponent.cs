@@ -1,4 +1,4 @@
-﻿namespace Capstone
+﻿namespace MonoEngine
 {
     /// <summary>
     /// The abstract base class for all GameObjectComponents

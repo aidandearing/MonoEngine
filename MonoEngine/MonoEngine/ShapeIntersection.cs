@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace Capstone
+namespace MonoEngine
 {
     class ShapeIntersection
     {

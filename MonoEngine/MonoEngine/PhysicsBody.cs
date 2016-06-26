@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
-namespace Capstone
+namespace MonoEngine
 {
     class PhysicsBody : GameObjectComponent, IGameObjectUpdatable
     {
