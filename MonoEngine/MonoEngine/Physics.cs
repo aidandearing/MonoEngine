@@ -11,8 +11,9 @@ namespace MonoEngine
         {
             public class PhysicsSettings
             {
-                public static int BOUNDINGBOX_SMALLEST = 1;
+                public static int BOUNDINGBOX_SMALLEST = 2;
                 public static int BOUNDINGBOX_ORDERS = 4;
+                public static int BOUNDINGBOX_LARGEST = (int)Math.Pow(BOUNDINGBOX_SMALLEST, BOUNDINGBOX_ORDERS);
             }
 
             private Matrix worldToRender;
@@ -129,19 +130,7 @@ namespace MonoEngine
             #region Broad Phase
             // Broad Phase //////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // This region contains all the broad phase members and functions
-
-            // TODO decide on how to build these, post scene load, but pre simulation, on the fly, or explicitly?
-            // Post scene load:
-            // Compute the bounds of all static bodies and build the array of BoundingChunks to match this, using a method call
-            // Much like Explicity this has the added bonus of allowing us to quickly compute the general area of boundingchunks to check based on a non static bodies transform
-            // On the fly:
-            // As static bodies are added find out if they are within any preexisting bounding chunks, if they aren't, build a new one that fits on a grid with the others, and put the body in it
-            // This has very few optimisations based on transform, but can allow the world to easily take on any shape and still function without wasting time with bounding chunks that are empty, due to being a rigid rectangle of chunks
-            // Explicity:
-            // Force the coder to call a method that requires the exact dimensions of the world and builds the array of bounding chunks appropriately
-            // Much like Post scene load the benefit comes in knowing where to look in the array given the transform of a body
-
-            // Another option!
+            
             // Use a list of BoundingChunks, for on the fly behaviour, but enable them to bind themselves to a dictionary of int -> boundingchunks
             // Store the first bounds position, assume it is index 0, then make every other bound calculate its index based around that position, and force all bodies that want to quickly check the bounds around themselves to do the same
             //PhysicsBoundingChunk[] bounds;
@@ -175,8 +164,8 @@ namespace MonoEngine
                         instance.bounds_hashtable = new Dictionary<int, PhysicsBoundingChunk>();
 
                         // TODO allow PhysicsBoundingChunks to be more adaptable, not so hard coded for our specific games case (maybe?)
-                        float x = (int)Math.Floor(body.parent.transform.Position.X / 8) * 8;
-                        float z = (int)Math.Floor(body.parent.transform.Position.Z / 8) * 8;
+                        float x = (int)Math.Floor(body.parent.transform.Position.X / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
+                        float z = (int)Math.Floor(body.parent.transform.Position.Z / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
 
                         instance.bounds_transform = new Transform();
                         instance.bounds_transform.Position = new Vector3(x, 0, z);
@@ -201,7 +190,7 @@ namespace MonoEngine
                                     if (i_x == 0 || i_x == dimension - 1 || i_z == 0 || i_z == dimension - 1)
                                     {
                                         newTransform.Transformation = Matrix.Identity;
-                                        newTransform.Position = new Vector3((i_x - (int)Math.Floor(dimension / 2.0f)) * 8, 0, (i_z - (int)Math.Floor(dimension / 2.0f)) * 8) - instance.bounds_transform.Position;
+                                        newTransform.Position = new Vector3((i_x - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST, 0, (i_z - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST) - instance.bounds_transform.Position;
 
                                         PhysicsBoundingChunk newChunk = new PhysicsBoundingChunk(newTransform);
                                         if (newChunk.BoundsTest(body))
@@ -225,8 +214,8 @@ namespace MonoEngine
                     {
                         int index = CalculateBoundsIndex(body.parent.transform);
 
-                        float x = (int)Math.Floor(body.parent.transform.Position.X / 8) * 8;
-                        float z = (int)Math.Floor(body.parent.transform.Position.Z / 8) * 8;
+                        float x = (int)Math.Floor(body.parent.transform.Position.X / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
+                        float z = (int)Math.Floor(body.parent.transform.Position.Z / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
 
                         instance.bounds_transform = new Transform();
                         instance.bounds_transform.Position = new Vector3(x, 0, z);
@@ -258,7 +247,7 @@ namespace MonoEngine
                                     if (i_x == 0 || i_x == dimension - 1 || i_z == 0 || i_z == dimension - 1)
                                     {
                                         newTransform.Transformation = Matrix.Identity;
-                                        newTransform.Position = new Vector3((i_x - (int)Math.Floor(dimension / 2.0f)) * 8 + x * 8, 0, (i_z - (int)Math.Floor(dimension / 2.0f)) * 8 + z * 8) - instance.bounds_transform.Position;
+                                        newTransform.Position = new Vector3((i_x - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST + x * PhysicsSettings.BOUNDINGBOX_LARGEST, 0, (i_z - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST + z * PhysicsSettings.BOUNDINGBOX_LARGEST) - instance.bounds_transform.Position;
                                         int newIndex = CalculateBoundsIndex(newTransform);
 
                                         if (instance.bounds_hashtable.ContainsKey(newIndex))
@@ -295,8 +284,8 @@ namespace MonoEngine
 
             private static int CalculateBoundsIndex(Transform transform)
             {
-                int x = (int)Math.Floor(transform.Position.X / 8);
-                int z = (int)Math.Floor(transform.Position.Z / 8);
+                int x = (int)Math.Floor(transform.Position.X / PhysicsSettings.BOUNDINGBOX_LARGEST);
+                int z = (int)Math.Floor(transform.Position.Z / PhysicsSettings.BOUNDINGBOX_LARGEST);
 
                 return (x - (int)instance.bounds_transform.Position.X) + (z - (int)instance.bounds_transform.Position.Z) * (int)Math.Sqrt(int.MaxValue / 2);
             }
@@ -307,8 +296,8 @@ namespace MonoEngine
                 AABB boundingBox = body.shape.GetBoundingBox();
                 int dimension = (int)Math.Max(boundingBox.Dimensions().X, boundingBox.Dimensions().Z) / 4;
 
-                int x = (int)Math.Floor(body.parent.transform.Position.X / 8);
-                int z = (int)Math.Floor(body.parent.transform.Position.Z / 8);
+                int x = (int)Math.Floor(body.parent.transform.Position.X / PhysicsSettings.BOUNDINGBOX_LARGEST);
+                int z = (int)Math.Floor(body.parent.transform.Position.Z / PhysicsSettings.BOUNDINGBOX_LARGEST);
 
                 indices.Add((x - (int)instance.bounds_transform.Position.X) + (z - (int)instance.bounds_transform.Position.Z) * (int)Math.Sqrt(int.MaxValue / 2));
 
@@ -320,7 +309,7 @@ namespace MonoEngine
                         {
                             Transform newTransform = new Transform();
                             newTransform.Transformation = Matrix.Identity;
-                            newTransform.Position = new Vector3((i_x - (int)Math.Floor(dimension / 2.0f)) * 8 + x * 8, 0, (i_z - (int)Math.Floor(dimension / 2.0f)) * 8 + z * 8) - instance.bounds_transform.Position;
+                            newTransform.Position = new Vector3((i_x - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST + x * PhysicsSettings.BOUNDINGBOX_LARGEST, 0, (i_z - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST + z * PhysicsSettings.BOUNDINGBOX_LARGEST) - instance.bounds_transform.Position;
                             int newIndex = CalculateBoundsIndex(newTransform);
                             if (!indices.Contains(newIndex))
                                 indices.Add(newIndex);
