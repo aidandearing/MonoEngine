@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using static MonoEngine.Physics.PhysicsEngine;
+using static MonoEngine.Physics2D.PhysicsEngine;
 using MonoEngine.Shapes;
 
 namespace MonoEngine
 {
-    namespace Physics
+    namespace Physics2D
     {
         /// <summary>
         /// Contains an array of Bounding Boxes that partition the worldspace in order to narrow the total number of collision checks any one non-static body must check against

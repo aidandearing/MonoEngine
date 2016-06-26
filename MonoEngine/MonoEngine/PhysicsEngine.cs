@@ -5,7 +5,7 @@ using MonoEngine.Shapes;
 
 namespace MonoEngine
 {
-    namespace Physics
+    namespace Physics2D
     {
         public class PhysicsEngine : GameComponent
         {
@@ -14,19 +14,6 @@ namespace MonoEngine
                 public static int BOUNDINGBOX_SMALLEST = 2;
                 public static int BOUNDINGBOX_ORDERS = 4;
                 public static int BOUNDINGBOX_LARGEST = (int)Math.Pow(BOUNDINGBOX_SMALLEST, BOUNDINGBOX_ORDERS);
-            }
-
-            private Matrix worldToRender;
-            private Matrix renderToWorld;
-
-            public static Matrix WorldToRender(Matrix matrix)
-            {
-                return new Matrix(matrix.M11, matrix.M12, matrix.M13, matrix.M14, matrix.M21, matrix.M22, matrix.M23, matrix.M24, matrix.M31, matrix.M32, matrix.M33, matrix.M34, matrix.M41 * instance.worldToRender.M11, matrix.M42 * instance.worldToRender.M22, matrix.M43 * instance.worldToRender.M33, matrix.M44 * instance.worldToRender.M44);
-            }
-
-            public static Matrix RenderToWorld(Matrix matrix)
-            {
-                return new Matrix(matrix.M11, matrix.M12, matrix.M13, matrix.M14, matrix.M21, matrix.M22, matrix.M23, matrix.M24, matrix.M31, matrix.M32, matrix.M33, matrix.M34, matrix.M41 * instance.renderToWorld.M11, matrix.M42 * instance.renderToWorld.M22, matrix.M43 * instance.renderToWorld.M33, matrix.M44 * instance.renderToWorld.M44);
             }
 
             #region Singleton
@@ -340,10 +327,6 @@ namespace MonoEngine
                 bodies_All = new List<PhysicsBody>();
                 bodies_Active = new List<PhysicsBody>();
                 bodies_Dead = new List<PhysicsBody>();
-
-                // Jenky as magic numbers, sorry. Works out this way for the scale we decided on in 3DSMax.
-                worldToRender = Matrix.CreateScale(100f);
-                renderToWorld = Matrix.CreateScale(1 / 100.0f);
 
                 base.Initialize();
             }

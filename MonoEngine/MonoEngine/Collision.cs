@@ -1,6 +1,6 @@
 ﻿namespace MonoEngine
 {
-    namespace Physics
+    namespace Physics2D
     {
         public class Collision
         {

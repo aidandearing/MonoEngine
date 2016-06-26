@@ -6,11 +6,12 @@ namespace MonoEngine
     {
         public class GameObject
         {
+            public GameObject parent;
             /// <summary>
             /// This is the list of all components this GameObject has
             /// Components are where GameObjects get their behaviours
             /// </summary>
-            private List<GameObjectComponent> components;
+            private List<GameObject> components;
             private List<IGameObjectUpdatable> components_updatable;
             private List<IGameObjectRenderable> components_renderable;
 
@@ -18,9 +19,10 @@ namespace MonoEngine
             /// Adds a component to the GameObject
             /// </summary>
             /// <param name="component">The component to be added</param>
-            public void AddComponent(GameObjectComponent component)
+            public void AddComponent(GameObject component)
             {
                 components.Add(component);
+                component.parent = this;
 
                 if (component is IGameObjectUpdatable)
                     components_updatable.Add(component as IGameObjectUpdatable);
@@ -38,7 +40,7 @@ namespace MonoEngine
                 transform = new Transform();
                 Name = name;
 
-                components = new List<GameObjectComponent>();
+                components = new List<GameObject>();
                 components_updatable = new List<IGameObjectUpdatable>();
                 components_renderable = new List<IGameObjectRenderable>();
             }
@@ -59,9 +61,9 @@ namespace MonoEngine
                 }
             }
 
-            public GameObjectComponent GetComponent<T>()
+            public GameObject GetComponent<T>()
             {
-                foreach (GameObjectComponent component in components)
+                foreach (GameObject component in components)
                 {
                     if (component is T)
                         return component;
@@ -70,11 +72,11 @@ namespace MonoEngine
                 return null;
             }
 
-            public List<GameObjectComponent> GetComponents<T>()
+            public List<GameObject> GetComponents<T>()
             {
-                List<GameObjectComponent> returnComponents = new List<GameObjectComponent>();
+                List<GameObject> returnComponents = new List<GameObject>();
 
-                foreach (GameObjectComponent component in components)
+                foreach (GameObject component in components)
                 {
                     if (component is T)
                         returnComponents.Add(component);

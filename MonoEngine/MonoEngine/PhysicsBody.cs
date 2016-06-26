@@ -5,9 +5,9 @@ using MonoEngine.Game;
 
 namespace MonoEngine
 {
-    namespace Physics
+    namespace Physics2D
     {
-        public class PhysicsBody : GameObjectComponent, IGameObjectUpdatable
+        public class PhysicsBody : GameObject, IGameObjectUpdatable
         {
             public enum BodyType { physics_rigidbody = 0x00, physics_static = 0x01, physics_kinematic = 0x02, physics_trigger = 0x04 };
 
@@ -16,17 +16,12 @@ namespace MonoEngine
 
             public Shape shape;
 
-            /// <summary>
-            /// transform stores all the physics forces acting on the body in matrix form
-            /// </summary>
-            private Matrix transform;
-
             // This list is referenced in Physic's callback registery
             public List<Collision.OnCollision> collisionCallbacks;
             // This list is referenced in Physic's collision registery
             public List<Collision> collisions;
 
-            public PhysicsBody(GameObject parent, Shape shape, BodyType bodyType) : base(parent)
+            public PhysicsBody(string name, Shape shape, BodyType bodyType) : base(name)
             {
                 this.shape = shape;
                 this.flagBodyType = bodyType;
@@ -39,8 +34,7 @@ namespace MonoEngine
 
             void IGameObjectUpdatable.Update()
             {
-                // I need to construct the transform for this
-                parent.transform.Transformation += transform;
+                // TODO physics
             }
 
             public void RegisterCollisionCallback(Collision.OnCollision callback)

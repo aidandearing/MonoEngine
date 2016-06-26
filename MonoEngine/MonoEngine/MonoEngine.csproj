@@ -49,12 +49,11 @@
     <Compile Include="GameAudioListener.cs" />
     <Compile Include="ModelRenderer.cs" />
     <Compile Include="GameObject.cs" />
-    <Compile Include="GameObjectComponent.cs" />
     <Compile Include="GameObjectManager.cs" />
     <Compile Include="GraphicsHelper.cs" />
     <Compile Include="IGameObjectRenderable.cs" />
     <Compile Include="IGameObjectUpdatable.cs" />
-    <Compile Include="Physics.cs" />
+    <Compile Include="PhysicsEngine.cs" />
     <Compile Include="PhysicsBody.cs" />
     <Compile Include="PhysicsBoundingChunk.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

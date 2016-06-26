@@ -1,19 +1,18 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using MonoEngine.Physics;
 using MonoEngine.Game;
 
 namespace MonoEngine
 {
     namespace Render
     {
-        public class ModelRenderer : GameObjectComponent, IGameObjectRenderable
+        public class ModelRenderer : GameObject, IGameObjectRenderable
         {
             private static Dictionary<string, Model> models = new Dictionary<string, Model>();
 
             private Model model;
 
-            public ModelRenderer(GameObject parent, Model model) : base(parent)
+            private ModelRenderer(string name, Model model) : base(name)
             {
                 this.model = model;
             }
@@ -21,10 +20,16 @@ namespace MonoEngine
             void IGameObjectRenderable.Render()
             {
                 //model.Draw(Physics.WorldToRender(Camera.Transformation.Transformation + parent.transform.Transformation), Camera.View, Camera.Projection);
-                model.Draw(PhysicsEngine.WorldToRender(Camera.MainCamera.parent.transform.Transformation + parent.transform.Transformation), Camera.MainCamera.View, Camera.MainCamera.Projection);
+                model.Draw(Camera.MainCamera.transform.Transformation + parent.transform.Transformation, Camera.MainCamera.View, Camera.MainCamera.Projection);
             }
 
-            public static ModelRenderer MakeGameModel(GameObject parent, string name)
+            /// <summary>
+            /// Factory Method Pattern
+            /// </summary>
+            /// <param name="parent"></param>
+            /// <param name="name"></param>
+            /// <returns></returns>
+            public static ModelRenderer MakeModelRenderer(GameObject parent, string name)
             {
                 // If the model isn't already loaded (it's key isn't found in the dictionary)
                 if (!models.ContainsKey(name))
@@ -35,7 +40,7 @@ namespace MonoEngine
                     models.Add(name, model);
                 }
                 // Pass the model at that key in the dictionary
-                return new ModelRenderer(parent, models[name]);
+                return new ModelRenderer(name, models[name]);
             }
         }
     }
