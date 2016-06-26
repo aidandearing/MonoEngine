@@ -2,7 +2,7 @@
 
 namespace MonoEngine
 {
-    abstract class Shape
+    public abstract class Shape
     {
         public const int VERTICELIMIT = 16;
 

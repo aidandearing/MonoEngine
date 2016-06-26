@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using static MonoEngine.Physics;
 
 namespace MonoEngine
 {
@@ -12,7 +13,7 @@ namespace MonoEngine
     /// Follows some basic rules:
     /// Every PhysicsBoundingChunk is 8x8 physics units
     /// </summary>
-    class PhysicsBoundingChunk
+    public class PhysicsBoundingChunk
     {
         private AABB[] bounds;
         private Transform transform;

@@ -2,7 +2,7 @@
 
 namespace MonoEngine
 {
-    class Circle : Shape
+    public class Circle : Shape
     {
         public Circle(Transform transform, float radius) : base(transform)
         {

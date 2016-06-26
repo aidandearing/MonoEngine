@@ -1,6 +1,6 @@
 ﻿namespace MonoEngine
 {
-    class Collision
+    public class Collision
     {
         public delegate void OnCollision(Collision collision);
 

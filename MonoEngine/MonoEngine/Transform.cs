@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace MonoEngine
 {
-    class Transform
+    public class Transform
     {
         private Matrix transformation;
 

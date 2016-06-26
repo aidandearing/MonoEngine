@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MonoEngine
 {
-    class GameModel : GameObjectComponent, IGameObjectRenderable
+    public class GameModel : GameObjectComponent, IGameObjectRenderable
     {
         private static Dictionary<string, Model> models = new Dictionary<string, Model>();
 

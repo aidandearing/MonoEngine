@@ -4,8 +4,14 @@ using Microsoft.Xna.Framework;
 
 namespace MonoEngine
 {
-    class Physics : GameComponent
+    public class Physics : GameComponent
     {
+        public class PhysicsSettings
+        {
+            public static int BOUNDINGBOX_SMALLEST = 1;
+            public static int BOUNDINGBOX_ORDERS = 4;
+        }
+
         private Matrix worldToRender;
         private Matrix renderToWorld;
 

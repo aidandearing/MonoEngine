@@ -3,7 +3,7 @@ using System;
 
 namespace MonoEngine
 {
-    class Camera : GameObjectComponent, IGameObjectUpdatable
+    public class Camera : GameObjectComponent, IGameObjectUpdatable
     {
         // TODO A variety of safer static methods to handle main camera and other camera based stuff
         public static Camera MainCamera;

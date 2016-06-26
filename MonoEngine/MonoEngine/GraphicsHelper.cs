@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoEngine
 {
-    class GraphicsHelper
+    public class GraphicsHelper
     {
         public static GraphicsDeviceManager graphics;
 

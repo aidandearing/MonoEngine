@@ -2,7 +2,7 @@
 
 namespace MonoEngine
 {
-    class AABB : Shape
+    public class AABB : Shape
     {
         public AABB(Transform transform, float width, float height) : base(transform)
         {

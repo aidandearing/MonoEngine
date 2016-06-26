@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace MonoEngine
 {
-    class SoundManager : GameComponent
+    public class SoundManager : GameComponent
     {
         private Dictionary<string, SoundEffect> sounds = new Dictionary<string, SoundEffect>();
 

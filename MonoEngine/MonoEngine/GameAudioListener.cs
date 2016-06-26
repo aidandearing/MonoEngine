@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace MonoEngine
 {
-    class GameAudioListener : GameObjectComponent
+    public class GameAudioListener : GameObjectComponent
     {
 
         public AudioListener audioListener;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MonoEngine
 {
-    class PhysicsBody : GameObjectComponent, IGameObjectUpdatable
+    public class PhysicsBody : GameObjectComponent, IGameObjectUpdatable
     {
         public enum BodyType { physics_rigidbody = 0x00, physics_static = 0x01, physics_kinematic = 0x02, physics_trigger = 0x04 };
 

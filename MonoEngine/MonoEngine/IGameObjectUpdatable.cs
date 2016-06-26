@@ -1,6 +1,6 @@
 ﻿namespace MonoEngine
 {
-    interface IGameObjectUpdatable
+    public interface IGameObjectUpdatable
     {
         void Update();
     }

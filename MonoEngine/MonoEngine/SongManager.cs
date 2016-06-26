@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace MonoEngine
 {
-    class SongManager : GameComponent
+    public class SongManager : GameComponent
     {
         private Dictionary<string, Song> songList = new Dictionary<string, Song>();
 

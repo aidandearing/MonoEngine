@@ -2,7 +2,7 @@
 
 namespace MonoEngine
 {
-    class GameObject
+    public class GameObject
     {
         /// <summary>
         /// This is the list of all components this GameObject has

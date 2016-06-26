@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace MonoEngine
 {
-    class GameObjectManager : DrawableGameComponent
+    public class GameObjectManager : DrawableGameComponent
     {
         private List<GameObject> gameObjects;
         private List<GameObject> gameObjectsDead;
