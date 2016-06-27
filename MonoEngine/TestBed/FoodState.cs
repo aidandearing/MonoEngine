@@ -22,17 +22,17 @@ namespace TestBed
 
         public string Name()
         {
-            return Food.foods[name].Name(cutstate, tempstate);
+            return Food.foods[name].Name(this);
         }
 
         public int Stack()
         {
-            return Food.foods[name].Stack(cutstate, tempstate);
+            return Food.foods[name].Stack(this);
         }
 
         public float Value()
         {
-            return Food.foods[name].Value(cutstate, tempstate);
+            return Food.foods[name].Value(this);
         }
 
         public void Write()
