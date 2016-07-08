@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using MonoEngine.Shapes;
 using MonoEngine.Game;
 
-namespace MonoEngine.Physics2D
+namespace MonoEngine.Physics.Physics2D
 {
     public class PhysicsBody2D : GameObject
     {

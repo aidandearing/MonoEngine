@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using MonoEngine.Game;
-using MonoEngine.Physics3D;
+using MonoEngine.Physics.Physics3D;
 
 namespace MonoEngine.Render
 {

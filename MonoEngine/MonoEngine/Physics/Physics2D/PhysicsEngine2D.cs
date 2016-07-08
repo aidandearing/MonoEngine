@@ -3,7 +3,7 @@ using System;
 using Microsoft.Xna.Framework;
 using MonoEngine.Shapes;
 
-namespace MonoEngine.Physics2D
+namespace MonoEngine.Physics.Physics2D
 {
     public class PhysicsEngine2D : GameComponent
     {

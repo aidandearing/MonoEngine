@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 
-namespace MonoEngine.Physics3D
+namespace MonoEngine.Physics.Physics3D
 {
     public class PhysicsEngine3D : GameComponent
     {
