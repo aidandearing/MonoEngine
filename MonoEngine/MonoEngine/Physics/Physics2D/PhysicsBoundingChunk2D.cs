@@ -38,7 +38,7 @@ namespace MonoEngine.Physics.Physics2D
             // This is the total number of bounding boxes that will be present
             if (sum == 0)
             {
-                sum = ((int)Math.Pow(4, PhysicsSettings.BOUNDINGBOX_ORDERS) - 1) / (4 - 1);
+                sum = ((int)Math.Pow(4, PhysicsEngine.PhysicsSettings.BOUNDINGBOX_ORDERS) - 1) / (4 - 1);
             }
 
             // Instantiate the bounds array
@@ -47,19 +47,19 @@ namespace MonoEngine.Physics.Physics2D
             // Instantiate the bounds dimensions array
             if (bound_dim == null)
             {
-                bound_dim = new int[PhysicsSettings.BOUNDINGBOX_ORDERS];
+                bound_dim = new int[PhysicsEngine.PhysicsSettings.BOUNDINGBOX_ORDERS];
             }
 
-            for (int i = PhysicsSettings.BOUNDINGBOX_ORDERS; i > 0; i--)
+            for (int i = PhysicsEngine.PhysicsSettings.BOUNDINGBOX_ORDERS; i > 0; i--)
             {
                 // Assign the dimension values for each order of bounding boxes to the array of dimensions
-                bound_dim[PhysicsSettings.BOUNDINGBOX_ORDERS - i] = (int)Math.Pow(PhysicsSettings.BOUNDINGBOX_SMALLEST, i);
+                bound_dim[PhysicsEngine.PhysicsSettings.BOUNDINGBOX_ORDERS - i] = (int)Math.Pow(PhysicsEngine.PhysicsSettings.BOUNDINGBOX_SMALLEST, i);
             }
 
             // Store the current index in the array of bounds
             int index = 0;
             // Iterate the depth of the bounds
-            for (int i = 0; i < PhysicsSettings.BOUNDINGBOX_ORDERS; ++i)
+            for (int i = 0; i < PhysicsEngine.PhysicsSettings.BOUNDINGBOX_ORDERS; ++i)
             {
                 // Prepare a list of all bounds at this depth
                 List<AABB> orderList = new List<AABB>();
@@ -113,7 +113,7 @@ namespace MonoEngine.Physics.Physics2D
         {
             bool added = false;
 
-            for (int i = 0; i < PhysicsSettings.BOUNDINGBOX_ORDERS; ++i)
+            for (int i = 0; i < PhysicsEngine.PhysicsSettings.BOUNDINGBOX_ORDERS; ++i)
             {
                 foreach (AABB bounds in orderToIndex[i])
                 {
@@ -137,7 +137,7 @@ namespace MonoEngine.Physics.Physics2D
             List<PhysicsBody2D> bodies = new List<PhysicsBody2D>();
 
             // Since every AABB in this chunk has a list that contains all the objects in that AABB and all the children AABB I only need to check against the AABBs at the same 'order' as the bodies shape
-            for (int i = ShapeToOrder(body.shape); i < PhysicsSettings.BOUNDINGBOX_ORDERS; ++i)
+            for (int i = ShapeToOrder(body.shape); i < PhysicsEngine.PhysicsSettings.BOUNDINGBOX_ORDERS; ++i)
             {
                 foreach (AABB bounds in orderToIndex[i])
                 {
@@ -157,7 +157,7 @@ namespace MonoEngine.Physics.Physics2D
 
             // Iterate from largest bounds to smallest, until one is smaller than the maxDim
             int depth = 0;
-            while (depth < PhysicsSettings.BOUNDINGBOX_ORDERS)
+            while (depth < PhysicsEngine.PhysicsSettings.BOUNDINGBOX_ORDERS)
             {
                 if (bound_dim[depth] < maxDim)
                     return MathHelper.Max(depth - 1, 0);
@@ -165,7 +165,7 @@ namespace MonoEngine.Physics.Physics2D
                     depth++;
             }
 
-            return PhysicsSettings.BOUNDINGBOX_ORDERS;
+            return PhysicsEngine.PhysicsSettings.BOUNDINGBOX_ORDERS;
         }
     }
 }

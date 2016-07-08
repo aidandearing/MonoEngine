@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using MonoEngine.Game;
-using MonoEngine.Physics.Physics3D;
+using MonoEngine.Physics;
 
 namespace MonoEngine.Render
 {
@@ -19,7 +19,7 @@ namespace MonoEngine.Render
         public override void Render()
         {
             //model.Draw(Physics.WorldToRender(Camera.Transformation.Transformation + parent.transform.Transformation), Camera.View, Camera.Projection);
-            model.Draw(PhysicsEngine3D.WorldToRender(Camera.MainCamera.transform.Transformation + transform.Transformation), Camera.MainCamera.View, Camera.MainCamera.Projection);
+            model.Draw(PhysicsEngine.WorldToRender(Camera.MainCamera.transform.Transformation + transform.Transformation), Camera.MainCamera.View, Camera.MainCamera.Projection);
         }
 
         /// <summary>

@@ -5,50 +5,25 @@ using MonoEngine.Shapes;
 
 namespace MonoEngine.Physics.Physics2D
 {
-    public class PhysicsEngine2D : GameComponent
+    internal class PhysicsEngine2D : PhysicsEngine
     {
-        public class PhysicsSettings
-        {
-            public static int BOUNDINGBOX_SMALLEST = 2;
-            public static int BOUNDINGBOX_ORDERS = 4;
-            public static int BOUNDINGBOX_LARGEST = (int)Math.Pow(BOUNDINGBOX_SMALLEST, BOUNDINGBOX_ORDERS);
-        }
-
         private Matrix worldToRender;
         private Matrix renderToWorld;
 
-        public static Matrix WorldToRender(Matrix matrix)
+        internal Matrix WorldToRender(Matrix matrix)
         {
-            return new Matrix(matrix.M11, matrix.M12, matrix.M13, matrix.M14, matrix.M21, matrix.M22, matrix.M23, matrix.M24, matrix.M31, matrix.M32, matrix.M33, matrix.M34, matrix.M41 * instance.worldToRender.M11, matrix.M42 * instance.worldToRender.M22, matrix.M43 * instance.worldToRender.M33, matrix.M44 * instance.worldToRender.M44);
+            return new Matrix(matrix.M11, matrix.M12, matrix.M13, matrix.M14, matrix.M21, matrix.M22, matrix.M23, matrix.M24, matrix.M31, matrix.M32, matrix.M33, matrix.M34, matrix.M41 * worldToRender.M11, matrix.M42 * worldToRender.M22, matrix.M43 * worldToRender.M33, matrix.M44 * worldToRender.M44);
         }
 
-        public static Matrix RenderToWorld(Matrix matrix)
+        internal Matrix RenderToWorld(Matrix matrix)
         {
-            return new Matrix(matrix.M11, matrix.M12, matrix.M13, matrix.M14, matrix.M21, matrix.M22, matrix.M23, matrix.M24, matrix.M31, matrix.M32, matrix.M33, matrix.M34, matrix.M41 * instance.renderToWorld.M11, matrix.M42 * instance.renderToWorld.M22, matrix.M43 * instance.renderToWorld.M33, matrix.M44 * instance.renderToWorld.M44);
+            return new Matrix(matrix.M11, matrix.M12, matrix.M13, matrix.M14, matrix.M21, matrix.M22, matrix.M23, matrix.M24, matrix.M31, matrix.M32, matrix.M33, matrix.M34, matrix.M41 * renderToWorld.M11, matrix.M42 * renderToWorld.M22, matrix.M43 * renderToWorld.M33, matrix.M44 * renderToWorld.M44);
         }
 
-        #region Singleton
-        // Singleton ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // This region contains all the singleton methods and variables
-
-        private static PhysicsEngine2D instance;
-        /// <summary>
-        /// DO NOT USE THIS
-        /// Unless you are stupid, or doing something sweet
-        /// </summary>
-        /// <param name="game">The Game instance running</param>
-        /// <returns>The Physics instance running</returns>
-        public static PhysicsEngine2D Instance(Microsoft.Xna.Framework.Game game)
-        {
-            instance = (instance == null) ? new PhysicsEngine2D(game) : instance;
-            return instance;
-        }
-        private PhysicsEngine2D(Microsoft.Xna.Framework.Game game) : base(game)
+        internal PhysicsEngine2D(Microsoft.Xna.Framework.Game game) : base(game)
         {
 
         }
-        // End of Singleton ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #endregion
 
         #region Registries
         // Registries //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -65,13 +40,13 @@ namespace MonoEngine.Physics.Physics2D
         /// </summary>
         /// <param name="callback">The delegate to be added</param>
         /// <param name="body">The body to add the delegate to</param>
-        public static void RegisterCollisionCallback(Collision2D.OnCollision callback, PhysicsBody2D body)
+        internal void RegisterCollisionCallback(Collision2D.OnCollision callback, PhysicsBody2D body)
         {
             // First check to see if the registry contains this key
-            if (!instance.registery_CollisionCallbacks.ContainsKey(body))
+            if (!registery_CollisionCallbacks.ContainsKey(body))
             {
                 // If the registry does not contain the body, add the body, and its list of callbacks
-                instance.registery_CollisionCallbacks.Add(body, body.collisionCallbacks);
+                registery_CollisionCallbacks.Add(body, body.collisionCallbacks);
             }
             // Add the new callback to the list
             body.collisionCallbacks.Add(callback);
@@ -82,10 +57,10 @@ namespace MonoEngine.Physics.Physics2D
         /// </summary>
         /// <param name="callback">The delegate to be removed</param>
         /// <param name="body">The body to remove the delegate from</param>
-        public static void UnregisterCollisionCallback(Collision2D.OnCollision callback, PhysicsBody2D body)
+        internal void UnregisterCollisionCallback(Collision2D.OnCollision callback, PhysicsBody2D body)
         {
             // First check to see if the registry contains this key
-            if (instance.registery_CollisionCallbacks.ContainsKey(body))
+            if (registery_CollisionCallbacks.ContainsKey(body))
             {
                 body.collisionCallbacks.Remove(callback);
             }
@@ -96,13 +71,13 @@ namespace MonoEngine.Physics.Physics2D
         /// </summary>
         /// <param name="body">The body to get callbacks from</param>
         /// <returns></returns>
-        public static List<Collision2D.OnCollision> GetCollisionCallbacks(PhysicsBody2D body)
+        internal List<Collision2D.OnCollision> GetCollisionCallbacks(PhysicsBody2D body)
         {
             // First check to see if the registry contains this key
-            if (instance.registery_CollisionCallbacks.ContainsKey(body))
+            if (registery_CollisionCallbacks.ContainsKey(body))
             {
                 // If it has this body, get its list
-                return instance.registery_CollisionCallbacks[body];
+                return registery_CollisionCallbacks[body];
             }
             else
                 return null;
@@ -118,9 +93,9 @@ namespace MonoEngine.Physics.Physics2D
         private List<PhysicsBody2D> bodies_Active;
         private List<PhysicsBody2D> bodies_Dead;
 
-        public static void RemovePhysicsBody(PhysicsBody2D body)
+        internal void RemoveBody(PhysicsBody2D body)
         {
-            instance.bodies_Dead.Add(body);
+            bodies_Dead.Add(body);
         }
         // End of Bodies ////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
@@ -140,26 +115,26 @@ namespace MonoEngine.Physics.Physics2D
         /// Adds a PhysicsBody to the Physics engine, bodies add themselves when made, this rarely needs to be called outside of the PhysicsBody constructor
         /// </summary>
         /// <param name="body">The body to be added</param>
-        public static void AddPhysicsBody(PhysicsBody2D body)
+        internal void AddBody(PhysicsBody2D body)
         {
-            instance.bodies_All.Add(body);
+            bodies_All.Add(body);
 
             if (body.flagBodyType.HasFlag(PhysicsBody2D.BodyType.physics_static))
             {
-                if (instance.bounds == null)
+                if (bounds == null)
                 {
-                    instance.bounds = new List<PhysicsBoundingChunk2D>();
-                    instance.bounds_hashtable = new Dictionary<int, PhysicsBoundingChunk2D>();
+                    bounds = new List<PhysicsBoundingChunk2D>();
+                    bounds_hashtable = new Dictionary<int, PhysicsBoundingChunk2D>();
 
                     float x = (int)Math.Floor(body.transform.Position.X / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
                     float z = (int)Math.Floor(body.transform.Position.Z / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
 
-                    instance.bounds_transform = new Transform();
-                    instance.bounds_transform.Position = new Vector3(x, 0, z);
+                    bounds_transform = new Transform();
+                    bounds_transform.Position = new Vector3(x, 0, z);
 
-                    instance.bounds.Add(new PhysicsBoundingChunk2D(instance.bounds_transform));
-                    instance.bounds_hashtable.Add(CalculateBoundsIndex(instance.bounds_transform), instance.bounds[0]);
-                    instance.bounds[instance.bounds.Count - 1].AddBody(body);
+                    bounds.Add(new PhysicsBoundingChunk2D(bounds_transform));
+                    bounds_hashtable.Add(CalculateBoundsIndex(bounds_transform), bounds[0]);
+                    bounds[bounds.Count - 1].AddBody(body);
 
                     // If the body is so large that it takes up more than 1 chunk I need to know that, and build all the chunks it is in around the one at its center
                     int dimension = 3;
@@ -175,13 +150,13 @@ namespace MonoEngine.Physics.Physics2D
                                 if (i_x == 0 || i_x == dimension - 1 || i_z == 0 || i_z == dimension - 1)
                                 {
                                     newTransform.Transformation = Matrix.Identity;
-                                    newTransform.Position = new Vector3((i_x - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST, 0, (i_z - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST) - instance.bounds_transform.Position;
+                                    newTransform.Position = new Vector3((i_x - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST, 0, (i_z - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST) - bounds_transform.Position;
 
                                     PhysicsBoundingChunk2D newChunk = new PhysicsBoundingChunk2D(newTransform);
                                     if (newChunk.BoundsTest(body))
                                     {
-                                        instance.bounds.Add(new PhysicsBoundingChunk2D(instance.bounds_transform));
-                                        instance.bounds_hashtable.Add(CalculateBoundsIndex(newTransform), newChunk);
+                                        bounds.Add(new PhysicsBoundingChunk2D(bounds_transform));
+                                        bounds_hashtable.Add(CalculateBoundsIndex(newTransform), newChunk);
                                         newChunk.AddBody(body);
                                         count++;
                                     }
@@ -202,18 +177,18 @@ namespace MonoEngine.Physics.Physics2D
                     float x = (int)Math.Floor(body.transform.Position.X / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
                     float z = (int)Math.Floor(body.transform.Position.Z / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
 
-                    instance.bounds_transform = new Transform();
-                    instance.bounds_transform.Position = new Vector3(x, 0, z);
+                    bounds_transform = new Transform();
+                    bounds_transform.Position = new Vector3(x, 0, z);
 
-                    if (instance.bounds_hashtable.ContainsKey(index))
+                    if (bounds_hashtable.ContainsKey(index))
                     {
-                        instance.bounds_hashtable[index].AddBody(body);
+                        bounds_hashtable[index].AddBody(body);
                     }
                     else
                     {
-                        instance.bounds.Add(new PhysicsBoundingChunk2D(instance.bounds_transform));
-                        instance.bounds_hashtable.Add(CalculateBoundsIndex(instance.bounds_transform), instance.bounds[0]);
-                        instance.bounds[instance.bounds.Count - 1].AddBody(body);
+                        bounds.Add(new PhysicsBoundingChunk2D(bounds_transform));
+                        bounds_hashtable.Add(CalculateBoundsIndex(bounds_transform), bounds[0]);
+                        bounds[bounds.Count - 1].AddBody(body);
                     }
 
                     // If the body is so large that it takes up more than 1 chunk I need to know that, and build all the chunks it is in around the one at its center
@@ -230,14 +205,14 @@ namespace MonoEngine.Physics.Physics2D
                                 if (i_x == 0 || i_x == dimension - 1 || i_z == 0 || i_z == dimension - 1)
                                 {
                                     newTransform.Transformation = Matrix.Identity;
-                                    newTransform.Position = new Vector3((i_x - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST + x * PhysicsSettings.BOUNDINGBOX_LARGEST, 0, (i_z - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST + z * PhysicsSettings.BOUNDINGBOX_LARGEST) - instance.bounds_transform.Position;
+                                    newTransform.Position = new Vector3((i_x - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST + x * PhysicsSettings.BOUNDINGBOX_LARGEST, 0, (i_z - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST + z * PhysicsSettings.BOUNDINGBOX_LARGEST) - bounds_transform.Position;
                                     int newIndex = CalculateBoundsIndex(newTransform);
 
-                                    if (instance.bounds_hashtable.ContainsKey(newIndex))
+                                    if (bounds_hashtable.ContainsKey(newIndex))
                                     {
-                                        if (instance.bounds_hashtable[newIndex].BoundsTest(body))
+                                        if (bounds_hashtable[newIndex].BoundsTest(body))
                                         {
-                                            instance.bounds_hashtable[newIndex].AddBody(body);
+                                            bounds_hashtable[newIndex].AddBody(body);
                                             count++;
                                         }
                                     }
@@ -246,8 +221,8 @@ namespace MonoEngine.Physics.Physics2D
                                         PhysicsBoundingChunk2D newChunk = new PhysicsBoundingChunk2D(newTransform);
                                         if (newChunk.BoundsTest(body))
                                         {
-                                            instance.bounds.Add(new PhysicsBoundingChunk2D(instance.bounds_transform));
-                                            instance.bounds_hashtable.Add(newIndex, newChunk);
+                                            bounds.Add(new PhysicsBoundingChunk2D(bounds_transform));
+                                            bounds_hashtable.Add(newIndex, newChunk);
                                             newChunk.AddBody(body);
                                             count++;
                                         }
@@ -265,15 +240,15 @@ namespace MonoEngine.Physics.Physics2D
             }
         }
 
-        private static int CalculateBoundsIndex(Transform transform)
+        private int CalculateBoundsIndex(Transform transform)
         {
             int x = (int)Math.Floor(transform.Position.X / PhysicsSettings.BOUNDINGBOX_LARGEST);
             int z = (int)Math.Floor(transform.Position.Z / PhysicsSettings.BOUNDINGBOX_LARGEST);
 
-            return (x - (int)instance.bounds_transform.Position.X) + (z - (int)instance.bounds_transform.Position.Z) * (int)Math.Sqrt(int.MaxValue / 2);
+            return (x - (int)bounds_transform.Position.X) + (z - (int)bounds_transform.Position.Z) * (int)Math.Sqrt(int.MaxValue / 2);
         }
 
-        public static List<int> CalculateBoundsIndices(PhysicsBody2D body)
+        internal List<int> CalculateBoundsIndices(PhysicsBody2D body)
         {
             List<int> indices = new List<int>();
             AABB boundingBox = body.shape.GetBoundingBox();
@@ -282,7 +257,7 @@ namespace MonoEngine.Physics.Physics2D
             int x = (int)Math.Floor(body.transform.Position.X / PhysicsSettings.BOUNDINGBOX_LARGEST);
             int z = (int)Math.Floor(body.transform.Position.Z / PhysicsSettings.BOUNDINGBOX_LARGEST);
 
-            indices.Add((x - (int)instance.bounds_transform.Position.X) + (z - (int)instance.bounds_transform.Position.Z) * (int)Math.Sqrt(int.MaxValue / 2));
+            indices.Add((x - (int)bounds_transform.Position.X) + (z - (int)bounds_transform.Position.Z) * (int)Math.Sqrt(int.MaxValue / 2));
 
             for (int i_x = 0; i_x < dimension; ++i_x)
             {
@@ -292,7 +267,7 @@ namespace MonoEngine.Physics.Physics2D
                     {
                         Transform newTransform = new Transform();
                         newTransform.Transformation = Matrix.Identity;
-                        newTransform.Position = new Vector3((i_x - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST + x * PhysicsSettings.BOUNDINGBOX_LARGEST, 0, (i_z - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST + z * PhysicsSettings.BOUNDINGBOX_LARGEST) - instance.bounds_transform.Position;
+                        newTransform.Position = new Vector3((i_x - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST + x * PhysicsSettings.BOUNDINGBOX_LARGEST, 0, (i_z - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST + z * PhysicsSettings.BOUNDINGBOX_LARGEST) - bounds_transform.Position;
                         int newIndex = CalculateBoundsIndex(newTransform);
                         if (!indices.Contains(newIndex))
                             indices.Add(newIndex);

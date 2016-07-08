@@ -27,7 +27,7 @@ namespace MonoEngine.Physics.Physics2D
             collisionCallbacks = new List<Collision2D.OnCollision>();
             collisions = new List<Collision2D>();
 
-            PhysicsEngine2D.AddPhysicsBody(this);
+            PhysicsEngine.AddPhysicsBody(this);
         }
 
         public override void Update()
@@ -38,17 +38,17 @@ namespace MonoEngine.Physics.Physics2D
 
         public void RegisterCollisionCallback(Collision2D.OnCollision callback)
         {
-            PhysicsEngine2D.RegisterCollisionCallback(callback, this);
+            PhysicsEngine.RegisterCollisionCallback(callback, this);
         }
 
         public void UnregisterCollisionCallback(Collision2D.OnCollision callback)
         {
-            PhysicsEngine2D.UnregisterCollisionCallback(callback, this);
+            PhysicsEngine.UnregisterCollisionCallback(callback, this);
         }
 
         public void Remove()
         {
-            PhysicsEngine2D.RemovePhysicsBody(this);
+            PhysicsEngine.RemovePhysicsBody(this);
         }
     }
 }
