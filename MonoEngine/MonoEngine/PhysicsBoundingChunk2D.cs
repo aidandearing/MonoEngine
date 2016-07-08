@@ -137,7 +137,7 @@ namespace MonoEngine.Physics2D
             List<PhysicsBody2D> bodies = new List<PhysicsBody2D>();
 
             // Since every AABB in this chunk has a list that contains all the objects in that AABB and all the children AABB I only need to check against the AABBs at the same 'order' as the bodies shape
-            for (int i = 0; i < PhysicsSettings.BOUNDINGBOX_ORDERS; ++i)
+            for (int i = ShapeToOrder(body.shape); i < PhysicsSettings.BOUNDINGBOX_ORDERS; ++i)
             {
                 foreach (AABB bounds in orderToIndex[i])
                 {
@@ -149,6 +149,23 @@ namespace MonoEngine.Physics2D
             }
 
             return bodies;
+        }
+
+        public static int ShapeToOrder(Shape shape)
+        {
+            float maxDim = MathHelper.Max(shape.GetBoundingBox().Dimensions().X, shape.GetBoundingBox().Dimensions().Z);
+
+            // Iterate from largest bounds to smallest, until one is smaller than the maxDim
+            int depth = 0;
+            while (depth < PhysicsSettings.BOUNDINGBOX_ORDERS)
+            {
+                if (bound_dim[depth] < maxDim)
+                    return MathHelper.Max(depth - 1, 0);
+                else
+                    depth++;
+            }
+
+            return PhysicsSettings.BOUNDINGBOX_ORDERS;
         }
     }
 }
