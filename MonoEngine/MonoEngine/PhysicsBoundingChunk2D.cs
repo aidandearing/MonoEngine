@@ -141,6 +141,7 @@ namespace MonoEngine
                     }
                 }*/
 
+                /*
                 bool added = false;
 
                 // If the body is static
@@ -165,6 +166,22 @@ namespace MonoEngine
                 }
 
                 return added;
+                */
+
+                bool added = false;
+
+                for (int i = 0; i < PhysicsSettings.BOUNDINGBOX_ORDERS; ++i)
+                {
+                    foreach(AABB bounds in orderToIndex[i])
+                    {
+                        if (bounds.OverlapTest(body.shape))
+                        {
+                            statics[bounds].Add(body);
+                            added = true;
+                        }
+                    }
+                }
+                return added;
             }
 
             /// <summary>
@@ -176,6 +193,7 @@ namespace MonoEngine
             {
                 List<PhysicsBody2D> bodies = new List<PhysicsBody2D>();
 
+                /*
                 // Reverse-ish logic of AddBody
                 List<AABB> boundsToCheck = new List<AABB>();
                 boundsToCheck.Add(bounds[0]);
@@ -189,6 +207,18 @@ namespace MonoEngine
                     }
 
                     boundsToCheck.RemoveAt(0);
+                }
+                */
+
+                for (int i = 0; i < PhysicsSettings.BOUNDINGBOX_ORDERS; ++i)
+                {
+                    foreach (AABB bounds in orderToIndex[i])
+                    {
+                        if (bounds.OverlapTest(body.shape))
+                        {
+                            bodies.AddRange(statics[bounds]);
+                        }
+                    }
                 }
 
                 return bodies;
