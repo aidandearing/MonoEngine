@@ -1,20 +1,17 @@
 ﻿using MonoEngine.Game;
 using Microsoft.Xna.Framework.Audio;
 
-namespace MonoEngine
+namespace MonoEngine.Audio
 {
-    namespace Audio
+    public class GameAudioListener : GameObject
     {
-        public class GameAudioListener : GameObject
+        public AudioListener audioListener;
+
+        private GameAudioListener(string name) : base(name)
         {
-            public AudioListener audioListener;
+            audioListener = new AudioListener();
 
-            private GameAudioListener(string name) : base(name)
-            {
-                audioListener = new AudioListener();
-
-                SoundManager.AddAudioListener(this);
-            }
+            SoundManager.AddAudioListener(this);
         }
     }
 }

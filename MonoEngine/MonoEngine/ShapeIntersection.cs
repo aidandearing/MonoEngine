@@ -1,13 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace MonoEngine
+namespace MonoEngine.Shapes
 {
-    namespace Shapes
+    public class ShapeIntersection
     {
-        public class ShapeIntersection
-        {
-            public Vector3 intersect;
-            public Vector3 normal;
-        }
+        public Vector3 intersect;
+        public Vector3 normal;
     }
 }

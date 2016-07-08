@@ -1,14 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace MonoEngine
+namespace MonoEngine.Render
 {
-    namespace Render
+    public class GraphicsHelper
     {
-        public class GraphicsHelper
-        {
-            public static GraphicsDeviceManager graphics;
+        public static GraphicsDeviceManager graphics;
 
-            public static Rectangle screen;
-        }
+        public static Rectangle screen;
     }
 }
