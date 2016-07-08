@@ -146,16 +146,6 @@ namespace MonoEngine
             {
                 instance.bodies_All.Add(body);
 
-                // TODO decide on the best way of handling how to add bodies to the PhysicsBoundingChunks
-                // Static optimisations (BoundingChunks broadphase system)
-                //if (body.flagBodyType.HasFlag(PhysicsBody.BodyType.physics_static))
-                //{
-                //    for (int i = 0; i < instance.bounds.Length; ++i)
-                //    {
-                //        instance.bounds[i].AddBody(body);
-                //    }
-                //}
-
                 if (body.flagBodyType.HasFlag(PhysicsBody2D.BodyType.physics_static))
                 {
                     if (instance.bounds == null)
@@ -163,7 +153,6 @@ namespace MonoEngine
                         instance.bounds = new List<PhysicsBoundingChunk2D>();
                         instance.bounds_hashtable = new Dictionary<int, PhysicsBoundingChunk2D>();
 
-                        // TODO allow PhysicsBoundingChunks to be more adaptable, not so hard coded for our specific games case (maybe?)
                         float x = (int)Math.Floor(body.transform.Position.X / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
                         float z = (int)Math.Floor(body.transform.Position.Z / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
 
@@ -175,8 +164,6 @@ namespace MonoEngine
                         instance.bounds[instance.bounds.Count - 1].AddBody(body);
 
                         // If the body is so large that it takes up more than 1 chunk I need to know that, and build all the chunks it is in around the one at its center
-                        // TODO Build functionality that enables large objects to still generate the appropriate amount of chunks to encase them entirely
-
                         int dimension = 3;
                         int count = 0;
                         bool tobig = false;
@@ -232,8 +219,6 @@ namespace MonoEngine
                         }
 
                         // If the body is so large that it takes up more than 1 chunk I need to know that, and build all the chunks it is in around the one at its center
-                        // TODO Build functionality that enables large objects to still generate the appropriate amount of chunks to encase them entirely
-
                         int dimension = 3;
                         int count = 0;
                         bool tobig = false;

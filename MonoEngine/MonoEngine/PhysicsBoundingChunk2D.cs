@@ -20,6 +20,7 @@ namespace MonoEngine
             private Dictionary<AABB, List<PhysicsBody2D>> statics;
             private Dictionary<int, int> indexToOrder;
             private Dictionary<int, List<AABB>> orderToIndex;
+            private Dictionary<AABB, int> boundToOrder;
             private int sum;
             private int[] bound_dim;
 
@@ -32,6 +33,7 @@ namespace MonoEngine
                 statics = new Dictionary<AABB, List<PhysicsBody2D>>();
                 indexToOrder = new Dictionary<int, int>();
                 orderToIndex = new Dictionary<int, List<AABB>>();
+                boundToOrder = new Dictionary<AABB, int>();
 
                 // Calculate the sum of powers for the bounding box array
                 // This is the total number of bounding boxes that will be present
@@ -74,6 +76,8 @@ namespace MonoEngine
                         Transform trans = new Transform(transform.Transformation.Translation + pos, transform.Transformation.Scale, transform.Transformation.Rotation);
                         // Instantiate the bounding box with the transform, and the dimensions necessary
                         bounds[index] = new AABB(trans, bound_dim[i], bound_dim[i]);
+                        // Add the current bounds and order to the bounds to order dictionary
+                        boundToOrder.Add(bounds[index], i);
                         // Add the bounding box to the dictionary of bounding box | list of bodies
                         statics.Add(bounds[index], new List<PhysicsBody2D>());
 
@@ -102,20 +106,11 @@ namespace MonoEngine
             /// <returns>True on success, False on failure</returns>
             public bool AddBody(PhysicsBody2D body)
             {
+                /*
                 if (body.flagBodyType.HasFlag(PhysicsBody2D.BodyType.physics_static))
                 {
                     if (BoundsTest(body))
                     {
-                        //statics[bounds[0]].Add(body);
-
-                        // Definitely not the fastest way to do this, but the way it is being done, for now.
-                        // TODO Add smarter algorithm for checking size of body, skipping adding bodies to smaller bounds lists if body is bigger than all smaller bounds.
-                        //for (short i = 1; i < sum; ++i)
-                        //{
-                        //    if (bounds[i].OverlapTest(body.shape))
-                        //        statics[bounds[i]].Add(body);
-                        //}
-
                         // This is still slower than it can be. There are better ways of doing this.
                         // Go through the depths
                         for (int depth = 0; depth < PhysicsSettings.BOUNDINGBOX_ORDERS; ++depth)
@@ -144,9 +139,30 @@ namespace MonoEngine
                             }
                         }
                     }
+                }*/
+
+                bool added = false;
+
+                // If the body is static
+                if (body.flagBodyType.HasFlag(PhysicsBody2D.BodyType.physics_static))
+                {
+                    // If the body intersects any of a larger order it is gauranteed to interesect at least 1 of a smaller order, until there are no smaller orders
+                    // I want to put it in every box it intersects with
+                    List<AABB> boundsToCheck = new List<AABB>();
+                    boundsToCheck.Add(bounds[0]);
+
+                    for (int i = 0; i < boundsToCheck.Count; ++i)
+                    {
+                        if (boundsToCheck[i].OverlapTest(body.shape))
+                        {
+                            boundsToCheck.AddRange(orderToIndex[boundToOrder[boundsToCheck[i]]]);
+                            statics[boundsToCheck[i]].Add(body);
+                            added = true;
+                        }
+                    }
                 }
 
-                return false;
+                return added;
             }
 
             /// <summary>
@@ -158,54 +174,18 @@ namespace MonoEngine
             {
                 List<PhysicsBody2D> bodies = new List<PhysicsBody2D>();
 
-                // TODO Once a better AddBody() system is in place this can change to a faster format
-                // Instead of having to check the smallest bounds, it should be able to backout if the body is too big, and opt for assuming it wants to know about the smaller bounds list of bodies.
-                //if (BoundsTest(body))
-                //{
-                //    if (bounds[(int)QUAD.One].OverlapTest(body.shape))
-                //    {
-                //        for (short i = 1; i < 5; ++i)
-                //        {
-                //            if (bounds[(int)QUAD.One + i].OverlapTest(body.shape))
-                //            {
-                //                bodies.AddRange(statics[bounds[(int)QUAD.One + i]]);
-                //            }
-                //        }
-                //    }
+                // Reverse-ish logic of AddBody
+                List<AABB> boundsToCheck = new List<AABB>();
+                boundsToCheck.Add(bounds[0]);
 
-                //    if (bounds[(int)QUAD.Two].OverlapTest(body.shape))
-                //    {
-                //        for (short i = 1; i < 5; ++i)
-                //        {
-                //            if (bounds[(int)QUAD.Two + i].OverlapTest(body.shape))
-                //            {
-                //                bodies.AddRange(statics[bounds[(int)QUAD.Two + i]]);
-                //            }
-                //        }
-                //    }
-
-                //    if (bounds[(int)QUAD.Three].OverlapTest(body.shape))
-                //    {
-                //        for (short i = 1; i < 5; ++i)
-                //        {
-                //            if (bounds[(int)QUAD.Three + i].OverlapTest(body.shape))
-                //            {
-                //                bodies.AddRange(statics[bounds[(int)QUAD.Three + i]]);
-                //            }
-                //        }
-                //    }
-
-                //    if (bounds[(int)QUAD.Four].OverlapTest(body.shape))
-                //    {
-                //        for (short i = 1; i < 5; ++i)
-                //        {
-                //            if (bounds[(int)QUAD.Four + i].OverlapTest(body.shape))
-                //            {
-                //                bodies.AddRange(statics[bounds[(int)QUAD.Four + i]]);
-                //            }
-                //        }
-                //    }
-                //}
+                for (int i = 0; i < boundsToCheck.Count; ++i)
+                {
+                    if (boundsToCheck[i].OverlapTest(body.shape))
+                    {
+                        boundsToCheck.AddRange(orderToIndex[boundToOrder[boundsToCheck[i]]]);
+                        bodies.AddRange(statics[boundsToCheck[i]]);
+                    }
+                }
 
                 return bodies;
             }
