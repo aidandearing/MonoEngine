@@ -151,14 +151,16 @@ namespace MonoEngine
                     List<AABB> boundsToCheck = new List<AABB>();
                     boundsToCheck.Add(bounds[0]);
 
-                    for (int i = 0; i < boundsToCheck.Count; ++i)
+                    while (boundsToCheck.Count > 0)
                     {
-                        if (boundsToCheck[i].OverlapTest(body.shape))
+                        if (boundsToCheck[0].OverlapTest(body.shape))
                         {
-                            boundsToCheck.AddRange(orderToIndex[boundToOrder[boundsToCheck[i]]]);
-                            statics[boundsToCheck[i]].Add(body);
+                            boundsToCheck.AddRange(orderToIndex[boundToOrder[boundsToCheck[0]]]);
+                            statics[boundsToCheck[0]].Add(body);
                             added = true;
                         }
+
+                        boundsToCheck.RemoveAt(0);
                     }
                 }
 
@@ -178,13 +180,15 @@ namespace MonoEngine
                 List<AABB> boundsToCheck = new List<AABB>();
                 boundsToCheck.Add(bounds[0]);
 
-                for (int i = 0; i < boundsToCheck.Count; ++i)
+                while (boundsToCheck.Count > 0)
                 {
-                    if (boundsToCheck[i].OverlapTest(body.shape))
+                    if (boundsToCheck[0].OverlapTest(body.shape))
                     {
-                        boundsToCheck.AddRange(orderToIndex[boundToOrder[boundsToCheck[i]]]);
-                        bodies.AddRange(statics[boundsToCheck[i]]);
+                        boundsToCheck.AddRange(orderToIndex[boundToOrder[boundsToCheck[0]]]);
+                        bodies.AddRange(statics[boundsToCheck[0]]);
                     }
+
+                    boundsToCheck.RemoveAt(0);
                 }
 
                 return bodies;
