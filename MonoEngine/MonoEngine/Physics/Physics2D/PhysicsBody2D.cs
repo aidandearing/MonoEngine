@@ -28,6 +28,7 @@ namespace MonoEngine.Physics.Physics2D
         private Vector3 force_rotation;
         private Vector3 acceleration;
         private float mass = PhysicsEngine.PhysicsSettings.DEFAULT_MASS;
+        private Vector3 moment_of_inertia;
         // ETC, later
 
         public PhysicsBody2D(string name, Shape shape, PhysicsEngine.BodyType bodyType) : base(name)
@@ -68,10 +69,9 @@ namespace MonoEngine.Physics.Physics2D
             if (!flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
             {
                 // TODO physics
-
                 force += PhysicsEngine.PhysicsSettings.WORLD_FORCE;
                 acceleration = force / mass;
-                velocity += acceleration;
+                velocity = velocity + 0.5f * acceleration * Time.DeltaTime * Time.DeltaTime;
 
                 transform.parent.Position += velocity;
 
@@ -93,6 +93,34 @@ namespace MonoEngine.Physics.Physics2D
         public void Remove()
         {
             PhysicsEngine.RemovePhysicsBody(this);
+        }
+
+        /// <summary>
+        /// Applies a force to the center of this body
+        /// </summary>
+        /// <param name="f">The force vector to apply</param>
+        public void ApplyForce(Vector3 f)
+        {
+            // TODO ApplyForce(Vector3 f)
+        }
+
+        /// <summary>
+        /// Applies a force to this body offset from the center by the position
+        /// </summary>
+        /// <param name="position">The position from the center to apply the force</param>
+        /// <param name="f">The force vector to apply</param>
+        public void ApplyForce(Vector3 position, Vector3 f)
+        {
+            // TODO ApplyForce(Vector3 position, Vector3 f)
+        }
+
+        /// <summary>
+        /// Applies a force directly to the velocity of this body
+        /// </summary>
+        /// <param name="f">The force vector to apply</param>
+        public void ApplyImpulse(Vector3 f)
+        {
+            // TODO ApplyImpulse(Vector3 f)
         }
     }
 }
