@@ -7,6 +7,8 @@ namespace MonoEngine.Physics
 {
     public class PhysicsEngine : GameComponent
     {
+        public enum BodyType { SIMPLE = 0x00, RIGID = 0x01, STATIC = 0x02, KINEMATIC = 0x04, TRIGGER = 0x08 };
+
         public class PhysicsSettings
         {
             public static int BOUNDINGBOX_SMALLEST = 2;

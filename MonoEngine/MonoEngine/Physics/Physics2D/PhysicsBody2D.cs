@@ -7,9 +7,7 @@ namespace MonoEngine.Physics.Physics2D
 {
     public class PhysicsBody2D : GameObject
     {
-        public enum BodyType { physics_simple = 0x00, physics_rigidbody = 0x01, physics_static = 0x02, physics_kinematic = 0x04, physics_trigger = 0x08 };
-
-        public BodyType flagBodyType = 0;
+        public PhysicsEngine.BodyType flagBodyType = 0;
         public short flagLayer = 0;
 
         public Shape shape;
@@ -32,7 +30,7 @@ namespace MonoEngine.Physics.Physics2D
         private float mass = 1000;
         // ETC, later
 
-        public PhysicsBody2D(string name, Shape shape, BodyType bodyType) : base(name)
+        public PhysicsBody2D(string name, Shape shape, PhysicsEngine.BodyType bodyType) : base(name)
         {
             this.shape = shape;
             this.flagBodyType = bodyType;
@@ -49,7 +47,7 @@ namespace MonoEngine.Physics.Physics2D
         {
             base.Update();
 
-            if (!flagBodyType.HasFlag(BodyType.physics_static))
+            if (!flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
             {
                 // TODO physics
 

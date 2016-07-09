@@ -119,7 +119,7 @@ namespace MonoEngine.Physics.Physics2D
         {
             bodies_All.Add(body);
 
-            if (body.flagBodyType.HasFlag(PhysicsBody2D.BodyType.physics_static))
+            if (body.flagBodyType.HasFlag(BodyType.STATIC))
             {
                 if (bounds == null)
                 {
@@ -331,7 +331,7 @@ namespace MonoEngine.Physics.Physics2D
                     registery_CollisionCallbacks.Remove(body);
                 }
 
-                if (body.flagBodyType.HasFlag(PhysicsBody2D.BodyType.physics_static))
+                if (body.flagBodyType.HasFlag(BodyType.STATIC))
                 {
                     foreach (PhysicsBoundingChunk2D chunk in body.chunks)
                     {
