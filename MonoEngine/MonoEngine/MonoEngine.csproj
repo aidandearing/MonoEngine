@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Physics\PhysicsEngine.cs" />
+    <Compile Include="Physics\PhysicsExceptions.cs" />
     <Compile Include="Shapes\AABB.cs" />
     <Compile Include="Game\Camera.cs" />
     <Compile Include="Shapes\Circle.cs" />

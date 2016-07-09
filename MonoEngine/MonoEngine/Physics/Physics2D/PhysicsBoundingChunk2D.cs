@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using static MonoEngine.Physics.Physics2D.PhysicsEngine2D;
 using MonoEngine.Shapes;
 
 namespace MonoEngine.Physics.Physics2D
 {
     /// <summary>
     /// Contains an array of Bounding Boxes that partition the worldspace in order to narrow the total number of collision checks any one non-static body must check against
-    /// Follows some basic rules:
-    /// Every PhysicsBoundingChunk is 8x8 physics units
     /// </summary>
     public class PhysicsBoundingChunk2D
     {
@@ -120,11 +117,22 @@ namespace MonoEngine.Physics.Physics2D
                     if (bounds.OverlapTest(body.shape))
                     {
                         statics[bounds].Add(body);
+                        body.chunks.Add(this);
                         added = true;
                     }
                 }
             }
             return added;
+        }
+
+        // TODO RemoveBody from PhysicsBoundingChunk2D can probably be way better
+        public void RemoveBody(PhysicsBody2D body)
+        {
+            foreach(AABB bounds in bounds)
+            {
+                if (statics[bounds].Contains(body))
+                    statics[bounds].Remove(body);
+            }
         }
 
         /// <summary>

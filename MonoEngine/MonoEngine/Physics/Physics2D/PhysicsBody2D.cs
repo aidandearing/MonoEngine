@@ -7,7 +7,7 @@ namespace MonoEngine.Physics.Physics2D
 {
     public class PhysicsBody2D : GameObject
     {
-        public enum BodyType { physics_rigidbody = 0x00, physics_static = 0x01, physics_kinematic = 0x02, physics_trigger = 0x04 };
+        public enum BodyType { physics_simple = 0x00, physics_rigidbody = 0x01, physics_static = 0x02, physics_kinematic = 0x04, physics_trigger = 0x08 };
 
         public BodyType flagBodyType = 0;
         public short flagLayer = 0;
@@ -18,6 +18,19 @@ namespace MonoEngine.Physics.Physics2D
         public List<Collision2D.OnCollision> collisionCallbacks;
         // This list is referenced in Physic's collision registery
         public List<Collision2D> collisions;
+        // This list contains a reference to any chunks the body is in, if it is static, and any chunks this body overlaps if it is dynamic
+        public List<PhysicsBoundingChunk2D> chunks;
+
+        // Physics stuff
+        private Vector3 velocity;
+        private Vector3 velocity_rotation;
+        private Vector3 velocity_last;
+        private Vector3 velocity_rotation_last;
+        private Vector3 force;
+        private Vector3 force_rotation;
+        private Vector3 acceleration;
+        private float mass = 1000;
+        // ETC, later
 
         public PhysicsBody2D(string name, Shape shape, BodyType bodyType) : base(name)
         {
@@ -27,13 +40,28 @@ namespace MonoEngine.Physics.Physics2D
             collisionCallbacks = new List<Collision2D.OnCollision>();
             collisions = new List<Collision2D>();
 
+            chunks = new List<PhysicsBoundingChunk2D>();
+
             PhysicsEngine.AddPhysicsBody(this);
         }
 
         public override void Update()
         {
             base.Update();
-            // TODO physics
+
+            if (!flagBodyType.HasFlag(BodyType.physics_static))
+            {
+                // TODO physics
+
+                force += PhysicsEngine.PhysicsSettings.WORLD_FORCE;
+                acceleration = force / mass;
+                velocity += acceleration;
+
+                transform.parent.Position += velocity;
+
+                force = Vector3.Zero;
+                velocity_last = velocity;
+            }
         }
 
         public void RegisterCollisionCallback(Collision2D.OnCollision callback)
