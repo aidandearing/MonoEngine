@@ -42,8 +42,8 @@ namespace MonoEngine.Physics.Physics3D
             //bodies_Dead = new List<PhysicsBody>();
 
             // Jenky as magic numbers, sorry. Works out this way for the scale we decided on in 3DSMax.
-            worldToRender = Matrix.CreateScale(PhysicsSettings.MODEL_SCALE);
-            renderToWorld = Matrix.CreateScale(1.0f / PhysicsSettings.MODEL_SCALE);
+            worldToRender = Matrix.CreateScale(PhysicsSettings.MODEL_TRANSLATION_SCALE);
+            renderToWorld = Matrix.CreateScale(1.0f / PhysicsSettings.MODEL_TRANSLATION_SCALE);
 
             base.Initialize();
         }
