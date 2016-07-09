@@ -7,7 +7,7 @@ namespace MonoEngine.Physics
 {
     public class PhysicsEngine : GameComponent
     {
-        public enum BodyType { SIMPLE = 0x00, RIGID = 0x01, STATIC = 0x02, KINEMATIC = 0x04, TRIGGER = 0x08 };
+        public enum BodyType { SIMPLE = 0x01, RIGID = 0x02, STATIC = 0x04, KINEMATIC = 0x08, TRIGGER = 0x16 };
 
         public class PhysicsSettings
         {
@@ -18,9 +18,11 @@ namespace MonoEngine.Physics
             public static float MODEL_SCALE = 200.0f;
 
             public static Vector3 WORLD_FORCE = new Vector3(0, -9.8f, 0);
+
+            public static float DEFAULT_MASS = 1;
         }
 
-        public enum EngineTypes { Physics2D = 0x00, Physics3D = 0x01 };
+        public enum EngineTypes { Physics2D = 0x01, Physics3D = 0x02 };
 
         private static EngineTypes engineType;
         public static EngineTypes EngineType

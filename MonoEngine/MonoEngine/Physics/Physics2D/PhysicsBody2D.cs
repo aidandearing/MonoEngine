@@ -27,7 +27,7 @@ namespace MonoEngine.Physics.Physics2D
         private Vector3 force;
         private Vector3 force_rotation;
         private Vector3 acceleration;
-        private float mass = 1000;
+        private float mass = PhysicsEngine.PhysicsSettings.DEFAULT_MASS;
         // ETC, later
 
         public PhysicsBody2D(string name, Shape shape, PhysicsEngine.BodyType bodyType) : base(name)
@@ -39,6 +39,24 @@ namespace MonoEngine.Physics.Physics2D
             collisions = new List<Collision2D>();
 
             chunks = new List<PhysicsBoundingChunk2D>();
+
+            if (flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
+            {
+                mass = float.MaxValue;
+
+                if (flagBodyType.HasFlag(PhysicsEngine.BodyType.RIGID))
+                {
+                    flagBodyType &= ~PhysicsEngine.BodyType.RIGID;
+                }
+                if (flagBodyType.HasFlag(PhysicsEngine.BodyType.SIMPLE))
+                {
+                    flagBodyType &= ~PhysicsEngine.BodyType.SIMPLE;
+                }
+                if (flagBodyType.HasFlag(PhysicsEngine.BodyType.KINEMATIC))
+                {
+                    flagBodyType &= ~PhysicsEngine.BodyType.KINEMATIC;
+                }
+            }
 
             PhysicsEngine.AddPhysicsBody(this);
         }
