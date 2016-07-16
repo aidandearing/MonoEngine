@@ -64,7 +64,20 @@
     <Compile Include="Audio\SoundManager.cs" />
     <Compile Include="Time.cs" />
     <Compile Include="Transform.cs" />
+<<<<<<< HEAD
     <Compile Include="Value.cs" />
+=======
+    <Compile Include="UI\UIBehaviour.cs" />
+    <Compile Include="UI\UIButton.cs" />
+    <Compile Include="UI\UIContainer.cs" />
+    <Compile Include="UI\UIImage.cs" />
+    <Compile Include="UI\UIManager.cs" />
+    <Compile Include="UI\UIObject.cs" />
+    <Compile Include="UI\UIScreen.cs" />
+    <Compile Include="UI\UISlider.cs" />
+    <Compile Include="UI\UIText.cs" />
+    <Compile Include="UI\UIVisual.cs" />
+>>>>>>> origin/master
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
