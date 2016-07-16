@@ -140,6 +140,20 @@ namespace MonoEngine.Physics
             throw new PhysicsExceptions.UnsupportedEngine("Cannot test for possible collisions on a PhysicsBody2D in a " + EngineType.ToString());
         }
 
+        // TODO 3D overload of this (PhysicsBody3D body)
+        public static List<int> CalculateBoundsIndices(PhysicsBody2D body)
+        {
+            switch (EngineType)
+            {
+                case EngineTypes.Physics2D:
+                    return (engine as PhysicsEngine2D).CalculateBoundsIndices(body);
+                case EngineTypes.Physics3D:
+                    throw new PhysicsExceptions.InvalidPhysicsBody("Cannot test for possible collisions on a PhysicsBody2D in a PhysicsEngine3D");
+            }
+
+            throw new PhysicsExceptions.UnsupportedEngine("Cannot test for possible collisions on a PhysicsBody2D in a " + EngineType.ToString());
+        }
+
         private static PhysicsEngine engine;
 
         internal PhysicsEngine(Microsoft.Xna.Framework.Game game) : base(game)

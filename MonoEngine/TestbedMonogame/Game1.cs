@@ -82,11 +82,10 @@ namespace TestbedMonogame
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
             GameObject obj = new GameObject("wall");
             obj.transform.Translate(new Vector3(0, 0, 0));
             obj.AddComponent(ModelRenderer.MakeModelRenderer(obj, "BasicWall"));
-            PhysicsBody2D body = new PhysicsBody2D("body", new AABB(obj.transform, 1, 1), PhysicsEngine.BodyType.STATIC);
+            PhysicsBody2D body = new PhysicsBody2D("wall", new AABB(obj.transform, 1, 1), PhysicsEngine.BodyType.STATIC);
             body.Mass = 10;
             obj.AddComponent(body);
             obj.AddComponent(new Camera("camera"));
@@ -96,9 +95,9 @@ namespace TestbedMonogame
             obj = new GameObject("floor");
             obj.transform.Translate(new Vector3(0, 0, 0));
             obj.AddComponent(ModelRenderer.MakeModelRenderer(obj, "FloorTile"));
-            body = new PhysicsBody2D("body", new Circle(obj.transform, 1), PhysicsEngine.BodyType.SIMPLE);
+            body = new PhysicsBody2D("floorA", new Circle(obj.transform, 1), PhysicsEngine.BodyType.SIMPLE);
             body.Mass = 1;
-            body.RegisterCollisionCallback(new Collision2D.OnCollision(OnCollisionBodyA));
+            body.RegisterCollisionCallback(new Collision2D.OnCollision(OnCollisionBody));
             obj.AddComponent(body);
 
             GameObjectManager.AddGameObject(obj);
@@ -106,9 +105,9 @@ namespace TestbedMonogame
             obj = new GameObject("floor2");
             obj.transform.Translate(new Vector3(0, 0, 0));
             obj.AddComponent(ModelRenderer.MakeModelRenderer(obj, "FloorTile"));
-            body = new PhysicsBody2D("body", new Circle(obj.transform, 1), PhysicsEngine.BodyType.SIMPLE);
+            body = new PhysicsBody2D("floorB", new Circle(obj.transform, 1), PhysicsEngine.BodyType.SIMPLE);
             body.Mass = 1;
-            body.RegisterCollisionCallback(new Collision2D.OnCollision(OnCollisionBodyB));
+            body.RegisterCollisionCallback(new Collision2D.OnCollision(OnCollisionBody));
             obj.AddComponent(body);
 
             GameObjectManager.AddGameObject(obj);
@@ -134,7 +133,6 @@ namespace TestbedMonogame
                 Exit();
 
             // TODO: Add your update logic here
-
             base.Update(gameTime);
         }
 
@@ -151,14 +149,9 @@ namespace TestbedMonogame
             base.Draw(gameTime);
         }
 
-        private void OnCollisionBodyA(Collision2D collision)
+        private void OnCollisionBody(Collision2D collision)
         {
-            System.Console.WriteLine("BodyA is colliding");
-        }
-
-        private void OnCollisionBodyB(Collision2D collision)
-        {
-            System.Console.WriteLine("BodyB is colliding");
+            System.Console.WriteLine(collision.BodyA.Name + " is colliding with " + collision.BodyB.Name);
         }
     }
 }

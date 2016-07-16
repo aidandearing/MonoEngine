@@ -113,8 +113,27 @@ namespace MonoEngine.Physics.Physics2D
         {
             bool added = false;
 
+            //for (int i = 0; i < PhysicsEngine.PhysicsSettings.BOUNDINGBOX_ORDERS; ++i)
+            //{
+            //    foreach (AABB bounds in orderToIndex[i])
+            //    {
+            //        if (bounds.OverlapTest(body.shape))
+            //        {
+            //            if (body.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
+            //            {
+            //                statics[bounds].Add(body);
+            //            }
+            //            else
+            //            {
+            //                dynamics[bounds].Add(body);
+            //            }
+            //            body.chunks.Add(this);
+            //            added = true;
+            //        }
+            //    }
+            //}
 
-            for (int i = 0; i < PhysicsEngine.PhysicsSettings.BOUNDINGBOX_ORDERS; ++i)
+            for (int i = ShapeToOrder(body.shape); i < PhysicsEngine.PhysicsSettings.BOUNDINGBOX_ORDERS; ++i)
             {
                 foreach (AABB bounds in orderToIndex[i])
                 {
@@ -133,6 +152,7 @@ namespace MonoEngine.Physics.Physics2D
                     }
                 }
             }
+
             return added;
         }
 

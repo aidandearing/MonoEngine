@@ -165,12 +165,20 @@ namespace MonoEngine.Physics.Physics2D
 
             List<PhysicsBody2D> collisionTests = PhysicsEngine.GetCollisionPass(this);
 
+            List<PhysicsBody2D> checkedAlready = new List<PhysicsBody2D>();
+
             foreach (PhysicsBody2D collider in collisionTests)
             {
-                Collision2D possibleCollision = Collision2D.Evaluate(this, collider);
-                if (possibleCollision != null)
+                if (!checkedAlready.Contains(collider) && collider != this)
                 {
-                    collisions.Add(possibleCollision);
+                    Collision2D possibleCollision = Collision2D.Evaluate(this, collider);
+                    if (possibleCollision != null)
+                    {
+                        collisions.Add(possibleCollision);
+                        collider.collisions.Add(possibleCollision);
+                    }
+
+                    checkedAlready.Add(collider);
                 }
             }
 

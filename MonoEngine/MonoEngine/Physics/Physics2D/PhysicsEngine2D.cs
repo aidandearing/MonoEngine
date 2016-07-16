@@ -119,8 +119,8 @@ namespace MonoEngine.Physics.Physics2D
         {
             bodies_All.Add(body);
 
-            if (body.flagBodyType.HasFlag(BodyType.STATIC))
-            {
+            //if (body.flagBodyType.HasFlag(BodyType.STATIC))
+            //{
                 if (bounds == null)
                 {
                     bounds = new List<PhysicsBoundingChunk2D>();
@@ -237,8 +237,13 @@ namespace MonoEngine.Physics.Physics2D
                         dimension += 2;
                     }
                 }
-            }
-            else
+            //}
+            //else
+            //{
+            //    bodies_Active.Add(body);
+            //}
+
+            if (!body.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
             {
                 bodies_Active.Add(body);
             }

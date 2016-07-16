@@ -25,34 +25,40 @@ namespace MonoEngine.Physics.Physics2D
         /// <returns>An instance of Collision</returns>
         public static Collision2D Evaluate(PhysicsBody2D bodyA, PhysicsBody2D bodyB)
         {
-            // This needs to evaluate whether these 2 bodies already have a Collision between them, if so, evaluate it, and return it
-            // If they don't it needs to make one, if they are colliding
-            // If they aren't colliding return a new Collision with CollisionType none
-
-            Collision2D collision;
-
-            // Neither body has any collisions
-            if (bodyA.collisions.Count == bodyB.collisions.Count && bodyA.collisions.Count == 0)
+            // No need to check collisions on a body with itself
+            if (bodyA != bodyB)
             {
-                // A new collision should be made
-                collision = new Collision2D(bodyA, bodyB);
-            }
+                // This needs to evaluate whether these 2 bodies already have a Collision between them, if so, evaluate it, and return it
+                // If they don't it needs to make one, if they are colliding
+                // If they aren't colliding return a new Collision with CollisionType none
 
-            // An optimisation here is to check the smaller list of collisions
-            // Since it is an iteration
-            if (bodyA.collisions.Count <= bodyB.collisions.Count)
-            {
-                collision = Helper_EvaluateCollisions(bodyA, bodyB);
+                Collision2D collision;
+
+                // Neither body has any collisions
+                if (bodyA.collisions.Count == bodyB.collisions.Count && bodyA.collisions.Count == 0)
+                {
+                    // A new collision should be made
+                    collision = new Collision2D(bodyA, bodyB);
+                }
+
+                // An optimisation here is to check the smaller list of collisions
+                // Since it is an iteration
+                if (bodyA.collisions.Count <= bodyB.collisions.Count)
+                {
+                    collision = Helper_EvaluateCollisions(bodyA, bodyB);
+                }
+                else
+                {
+                    collision = Helper_EvaluateCollisions(bodyB, bodyA);
+                }
+
+                // Evaluate the collision
+                collision.Evaluate();
+                // Return it
+                return collision;
             }
             else
-            {
-                collision = Helper_EvaluateCollisions(bodyB, bodyA);
-            }
-
-            // Evaluate the collision
-            collision.Evaluate();
-            // Return it
-            return collision;
+                return null;
         }
 
         private static Collision2D Helper_EvaluateCollisions(PhysicsBody2D bodyA, PhysicsBody2D bodyB)
@@ -129,7 +135,7 @@ namespace MonoEngine.Physics.Physics2D
                             {
                                 if (BodyB.shape is Shapes.Circle)
                                 {
-                                    // Circle Circle
+                                    // TODO Circle Circle
                                     Shapes.Circle BA = BodyA.shape as Shapes.Circle;
                                     Vector3 dN = BA.lastOverlap_delta / BA.lastOverlap_radius;
                                     float tM = BodyA.Mass + BodyB.Mass;
@@ -140,7 +146,7 @@ namespace MonoEngine.Physics.Physics2D
                                 }
                                 else if (BodyB.shape is Shapes.AABB)
                                 {
-                                    // Circle AABB
+                                    // TOD Circle AABB
                                 }
                                 else
                                 {
@@ -151,11 +157,11 @@ namespace MonoEngine.Physics.Physics2D
                             {
                                 if (BodyB.shape is Shapes.Circle)
                                 {
-                                    // AABB Circle
+                                    // TODO AABB Circle
                                 }
                                 else if (BodyB.shape is Shapes.AABB)
                                 {
-                                    // AABB AABB
+                                    // TODO AABB AABB
                                 }
                                 else
                                 {
