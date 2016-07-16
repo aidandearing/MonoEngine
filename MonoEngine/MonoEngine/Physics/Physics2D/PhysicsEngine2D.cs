@@ -119,7 +119,7 @@ namespace MonoEngine.Physics.Physics2D
         {
             bodies_All.Add(body);
 
-            if (body.flagBodyType.HasFlag(PhysicsBody2D.BodyType.physics_static))
+            if (body.flagBodyType.HasFlag(BodyType.STATIC))
             {
                 if (bounds == null)
                 {
@@ -238,6 +238,10 @@ namespace MonoEngine.Physics.Physics2D
                     }
                 }
             }
+            else
+            {
+                bodies_Active.Add(body);
+            }
         }
 
         private int CalculateBoundsIndex(Transform transform)
@@ -299,9 +303,8 @@ namespace MonoEngine.Physics.Physics2D
             bodies_Active = new List<PhysicsBody2D>();
             bodies_Dead = new List<PhysicsBody2D>();
 
-            // Jenky as magic numbers, sorry. Works out this way for the scale we decided on in 3DSMax.
-            worldToRender = Matrix.CreateScale(200f);
-            renderToWorld = Matrix.CreateScale(1 / 200.0f);
+            worldToRender = Matrix.CreateScale(PhysicsSettings.MODEL_TRANSLATION_SCALE);
+            renderToWorld = Matrix.CreateScale(1.0f / PhysicsSettings.MODEL_TRANSLATION_SCALE);
 
             base.Initialize();
         }
@@ -309,6 +312,11 @@ namespace MonoEngine.Physics.Physics2D
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            foreach(PhysicsBody2D body in bodies_Active)
+            {
+                body.Update();
+            }
 
             // Remove all dead bodies
             foreach (PhysicsBody2D body in bodies_Dead)
@@ -320,6 +328,16 @@ namespace MonoEngine.Physics.Physics2D
                 if (registery_CollisionCallbacks.ContainsKey(body))
                 {
                     registery_CollisionCallbacks.Remove(body);
+                }
+
+                if (body.flagBodyType.HasFlag(BodyType.STATIC))
+                {
+                    foreach (PhysicsBoundingChunk2D chunk in body.chunks)
+                    {
+                        chunk.RemoveBody(body);
+                    }
+
+                    body.chunks = null;
                 }
             }
         }

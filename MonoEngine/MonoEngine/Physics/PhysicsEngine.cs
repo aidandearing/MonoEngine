@@ -7,14 +7,22 @@ namespace MonoEngine.Physics
 {
     public class PhysicsEngine : GameComponent
     {
+        public enum BodyType { SIMPLE = 0x01, RIGID = 0x02, STATIC = 0x04, KINEMATIC = 0x08, TRIGGER = 0x16 };
+
         public class PhysicsSettings
         {
             public static int BOUNDINGBOX_SMALLEST = 2;
             public static int BOUNDINGBOX_ORDERS = 4;
             public static int BOUNDINGBOX_LARGEST = (int)Math.Pow(BOUNDINGBOX_SMALLEST, BOUNDINGBOX_ORDERS);
+
+            public static float MODEL_TRANSLATION_SCALE = 200.0f;
+
+            public static Vector3 WORLD_FORCE = new Vector3(0, -9.8f, 0);
+
+            public static float DEFAULT_MASS = 1;
         }
 
-        public enum EngineTypes { Physics2D = 0x00, Physics3D = 0x01 };
+        public enum EngineTypes { Physics2D = 0x01, Physics3D = 0x02 };
 
         private static EngineTypes engineType;
         public static EngineTypes EngineType
@@ -40,7 +48,7 @@ namespace MonoEngine.Physics
                     return (engine as PhysicsEngine3D).WorldToRender(matrix);
             }
 
-            return ((Physics2D.PhysicsEngine2D)engine).WorldToRender(matrix);
+            return (engine as PhysicsEngine2D).WorldToRender(matrix);
         }
 
         public static Matrix RenderToWorld(Matrix matrix)
@@ -65,7 +73,7 @@ namespace MonoEngine.Physics
                     (engine as PhysicsEngine2D).AddBody(body);
                     break;
                 case EngineTypes.Physics3D:
-                    throw new Exception("Cannot add a PhysicsBody2D to a PhysicsEngine3D");
+                    throw new PhysicsExceptions.InvalidPhysicsBody("Cannot add a PhysicsBody2D to a PhysicsEngine3D");
             }
         }
 
@@ -78,7 +86,7 @@ namespace MonoEngine.Physics
                     (engine as PhysicsEngine2D).RemoveBody(body);
                     break;
                 case EngineTypes.Physics3D:
-                    throw new Exception("Cannot remove a PhysicsBody2D from a PhysicsEngine3D");
+                    throw new PhysicsExceptions.InvalidPhysicsBody("Cannot remove a PhysicsBody2D from a PhysicsEngine3D");
             }
         }
 
@@ -91,7 +99,7 @@ namespace MonoEngine.Physics
                     (engine as PhysicsEngine2D).RegisterCollisionCallback(callback, body);
                     break;
                 case EngineTypes.Physics3D:
-                    throw new Exception("Cannot register a Collision2D.OnCollision callback to a PhysicsBody2D in a PhysicsEngine3D");
+                    throw new PhysicsExceptions.InvalidCollisionCallback("Cannot register a Collision2D.OnCollision callback to a PhysicsBody2D in a PhysicsEngine3D");
             }
         }
 
@@ -104,7 +112,7 @@ namespace MonoEngine.Physics
                     (engine as PhysicsEngine2D).UnregisterCollisionCallback(callback, body);
                     break;
                 case EngineTypes.Physics3D:
-                    throw new Exception("Cannot unregister a Collision2D.OnCollision callback from a PhysicsBody2D in a PhysicsEngine3D");
+                    throw new PhysicsExceptions.InvalidCollisionCallback("Cannot unregister a Collision2D.OnCollision callback from a PhysicsBody2D in a PhysicsEngine3D");
             }
         }
 
@@ -116,8 +124,7 @@ namespace MonoEngine.Physics
         }
 
         /// <summary>
-        /// DO NOT USE THIS
-        /// Unless you are stupid, or doing something sweet
+        /// Instances the physics engine as either 2D or 3D
         /// </summary>
         /// <param name="game">The Game instance running</param>
         /// <returns>The Physics instance running</returns>

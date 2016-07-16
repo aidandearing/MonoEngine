@@ -9,7 +9,7 @@ namespace MonoEngine.Game
         // TODO A variety of safer static methods to handle main camera and other camera based stuff
         public static Camera MainCamera;
 
-        public Camera(String name) : base(name)
+        public Camera(string name) : base(name)
         {
             // Isometric stuff
             // Making the camera view matrix rotated properly for the 45 degree arctan(1/sqrt(2)) stuffs that is necessary to create the appearance of 120 degrees between any 2 axis that is necessary for isometric
