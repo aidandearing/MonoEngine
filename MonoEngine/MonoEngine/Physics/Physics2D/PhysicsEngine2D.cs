@@ -282,6 +282,21 @@ namespace MonoEngine.Physics.Physics2D
             return indices;
         }
 
+        public List<PhysicsBody2D> GetCollisionPass(PhysicsBody2D body)
+        {
+            // TODO broad phase collision pass on non-static bodies
+            List<PhysicsBody2D> bodies = new List<PhysicsBody2D>();
+
+            List<int> indices = CalculateBoundsIndices(body);
+
+            foreach (int index in indices)
+            {
+                bodies.AddRange(bounds[index].GetNearbyBodies(body));
+            }
+
+            return bodies;
+        }
+
         // End of Broad Phase ////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 

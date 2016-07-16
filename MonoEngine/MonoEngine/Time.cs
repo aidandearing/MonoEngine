@@ -15,7 +15,23 @@ namespace MonoEngine
 
             internal set
             {
+                LastDeltaTime = instance.deltaTime;
                 instance.deltaTime = value;
+            }
+        }
+
+        private float deltaTime_last;
+
+        public static float LastDeltaTime
+        {
+            get
+            {
+                return instance.deltaTime_last;
+            }
+
+            internal set
+            {
+                instance.deltaTime_last = value;
             }
         }
 
@@ -51,6 +67,7 @@ namespace MonoEngine
         {
             base.Update(gameTime);
 
+            deltaTime_last = deltaTime;
             deltaTime = gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
             elapsedTime = gameTime.TotalGameTime.Milliseconds / 1000.0f;
         }

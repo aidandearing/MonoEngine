@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 using MonoEngine.Physics.Physics2D;
 using MonoEngine.Physics.Physics3D;
 
@@ -7,7 +8,16 @@ namespace MonoEngine.Physics
 {
     public class PhysicsEngine : GameComponent
     {
-        public enum BodyType { SIMPLE = 0x01, RIGID = 0x02, STATIC = 0x04, KINEMATIC = 0x08, TRIGGER = 0x16 };
+        /// <summary>
+        /// SIMPLE: Has no rotational motion, and does not conserve energy when colliding
+        /// RIGID: Simulates real world rigidbody physics
+        /// STATIC: Is unable to be moved by anything, also gets placed in the static bounding chunk system, for quick use
+        /// KINEMATIC: Is unable to be stopped by anything
+        /// TRIGGER: Doesn't resolve collisions
+        /// WORLDFORCE: Is affected by the world force vector (gravity)
+        /// </summary>
+        public enum BodyType { SIMPLE = 0x01, RIGID = 0x02, STATIC = 0x04, KINEMATIC = 0x08, TRIGGER = 0x16, WORLDFORCE = 0x32 };
+        public enum CollisionType { START, STAY, STOP, NONE };
 
         public class PhysicsSettings
         {
@@ -48,7 +58,7 @@ namespace MonoEngine.Physics
                     return (engine as PhysicsEngine3D).WorldToRender(matrix);
             }
 
-            return (engine as PhysicsEngine2D).WorldToRender(matrix);
+            throw new PhysicsExceptions.UnsupportedEngine("The Physics Engine must either be set to EngineTypes.Physics2D, or EngineTypes.Physics3D");
         }
 
         public static Matrix RenderToWorld(Matrix matrix)
@@ -61,7 +71,7 @@ namespace MonoEngine.Physics
                     return (engine as PhysicsEngine3D).RenderToWorld(matrix);
             }
 
-            return (engine as PhysicsEngine2D).RenderToWorld(matrix);
+            throw new PhysicsExceptions.UnsupportedEngine("The Physics Engine must either be set to EngineTypes.Physics2D, or EngineTypes.Physics3D");
         }
 
         // TODO 3D overload of this (PhysicsBody3D body)
@@ -114,6 +124,20 @@ namespace MonoEngine.Physics
                 case EngineTypes.Physics3D:
                     throw new PhysicsExceptions.InvalidCollisionCallback("Cannot unregister a Collision2D.OnCollision callback from a PhysicsBody2D in a PhysicsEngine3D");
             }
+        }
+
+        // TODO 3D overload of this (PhysicsBody3D body)
+        public static List<PhysicsBody2D> GetCollisionPass(PhysicsBody2D body)
+        {
+            switch(EngineType)
+            {
+                case EngineTypes.Physics2D:
+                    return (engine as PhysicsEngine2D).GetCollisionPass(body);
+                case EngineTypes.Physics3D:
+                    throw new PhysicsExceptions.InvalidPhysicsBody("Cannot test for possible collisions on a PhysicsBody2D in a PhysicsEngine3D");
+            }
+
+            throw new PhysicsExceptions.UnsupportedEngine("Cannot test for possible collisions on a PhysicsBody2D in a " + EngineType.ToString());
         }
 
         private static PhysicsEngine engine;

@@ -4,6 +4,9 @@ namespace MonoEngine.Shapes
 {
     public class Circle : Shape
     {
+        public Vector3 lastOverlap_delta;
+        public float lastOverlap_radius;
+
         public Circle(Transform transform, float radius) : base(transform)
         {
             points = new Vector3[1];
@@ -29,9 +32,11 @@ namespace MonoEngine.Shapes
             {
                 // Circle intersect Circle
                 Vector3 delta = shape.transform.Position - transform.Position;
+                lastOverlap_delta = delta;
+                lastOverlap_radius = Radius() + ((Circle)shape).Radius();
 
                 // Check the Circle against the other shape as a circle
-                if (delta.Length() <= Radius() + ((Circle)shape).Radius())
+                if (delta.Length() <= lastOverlap_radius)
                 {
                     return true;
                 }

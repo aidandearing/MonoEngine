@@ -64,6 +64,7 @@
     <Compile Include="Audio\SoundManager.cs" />
     <Compile Include="Time.cs" />
     <Compile Include="Transform.cs" />
+    <Compile Include="Value.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
