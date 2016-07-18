@@ -5,14 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoEngine.UI
 {
-    class UIVisual : UIObject
+    public class UIVisual : UIObject
     {
         public string Ref { get; set; }
         public Color[] Colour { get; set; }
         public float[] Opacity { get; set; }
+        public float Rotation { get; set; }
+        public Texture2D Sprite { get; set; }
 
         public static Color[] ReaderToColour(UIVisual parent, XmlReader reader)
         {

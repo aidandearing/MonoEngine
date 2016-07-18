@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoEngine.UI
 {
-    class UIScreen
+    public class UIScreen
     {
         
 

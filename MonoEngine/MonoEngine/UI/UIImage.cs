@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoEngine.Render;
 
 namespace MonoEngine.UI
 {
@@ -22,20 +23,20 @@ namespace MonoEngine.UI
                         case "bounds":
                             Alignment align = new Alignment();
                             Enum.TryParse<Alignment>(reader["origin"], out align);
-                            BoundsAlign = align;
-                            Bounds = ReaderToBounds(this, reader);
+                            this.BoundsAlign = align;
+                            this.Bounds = ReaderToBounds(this, reader);
                             break;
                         case "behaviours":
-                            Behaviours = ReaderToBehaviours(this, reader);
+                            this.Behaviours = ReaderToBehaviours(this, reader);
                             break;
                         case "objects":
-                            ComponentRefs = ReaderToObjectRefs(this, reader);
+                            this.ComponentRefs = ReaderToObjectRefs(this, reader);
                             break;
                         case "colour":
-                            Colour = ReaderToColour(this, reader);
+                            this.Colour = ReaderToColour(this, reader);
                             break;
                         case "opacity":
-                            Opacity = ReaderToOpacity(this, reader);
+                            this.Opacity = ReaderToOpacity(this, reader);
                             break;
                         case "ref":
                             if (reader.Read() && reader["type"] == "object")
@@ -44,13 +45,15 @@ namespace MonoEngine.UI
                     }
                 }
             }
+            Sprite = SpriteRenderer.MakeSpriteRenderer(Ref).sprite;
             SetOrigin(BoundsAlign);
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            //Texture2D texture
-            
+            int i = 0;
+            spriteBatch.Draw(Sprite, Bounds, null, Colour[i] * Opacity[i], Rotation, Origin, SpriteEffects.None, Depth);
             base.Draw(spriteBatch);
         }
+        
     }
 }

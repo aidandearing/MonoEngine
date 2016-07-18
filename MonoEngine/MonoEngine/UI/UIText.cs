@@ -26,20 +26,20 @@ namespace MonoEngine.UI
                         case "bounds":
                             Alignment align = new Alignment();
                             Enum.TryParse<Alignment>(reader["origin"], out align);
-                            BoundsAlign = align;
-                            Bounds = ReaderToBounds(this, reader);
+                            this.BoundsAlign = align;
+                            this.Bounds = ReaderToBounds(this, reader);
                             break;
                         case "behaviours":
-                            Behaviours = ReaderToBehaviours(this, reader);
+                            this.Behaviours = ReaderToBehaviours(this, reader);
                             break;
                         case "objects":
-                            ComponentRefs = ReaderToObjectRefs(this, reader);
+                            this.ComponentRefs = ReaderToObjectRefs(this, reader);
                             break;
                         case "colour":
-                            Colour = ReaderToColour(this, reader);
+                            this.Colour = ReaderToColour(this, reader);
                             break;
                         case "opacity":
-                            Opacity = ReaderToOpacity(this, reader);
+                            this.Opacity = ReaderToOpacity(this, reader);
                             break;
                         case "ref":
                             if (reader.Read() && reader["type"] == "object")
@@ -56,9 +56,10 @@ namespace MonoEngine.UI
             }
             TextToDraw = CalculateText();
         }
-        public virtual void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             //spriteBatch.DrawString()
+            
             base.Draw(spriteBatch);
         }
         public string CalculateText()

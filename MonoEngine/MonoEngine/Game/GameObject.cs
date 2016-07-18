@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using MonoEngine.Render;
 
 namespace MonoEngine.Game
 {
@@ -37,14 +38,6 @@ namespace MonoEngine.Game
             foreach (GameObject component in components)
             {
                 component.Update();
-            }
-        }
-
-        public virtual void Render()
-        {
-            foreach (GameObject component in components)
-            {
-                component.Render();
             }
         }
 

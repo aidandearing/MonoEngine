@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace MonoEngine.UI
 {
-    abstract class UIBehaviour
+    public abstract class UIBehaviour
     {
         public virtual void Update()
         {

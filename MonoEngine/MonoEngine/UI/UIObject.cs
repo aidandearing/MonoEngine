@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoEngine.Render;
 
 namespace MonoEngine.UI
 {
-    class UIObject
+    public class UIObject
     {
         public enum Alignment { None, TopLeft, TopCenter, TopRight, Top, Left, CenterLeft, Center, CenterRight, Right, BottomLeft, BottomCenter, BottomRight, Bottom };
 
@@ -72,6 +73,7 @@ namespace MonoEngine.UI
             foreach (UIObject obj in Components)
             {
                 obj.Draw(spriteBatch);
+                
             }
         }
         public void AddObject(UIObject obj)
