@@ -117,6 +117,11 @@ namespace MonoEngine
             transformation = Matrix.CreateScale(scale) * Matrix.CreateFromQuaternion(rotation) * Matrix.CreateTranslation(translation);
         }
 
+        public Transform(Transform parent)
+        {
+            this.parent = parent;
+        }
+
         public Vector3 WorldToLocal(Vector3 vector)
         {
             if (parent == null)

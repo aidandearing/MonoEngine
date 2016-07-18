@@ -59,5 +59,53 @@ namespace MonoEngine.Game
             //    obj.Draw();
             //}
         }
+
+        public static GameObject GetGameObjectByName(string name)
+        {
+            foreach(GameObject obj in instance.gameObjects)
+            {
+                if (obj.Name == name)
+                    return obj;
+            }
+
+            return null;
+        }
+
+        public static List<GameObject> GetGameObjectsByName(string name)
+        {
+            List<GameObject> objs = new List<GameObject>();
+
+            foreach (GameObject obj in instance.gameObjects)
+            {
+                if (obj.Name == name)
+                    objs.Add(obj);
+            }
+
+            return objs;
+        }
+
+        public static GameObject GetGameObject<T>()
+        {
+            foreach (GameObject obj in instance.gameObjects)
+            {
+                if (obj is T)
+                    return obj;
+            }
+
+            return null;
+        }
+
+        public static List<GameObject> GetGameObjects<T>()
+        {
+            List<GameObject> objs = new List<GameObject>();
+
+            foreach(GameObject obj in instance.gameObjects)
+            {
+                if (obj is T)
+                    objs.Add(obj);
+            }
+
+            return objs;
+        }
     }
 }

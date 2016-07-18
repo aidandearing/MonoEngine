@@ -46,5 +46,43 @@ namespace MonoEngine.Physics
             {
             }
         }
+
+        public class NotImplementedYet : Exception
+        {
+            public NotImplementedYet()
+            {
+            }
+
+            public NotImplementedYet(string message) : base(message)
+            {
+            }
+
+            public NotImplementedYet(string message, Exception innerException) : base(message, innerException)
+            {
+            }
+
+            protected NotImplementedYet(SerializationInfo info, StreamingContext context) : base(info, context)
+            {
+            }
+        }
+
+        public class UnsupportedEngine : Exception
+        {
+            public UnsupportedEngine()
+            {
+            }
+
+            public UnsupportedEngine(string message) : base(message)
+            {
+            }
+
+            public UnsupportedEngine(string message, Exception innerException) : base(message, innerException)
+            {
+            }
+
+            protected UnsupportedEngine(SerializationInfo info, StreamingContext context) : base(info, context)
+            {
+            }
+        }
     }
 }

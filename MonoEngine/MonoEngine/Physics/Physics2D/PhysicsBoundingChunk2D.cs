@@ -13,6 +13,7 @@ namespace MonoEngine.Physics.Physics2D
         private AABB[] bounds;
         private Transform transform;
         private Dictionary<AABB, List<PhysicsBody2D>> statics;
+        private Dictionary<AABB, List<PhysicsBody2D>> dynamics;
         private Dictionary<int, int> indexToOrder;
         private Dictionary<int, List<AABB>> orderToIndex;
         private Dictionary<AABB, int> boundToOrder;
@@ -26,6 +27,7 @@ namespace MonoEngine.Physics.Physics2D
 
             // Instantiate all the dictionaries
             statics = new Dictionary<AABB, List<PhysicsBody2D>>();
+            dynamics = new Dictionary<AABB, List<PhysicsBody2D>>();
             indexToOrder = new Dictionary<int, int>();
             orderToIndex = new Dictionary<int, List<AABB>>();
             boundToOrder = new Dictionary<AABB, int>();
@@ -85,6 +87,7 @@ namespace MonoEngine.Physics.Physics2D
                     boundToOrder.Add(bounds[index], i);
                     // Add the bounding box to the dictionary of bounding box | list of bodies
                     statics.Add(bounds[index], new List<PhysicsBody2D>());
+                    dynamics.Add(bounds[index], new List<PhysicsBody2D>());
 
                     // Add the bounding box to the list of boxes at this depth
                     orderList.Add(bounds[index]);
@@ -110,28 +113,64 @@ namespace MonoEngine.Physics.Physics2D
         {
             bool added = false;
 
-            for (int i = 0; i < PhysicsEngine.PhysicsSettings.BOUNDINGBOX_ORDERS; ++i)
+            //for (int i = 0; i < PhysicsEngine.PhysicsSettings.BOUNDINGBOX_ORDERS; ++i)
+            //{
+            //    foreach (AABB bounds in orderToIndex[i])
+            //    {
+            //        if (bounds.OverlapTest(body.shape))
+            //        {
+            //            if (body.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
+            //            {
+            //                statics[bounds].Add(body);
+            //            }
+            //            else
+            //            {
+            //                dynamics[bounds].Add(body);
+            //            }
+            //            body.chunks.Add(this);
+            //            added = true;
+            //        }
+            //    }
+            //}
+
+            for (int i = ShapeToOrder(body.shape); i < PhysicsEngine.PhysicsSettings.BOUNDINGBOX_ORDERS; ++i)
             {
                 foreach (AABB bounds in orderToIndex[i])
                 {
                     if (bounds.OverlapTest(body.shape))
                     {
-                        statics[bounds].Add(body);
+                        if (body.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
+                        {
+                            statics[bounds].Add(body);
+                        }
+                        else
+                        {
+                            dynamics[bounds].Add(body);
+                        }
                         body.chunks.Add(this);
                         added = true;
                     }
                 }
             }
+
             return added;
         }
 
         // TODO RemoveBody from PhysicsBoundingChunk2D can probably be way better
         public void RemoveBody(PhysicsBody2D body)
         {
-            foreach(AABB bounds in bounds)
+            foreach (AABB bounds in bounds)
             {
-                if (statics[bounds].Contains(body))
-                    statics[bounds].Remove(body);
+                if (body.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
+                {
+                    if (statics[bounds].Contains(body))
+                        statics[bounds].Remove(body);
+                }
+                else
+                {
+                    if (dynamics[bounds].Contains(body))
+                        dynamics[bounds].Remove(body);
+                }
             }
         }
 
@@ -152,6 +191,7 @@ namespace MonoEngine.Physics.Physics2D
                     if (bounds.OverlapTest(body.shape))
                     {
                         bodies.AddRange(statics[bounds]);
+                        bodies.AddRange(dynamics[bounds]);
                     }
                 }
             }
@@ -161,7 +201,7 @@ namespace MonoEngine.Physics.Physics2D
 
         public static int ShapeToOrder(Shape shape)
         {
-            float maxDim = MathHelper.Max(shape.GetBoundingBox().Dimensions().X, shape.GetBoundingBox().Dimensions().Z);
+            float maxDim = MathHelper.Max(shape.GetBoundingBox().Dimensions.X, shape.GetBoundingBox().Dimensions.Z);
 
             // Iterate from largest bounds to smallest, until one is smaller than the maxDim
             int depth = 0;
@@ -173,7 +213,7 @@ namespace MonoEngine.Physics.Physics2D
                     depth++;
             }
 
-            return PhysicsEngine.PhysicsSettings.BOUNDINGBOX_ORDERS;
+            return PhysicsEngine.PhysicsSettings.BOUNDINGBOX_ORDERS - 1;
         }
     }
 }

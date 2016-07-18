@@ -66,6 +66,7 @@
     <Compile Include="Audio\SoundManager.cs" />
     <Compile Include="Time.cs" />
     <Compile Include="Transform.cs" />
+    <Compile Include="Value.cs" />
     <Compile Include="UI\UIBehaviour.cs" />
     <Compile Include="UI\UIButton.cs" />
     <Compile Include="UI\UIContainer.cs" />

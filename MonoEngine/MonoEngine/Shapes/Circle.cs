@@ -4,6 +4,9 @@ namespace MonoEngine.Shapes
 {
     public class Circle : Shape
     {
+        public Vector3 lastOverlap_delta;
+        public float lastOverlap_radius;
+
         public Circle(Transform transform, float radius) : base(transform)
         {
             points = new Vector3[1];
@@ -29,9 +32,11 @@ namespace MonoEngine.Shapes
             {
                 // Circle intersect Circle
                 Vector3 delta = shape.transform.Position - transform.Position;
+                lastOverlap_delta = delta;
+                lastOverlap_radius = Radius + ((Circle)shape).Radius;
 
                 // Check the Circle against the other shape as a circle
-                if (delta.Length() <= Radius() + ((Circle)shape).Radius())
+                if (delta.Length() < lastOverlap_radius)
                 {
                     return true;
                 }
@@ -40,12 +45,13 @@ namespace MonoEngine.Shapes
             {
                 // Circle intersect AABB
                 Vector3 delta = shape.transform.Position - transform.Position;
+                lastOverlap_delta = delta;
 
                 // Check the Circle against the bounding circle of the AABB
-                if (delta.Length() <= Radius() + ((AABB)shape).Diagonal())
+                if (delta.Length() < Radius + ((AABB)shape).Diagonal)
                 {
                     // This means the box is fully within the circle
-                    if (delta.Length() <= Radius() - ((AABB)shape).Diagonal())
+                    if (delta.Length() <= Radius - ((AABB)shape).Diagonal)
                     {
                         return true;
                     }
@@ -72,7 +78,7 @@ namespace MonoEngine.Shapes
         {
             Vector3 delta = point - transform.Position;
 
-            if (delta.Length() <= Radius())
+            if (delta.Length() <= Radius)
             {
                 return true;
             }
@@ -85,9 +91,17 @@ namespace MonoEngine.Shapes
             return new AABB(transform, points[0].Z * 2, points[0].Z * 2);
         }
 
-        public float Radius()
+        public float Radius
         {
-            return points[0].Z;
+            get
+            {
+                return points[0].Z;
+            }
+
+            set
+            {
+                points[0].Z = value;
+            }
         }
     }
 }
