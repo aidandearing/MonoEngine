@@ -121,131 +121,89 @@ namespace MonoEngine.Physics.Physics2D
 
             //if (body.flagBodyType.HasFlag(BodyType.STATIC))
             //{
-                if (bounds == null)
-                {
-                    bounds = new List<PhysicsBoundingChunk2D>();
-                    bounds_hashtable = new Dictionary<int, PhysicsBoundingChunk2D>();
+            if (bounds == null)
+            {
+                bounds = new List<PhysicsBoundingChunk2D>();
+                bounds_hashtable = new Dictionary<int, PhysicsBoundingChunk2D>();
 
-                    float x = (int)Math.Floor(body.transform.Position.X / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
-                    float z = (int)Math.Floor(body.transform.Position.Z / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
-
-                    bounds_transform = new Transform();
-                    bounds_transform.Position = new Vector3(x, 0, z);
-
-                    bounds.Add(new PhysicsBoundingChunk2D(bounds_transform));
-                    bounds_hashtable.Add(CalculateBoundsIndex(bounds_transform), bounds[0]);
-                    bounds[bounds.Count - 1].AddBody(body);
-
-                    // If the body is so large that it takes up more than 1 chunk I need to know that, and build all the chunks it is in around the one at its center
-                    int dimension = 3;
-                    int count = 0;
-                    bool tobig = false;
-                    Transform newTransform = new Transform();
-                    while (!tobig)
-                    {
-                        for (int i_x = 0; i_x < dimension; ++i_x)
-                        {
-                            for (int i_z = 0; i_z < dimension; ++i_z)
-                            {
-                                if (i_x == 0 || i_x == dimension - 1 || i_z == 0 || i_z == dimension - 1)
-                                {
-                                    newTransform.Transformation = Matrix.Identity;
-                                    newTransform.Position = new Vector3((i_x - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST, 0, (i_z - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST) - bounds_transform.Position;
-
-                                    PhysicsBoundingChunk2D newChunk = new PhysicsBoundingChunk2D(newTransform);
-                                    if (newChunk.BoundsTest(body))
-                                    {
-                                        bounds.Add(new PhysicsBoundingChunk2D(bounds_transform));
-                                        bounds_hashtable.Add(CalculateBoundsIndex(newTransform), newChunk);
-                                        newChunk.AddBody(body);
-                                        count++;
-                                    }
-                                }
-                            }
-                        }
-
-                        tobig = (count == 0) ? true : false;
-
-                        count = 0;
-                        dimension += 2;
-                    }
-                }
-                else
-                {
-                    int index = CalculateBoundsIndex(body.transform);
-
-                    float x = (int)Math.Floor(body.transform.Position.X / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
-                    float z = (int)Math.Floor(body.transform.Position.Z / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
-
-                    bounds_transform = new Transform();
-                    bounds_transform.Position = new Vector3(x, 0, z);
-
-                    if (bounds_hashtable.ContainsKey(index))
-                    {
-                        bounds_hashtable[index].AddBody(body);
-                    }
-                    else
-                    {
-                        bounds.Add(new PhysicsBoundingChunk2D(bounds_transform));
-                        bounds_hashtable.Add(CalculateBoundsIndex(bounds_transform), bounds[0]);
-                        bounds[bounds.Count - 1].AddBody(body);
-                    }
-
-                    // If the body is so large that it takes up more than 1 chunk I need to know that, and build all the chunks it is in around the one at its center
-                    int dimension = 3;
-                    int count = 0;
-                    bool tobig = false;
-                    Transform newTransform = new Transform();
-                    while (!tobig)
-                    {
-                        for (int i_x = 0; i_x < dimension; ++i_x)
-                        {
-                            for (int i_z = 0; i_z < dimension; ++i_z)
-                            {
-                                if (i_x == 0 || i_x == dimension - 1 || i_z == 0 || i_z == dimension - 1)
-                                {
-                                    newTransform.Transformation = Matrix.Identity;
-                                    newTransform.Position = new Vector3((i_x - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST + x * PhysicsSettings.BOUNDINGBOX_LARGEST, 0, (i_z - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST + z * PhysicsSettings.BOUNDINGBOX_LARGEST) - bounds_transform.Position;
-                                    int newIndex = CalculateBoundsIndex(newTransform);
-
-                                    if (bounds_hashtable.ContainsKey(newIndex))
-                                    {
-                                        if (bounds_hashtable[newIndex].BoundsTest(body))
-                                        {
-                                            bounds_hashtable[newIndex].AddBody(body);
-                                            count++;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        PhysicsBoundingChunk2D newChunk = new PhysicsBoundingChunk2D(newTransform);
-                                        if (newChunk.BoundsTest(body))
-                                        {
-                                            bounds.Add(new PhysicsBoundingChunk2D(bounds_transform));
-                                            bounds_hashtable.Add(newIndex, newChunk);
-                                            newChunk.AddBody(body);
-                                            count++;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        tobig = (count == 0) ? true : false;
-
-                        count = 0;
-                        dimension += 2;
-                    }
-                }
-            //}
-            //else
-            //{
-            //    bodies_Active.Add(body);
-            //}
+                AddChunk(body);
+            }
+            else
+            {
+                AddChunk(body);
+            }
 
             if (!body.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
             {
                 bodies_Active.Add(body);
+            }
+        }
+
+        internal void AddChunk(PhysicsBody2D body)
+        {
+            int index = CalculateBoundsIndex(body.transform);
+
+            float x = (int)Math.Floor(body.transform.Position.X / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
+            float z = (int)Math.Floor(body.transform.Position.Z / PhysicsSettings.BOUNDINGBOX_LARGEST) * PhysicsSettings.BOUNDINGBOX_LARGEST;
+
+            if (bounds_hashtable.ContainsKey(index))
+            {
+                bounds_hashtable[index].AddBody(body);
+            }
+            else
+            {
+                bounds_transform = new Transform();
+                bounds_transform.Position = new Vector3(x, 0, z);
+
+                bounds.Add(new PhysicsBoundingChunk2D(bounds_transform));
+                bounds_hashtable.Add(index, bounds[bounds.Count - 1]);
+                bounds[bounds.Count - 1].AddBody(body);
+            }
+
+            // If the body is so large that it takes up more than 1 chunk I need to know that, and build all the chunks it is in around the one at its center
+            int dimension = 3;
+            int count = 0;
+            bool tobig = false;
+            Transform newTransform = new Transform();
+            while (!tobig)
+            {
+                for (int i_x = 0; i_x < dimension; ++i_x)
+                {
+                    for (int i_z = 0; i_z < dimension; ++i_z)
+                    {
+                        if (i_x == 0 || i_x == dimension - 1 || i_z == 0 || i_z == dimension - 1)
+                        {
+                            newTransform.Transformation = Matrix.Identity;
+                            newTransform.Position = new Vector3((i_x - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST + x * PhysicsSettings.BOUNDINGBOX_LARGEST, 0, (i_z - (int)Math.Floor(dimension / 2.0f)) * PhysicsSettings.BOUNDINGBOX_LARGEST + z * PhysicsSettings.BOUNDINGBOX_LARGEST) - bounds_transform.Position;
+                            int newIndex = CalculateBoundsIndex(newTransform);
+
+                            if (bounds_hashtable.ContainsKey(newIndex))
+                            {
+                                if (bounds_hashtable[newIndex].BoundsTest(body))
+                                {
+                                    bounds_hashtable[newIndex].AddBody(body);
+                                    count++;
+                                }
+                            }
+                            else
+                            {
+                                PhysicsBoundingChunk2D newChunk = new PhysicsBoundingChunk2D(newTransform);
+                                if (newChunk.BoundsTest(body))
+                                {
+                                    bounds.Add(newChunk);
+                                    bounds_hashtable.Add(newIndex, newChunk);
+                                    newChunk.AddBody(body);
+                                    count++;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                tobig = (count == 0) ? true : false;
+
+                count = 0;
+                dimension += 2;
             }
         }
 
@@ -254,19 +212,19 @@ namespace MonoEngine.Physics.Physics2D
             int x = (int)Math.Floor(transform.Position.X / PhysicsSettings.BOUNDINGBOX_LARGEST);
             int z = (int)Math.Floor(transform.Position.Z / PhysicsSettings.BOUNDINGBOX_LARGEST);
 
-            return (x - (int)bounds_transform.Position.X) + (z - (int)bounds_transform.Position.Z) * (int)Math.Sqrt(int.MaxValue / 2);
+            return (x + (z * (int)Math.Sqrt(int.MaxValue / 2)));
         }
 
         internal List<int> CalculateBoundsIndices(PhysicsBody2D body)
         {
             List<int> indices = new List<int>();
             AABB boundingBox = body.shape.GetBoundingBox();
-            int dimension = (int)Math.Max(boundingBox.Dimensions().X, boundingBox.Dimensions().Z) / 4;
+            int dimension = (int)Math.Max(boundingBox.Dimensions.X, boundingBox.Dimensions.Z) / 4;
 
             int x = (int)Math.Floor(body.transform.Position.X / PhysicsSettings.BOUNDINGBOX_LARGEST);
             int z = (int)Math.Floor(body.transform.Position.Z / PhysicsSettings.BOUNDINGBOX_LARGEST);
 
-            indices.Add((x - (int)bounds_transform.Position.X) + (z - (int)bounds_transform.Position.Z) * (int)Math.Sqrt(int.MaxValue / 2));
+            indices.Add(x + (z * (int)Math.Sqrt(int.MaxValue / 2)));
 
             for (int i_x = 0; i_x < dimension; ++i_x)
             {
@@ -296,7 +254,14 @@ namespace MonoEngine.Physics.Physics2D
 
             foreach (int index in indices)
             {
-                bodies.AddRange(bounds[index].GetNearbyBodies(body));
+                if (bounds_hashtable.ContainsKey(index))
+                    bodies.AddRange(bounds_hashtable[index].GetNearbyBodies(body));
+                else
+                {
+                    // This means there is no chunk there, and it must be made
+                    AddChunk(body);
+                }
+
             }
 
             return bodies;
@@ -333,7 +298,10 @@ namespace MonoEngine.Physics.Physics2D
         {
             base.Update(gameTime);
 
-            foreach(PhysicsBody2D body in bodies_Active)
+            Console.WriteLine(Time.DeltaTime);
+            Console.WriteLine(bounds.Count);
+
+            foreach (PhysicsBody2D body in bodies_Active)
             {
                 body.Update();
             }

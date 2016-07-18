@@ -98,9 +98,11 @@ namespace MonoEngine.Physics.Physics2D
             }
         }
 
-        public PhysicsBody2D(string name, Shape shape, PhysicsEngine.BodyType bodyType) : base(name)
+        public PhysicsBody2D(GameObject parent, string name, Shape shape, PhysicsEngine.BodyType bodyType) : base(name)
         {
+            this.transform.parent = parent.transform;
             this.shape = shape;
+            //this.shape.transform.parent = this.transform;
             this.flagBodyType = bodyType;
 
             collisionCallbacks = new List<Collision2D.OnCollision>();
@@ -109,10 +111,12 @@ namespace MonoEngine.Physics.Physics2D
 
             chunks = new List<PhysicsBoundingChunk2D>();
 
+            // Set up some defaults, to ensure nothing goes horribly wrong
+            mass = PhysicsEngine.PhysicsSettings.DEFAULT_MASS;
+
+            // A body flagged as static cannot be anything but static
             if (flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
             {
-                mass = float.MaxValue;
-
                 if (flagBodyType.HasFlag(PhysicsEngine.BodyType.RIGID))
                 {
                     flagBodyType &= ~PhysicsEngine.BodyType.RIGID;
@@ -127,9 +131,18 @@ namespace MonoEngine.Physics.Physics2D
                 }
             }
 
+            if (flagBodyType.HasFlag(PhysicsEngine.BodyType.KINEMATIC) || flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
+            {
+                // Static / Kinematic bodies are essentially infinite mass bodies, and as such, 
+                // a max float is a good way of ensuring that no other body has sufficient mass 
+                // in any physics to exert force on this one, while not immediately devolving any 
+                // physics into a giant pile of float.infinitys
+                mass = float.MaxValue;
+            }
+
             PhysicsEngine.AddPhysicsBody(this);
 
-            mass = PhysicsEngine.PhysicsSettings.DEFAULT_MASS;
+            // Time saving calculation results stored in memory
             mass_i = 1 / mass;
         }
 
@@ -172,7 +185,7 @@ namespace MonoEngine.Physics.Physics2D
                 if (!checkedAlready.Contains(collider) && collider != this)
                 {
                     Collision2D possibleCollision = Collision2D.Evaluate(this, collider);
-                    if (possibleCollision != null)
+                    if (possibleCollision != null && !collisions.Contains(possibleCollision))
                     {
                         collisions.Add(possibleCollision);
                         collider.collisions.Add(possibleCollision);
@@ -242,6 +255,24 @@ namespace MonoEngine.Physics.Physics2D
         public void ApplyImpulse(Vector3 f)
         {
             velocity += f;
+        }
+
+        /// <summary>
+        /// Translates the body by Vector v
+        /// </summary>
+        /// <param name="v">The vector to translate by</param>
+        public void Translate(Vector3 v)
+        {
+            transform.parent.Position += v;
+        }
+
+        /// <summary>
+        /// Moves the body to the position specificed
+        /// </summary>
+        /// <param name="position">The new position for this body</param>
+        public void MoveTo(Vector3 position)
+        {
+            transform.parent.Position = position;
         }
     }
 }

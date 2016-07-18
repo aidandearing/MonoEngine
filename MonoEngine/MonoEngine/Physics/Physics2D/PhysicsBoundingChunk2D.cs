@@ -201,7 +201,7 @@ namespace MonoEngine.Physics.Physics2D
 
         public static int ShapeToOrder(Shape shape)
         {
-            float maxDim = MathHelper.Max(shape.GetBoundingBox().Dimensions().X, shape.GetBoundingBox().Dimensions().Z);
+            float maxDim = MathHelper.Max(shape.GetBoundingBox().Dimensions.X, shape.GetBoundingBox().Dimensions.Z);
 
             // Iterate from largest bounds to smallest, until one is smaller than the maxDim
             int depth = 0;

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace MonoEngine.Physics.Physics2D
 {
@@ -14,6 +15,7 @@ namespace MonoEngine.Physics.Physics2D
         {
             BodyA = A;
             BodyB = B;
+            type = PhysicsEngine.CollisionType.NONE;
         }
 
         /// <summary>
@@ -40,20 +42,22 @@ namespace MonoEngine.Physics.Physics2D
                     // A new collision should be made
                     collision = new Collision2D(bodyA, bodyB);
                 }
-
-                // An optimisation here is to check the smaller list of collisions
-                // Since it is an iteration
-                if (bodyA.collisions.Count <= bodyB.collisions.Count)
-                {
-                    collision = Helper_EvaluateCollisions(bodyA, bodyB);
-                }
                 else
                 {
-                    collision = Helper_EvaluateCollisions(bodyB, bodyA);
+                    // An optimisation here is to check the smaller list of collisions
+                    // Since it is an iteration
+                    if (bodyA.collisions.Count <= bodyB.collisions.Count)
+                    {
+                        collision = Helper_EvaluateCollisions(bodyA, bodyB);
+                    }
+                    else
+                    {
+                        collision = Helper_EvaluateCollisions(bodyB, bodyA);
+                    }
                 }
 
                 // Evaluate the collision
-                collision.Evaluate();
+                //collision.Evaluate();
                 // Return it
                 return collision;
             }
@@ -65,7 +69,7 @@ namespace MonoEngine.Physics.Physics2D
         {
             foreach (Collision2D collision in bodyA.collisions)
             {
-                if (collision.BodyB == bodyB)
+                if ((collision.BodyB == bodyB && collision.BodyA == bodyA) || (collision.BodyA == bodyB && collision.BodyB == bodyA))
                 {
                     return collision;
                 }
@@ -84,21 +88,52 @@ namespace MonoEngine.Physics.Physics2D
 
             // If the test returns true, collision is occuring
 
-            // If this type is none and test is true, collision is starting
-            if (type == PhysicsEngine.CollisionType.NONE && test)
-                type = PhysicsEngine.CollisionType.START;
             // If this type is start and test is true, collision is continuing
             if (type == PhysicsEngine.CollisionType.START && test)
+            {
                 type = PhysicsEngine.CollisionType.STAY;
+                BodyA.Broadcast(this, "OnCollision2DStay");
+                BodyB.Broadcast(this, "OnCollision2DStay");
+            }
+            // If this type is none and test is true, collision is starting
+            if (type == PhysicsEngine.CollisionType.NONE && test)
+            {
+                type = PhysicsEngine.CollisionType.START;
+                BodyA.Broadcast(this, "OnCollision2DStart");
+                BodyB.Broadcast(this, "OnCollision2DStart");
+            }
             // If this type is stop and test is false, collision is none
             if (type == PhysicsEngine.CollisionType.STOP && !test)
+            {
                 type = PhysicsEngine.CollisionType.NONE;
+            }
             // If this type is start or stay and test is false, collision is ending
             if ((type == PhysicsEngine.CollisionType.START || type == PhysicsEngine.CollisionType.STAY) && !test)
+            {
                 type = PhysicsEngine.CollisionType.STOP;
+                BodyA.Broadcast(this, "OnCollision2DStop");
+                BodyB.Broadcast(this, "OnCollision2DStop");
+            }
             // If this type is stop and test is true, collision is starting, again
             if (type == PhysicsEngine.CollisionType.STOP && test)
+            {
                 type = PhysicsEngine.CollisionType.START;
+                BodyA.Broadcast(this, "OnCollision2DStart");
+                BodyB.Broadcast(this, "OnCollision2DStart");
+            }
+
+            if (test)
+            {
+                foreach (Collision2D.OnCollision callback in BodyA.collisionCallbacks)
+                {
+                    callback.Invoke(this);
+                }
+
+                foreach (Collision2D.OnCollision callback in BodyB.collisionCallbacks)
+                {
+                    callback.Invoke(this);
+                }
+            }
 
             return test;
         }
@@ -135,42 +170,35 @@ namespace MonoEngine.Physics.Physics2D
                             {
                                 if (BodyB.shape is Shapes.Circle)
                                 {
-                                    // TODO Circle Circle
-                                    Shapes.Circle BA = BodyA.shape as Shapes.Circle;
-                                    Vector3 dN = BA.lastOverlap_delta / BA.lastOverlap_radius;
-                                    float tM = BodyA.Mass + BodyB.Mass;
-
-                                    // I need to apply a force to BodyA along the inverse normal that is proportional to its mass
-                                    BodyA.ApplyForce(Vector3.Negate(dN) * (1 - (BodyA.Mass / tM)) * BA.lastOverlap_radius);
-                                    BodyB.ApplyForce(dN * (1 - (BodyB.Mass / tM)) * BA.lastOverlap_radius);
+                                    ResolveCircleCircle();
                                 }
                                 else if (BodyB.shape is Shapes.AABB)
                                 {
-                                    // TOD Circle AABB
+                                    ResolveCircleAABB();
                                 }
                                 else
                                 {
-                                    throw new PhysicsExceptions.NotImplementedYet("Non Circle/AABB 2D collision resolution is not yet implemented");
+                                    throw new PhysicsExceptions.NotImplementedYet("Poly2D collision resolution is not yet implemented");
                                 }
                             }
                             else if (BodyA.shape is Shapes.AABB)
                             {
                                 if (BodyB.shape is Shapes.Circle)
                                 {
-                                    // TODO AABB Circle
+                                    ResolveCircleAABB();
                                 }
                                 else if (BodyB.shape is Shapes.AABB)
                                 {
-                                    // TODO AABB AABB
+                                    ResolveAABBAABB();
                                 }
                                 else
                                 {
-                                    throw new PhysicsExceptions.NotImplementedYet("Non Circle/AABB 2D collision resolution is not yet implemented");
+                                    throw new PhysicsExceptions.NotImplementedYet("Poly2D collision resolution is not yet implemented");
                                 }
                             }
                             else
                             {
-                                throw new PhysicsExceptions.NotImplementedYet("Non Circle/AABB 2D collision resolution is not yet implemented");
+                                throw new PhysicsExceptions.NotImplementedYet("Poly2D collision resolution is not yet implemented");
                             }
                         }
                     }
@@ -185,15 +213,121 @@ namespace MonoEngine.Physics.Physics2D
                     BodyB.RemoveCollision(this);
                 }
             }
+        }
 
-            foreach (Collision2D.OnCollision callback in BodyA.collisionCallbacks)
+        internal void ResolveCircleCircle()
+        {
+            // TODO Circle Circle
+            Shapes.Circle BA = BodyA.shape as Shapes.Circle;
+            Shapes.Circle BB = BodyB.shape as Shapes.Circle;
+            Vector3 dN = Vector3.Normalize(BA.lastOverlap_delta);
+            float dR = BA.lastOverlap_radius;
+            float tM = BodyA.Mass + BodyB.Mass;
+
+            // Calculate a new center of mass for the system, and offset them both their radius away from this center of mass, along the normal, based on their mass percentage of the system
+            float mA = BodyA.Mass / tM;
+            float mB = BodyB.Mass / tM;
+            Vector3 newCOM = BodyA.transform.Position * mA + BodyB.transform.Position * mB;
+            BodyA.transform.parent.Position = newCOM - (dN * dR * (1 - mA));
+            BodyB.transform.parent.Position = newCOM + (dN * dR * (1 - mB));
+        }
+
+        internal void ResolveCircleAABB()
+        {
+            // TODO Circle AABB
+            Shapes.Circle BA = (BodyA.shape is Shapes.Circle) ? BodyA.shape as Shapes.Circle : BodyB.shape as Shapes.Circle;
+            Shapes.AABB BB = (BodyA.shape is Shapes.Circle) ? BodyB.shape as Shapes.AABB : BodyA.shape as Shapes.AABB;
+
+            // -------x----------------
+            // |       \              |
+            // |        \             |
+            // |         \.           |
+            // |                      |
+            // |                      |
+            // ------------------------
+            // Given an angle from the center of an AABB determine the length from the center to the edge of the AABB on that angle
+
+            // First lets determine the angle we are dealing with, using delta
+            // Might as well normalize the delta while we are at it
+            Vector3 dN = Vector3.Normalize(BA.lastOverlap_delta);
+            float theta = (float)Math.Atan(dN.Y / dN.X);
+            // Next lets figure out what quad the angle is in
+            // This is important because it changes the knows for the equation
+            int quad = (int)Math.Floor(theta / MathHelper.PiOver2);
+
+            float knownDim = 0;
+
+            if (quad == 0 || quad == 2)
             {
-                callback.Invoke(this);
+                // Quad 1 & Quad 3 (they have the same knowns)
+                // In Quads 1 & 3 the known is half the width
+                knownDim = BB.Dimensions.X / 2;
+            }
+            else if (quad == 1 || quad == 4)
+            {
+                // Quad 2 & Quad 4 (they have the same knowns)
+                // In Quads 2 & 4 the known is half the height
+                knownDim = BB.Dimensions.Z / 2;
             }
 
-            foreach (Collision2D.OnCollision callback in BodyB.collisionCallbacks)
+            // Next lets isolate the angle to the quad we are in
+            theta = theta % MathHelper.PiOver2;
+
+            float angle = MathHelper.ToDegrees(theta);
+
+            // Now lets use this angle and the known dimension to calculate the length to the edge
+            float length = (float)Math.Cos(theta) * knownDim + (float)Math.Sin(theta) * knownDim;
+
+            // Time to move the circle and the aabb away from eachother along the normal
+            // Calculate a new center of mass for the system, and offset them both their radius away from this center of mass, along the normal, based on their mass percentage of the system
+            float dR = length + BA.Radius;
+            float tM = BodyA.Mass + BodyB.Mass;
+            float mA = BodyA.Mass / tM;
+            float mB = BodyB.Mass / tM;
+            Vector3 newCOM = BodyA.transform.Position * mA + BodyB.transform.Position * mB;
+            BodyA.transform.parent.Position = newCOM - (dN * dR * (1 - mA));
+            BodyB.transform.parent.Position = newCOM + (dN * dR * (1 - mB));
+        }
+
+        internal void ResolveAABBAABB()
+        {
+            Shapes.AABB BA = BodyA.shape as Shapes.AABB;
+            Shapes.AABB BB = BodyB.shape as Shapes.AABB;
+            float tM = BodyA.Mass + BodyB.Mass;
+            float mA = BodyA.Mass / tM;
+            float mB = BodyB.Mass / tM;
+
+            // Calculate a new center of mass for the system, and offset them both their radius away from this center of mass, along the normal
+            Vector3 newCOM = BodyA.transform.Position * mA + BodyB.transform.Position * mB;
+
+            Vector3 delta = BB.transform.Position - BA.transform.Position;
+            Vector3 tD = (BA.Dimensions + BB.Dimensions) / 2;
+
+            if (Math.Abs(delta.X) > Math.Abs(delta.Z))
             {
-                callback.Invoke(this);
+                if (delta.X < 0)
+                {// Left
+                    BodyA.transform.parent.Position = newCOM + new Vector3(tD.X * mA, 0, 0);
+                    BodyB.transform.parent.Position = newCOM - new Vector3(tD.X * mB, 0, 0);
+                }
+                else
+                {// Right
+                    BodyA.transform.parent.Position = newCOM - new Vector3(tD.X * mA, 0, 0);
+                    BodyB.transform.parent.Position = newCOM + new Vector3(tD.X * mB, 0, 0);
+                }
+            }
+            else
+            {
+                if (delta.Z < 0)
+                {// Top
+                    BodyA.transform.parent.Position = newCOM + new Vector3(0, 0, tD.Z * mA);
+                    BodyB.transform.parent.Position = newCOM - new Vector3(0, 0, tD.Z * mB);
+                }
+                else
+                {// Bottom
+                    BodyA.transform.parent.Position = newCOM - new Vector3(0, 0, tD.Z * mA);
+                    BodyB.transform.parent.Position = newCOM + new Vector3(0, 0, tD.Z * mB);
+                }
             }
         }
     }

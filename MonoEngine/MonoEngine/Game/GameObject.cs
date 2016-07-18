@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace MonoEngine.Game
 {
     public class GameObject
     {
+        public GameObject parent;
         /// <summary>
         /// This is the list of all components this GameObject has
         /// Components are where GameObjects get their behaviours
@@ -16,6 +19,7 @@ namespace MonoEngine.Game
         /// <param name="component">The component to be added</param>
         public void AddComponent(GameObject component)
         {
+            component.parent = this;
             components.Add(component);
             component.transform.parent = this.transform;
         }
@@ -70,6 +74,97 @@ namespace MonoEngine.Game
             }
 
             return returnComponents;
+        }
+
+        public void Broadcast(object obj, string methodName)
+        {
+            if (parent == null)
+            {
+                object[] objs = new object[1];
+                objs[0] = obj;
+
+                Type thisType = this.GetType();
+                MethodInfo theMethod = thisType.GetMethod(methodName);
+                if (theMethod != null)
+                    theMethod.Invoke(this, objs);
+
+                foreach (GameObject component in components)
+                {
+                    component.MessageToChildren(obj, methodName);
+                }
+            }
+            else
+            {
+                parent.Broadcast(obj, methodName);
+            }
+        }
+
+        public void Broadcast(object[] obj, string methodName)
+        {
+            if (parent == null)
+            {
+                Type thisType = this.GetType();
+                MethodInfo theMethod = thisType.GetMethod(methodName);
+                if (theMethod != null)
+                    theMethod.Invoke(this, obj);
+
+                foreach (GameObject component in components)
+                {
+                    component.MessageToChildren(obj, methodName);
+                }
+            }
+            else
+            {
+                parent.Broadcast(obj, methodName);
+            }
+        }
+
+        public void Message(object obj, string methodName)
+        {
+            object[] objs = new object[1];
+            objs[0] = obj;
+
+            Type thisType = this.GetType();
+            MethodInfo theMethod = thisType.GetMethod(methodName);
+            if (theMethod != null)
+                theMethod.Invoke(this, objs);
+        }
+
+        public void Message(object[] obj, string methodName)
+        {
+            Type thisType = this.GetType();
+            MethodInfo theMethod = thisType.GetMethod(methodName);
+            if (theMethod != null)
+                theMethod.Invoke(this, obj);
+        }
+
+        public void MessageToChildren(object obj, string methodName)
+        {
+            object[] objs = new object[1];
+            objs[0] = obj;
+
+            Type thisType = this.GetType();
+            MethodInfo theMethod = thisType.GetMethod(methodName);
+            if (theMethod != null)
+                theMethod.Invoke(this, objs);
+
+            foreach (GameObject component in components)
+            {
+                component.Message(obj, methodName);
+            }
+        }
+
+        public void MessageToChildren(object[] obj, string methodName)
+        {
+            Type thisType = this.GetType();
+            MethodInfo theMethod = thisType.GetMethod(methodName);
+            if (theMethod != null)
+                theMethod.Invoke(this, obj);
+
+            foreach (GameObject component in components)
+            {
+                component.Message(obj, methodName);
+            }
         }
     }
 }

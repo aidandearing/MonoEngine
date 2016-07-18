@@ -9,14 +9,17 @@ namespace MonoEngine.Physics
     public class PhysicsEngine : GameComponent
     {
         /// <summary>
+        /// FLAGS: Or these together to create the specific body of your needs
+        /// 
         /// SIMPLE: Has no rotational motion, and does not conserve energy when colliding
         /// RIGID: Simulates real world rigidbody physics
         /// STATIC: Is unable to be moved by anything, also gets placed in the static bounding chunk system, for quick use
         /// KINEMATIC: Is unable to be stopped by anything
         /// TRIGGER: Doesn't resolve collisions
         /// WORLDFORCE: Is affected by the world force vector (gravity)
+        /// INTERPOLATE: If the body has moved more than its shape dimensions on any axis, it will check across the distance traveled, instead of just where it currently is
         /// </summary>
-        public enum BodyType { SIMPLE = 0x01, RIGID = 0x02, STATIC = 0x04, KINEMATIC = 0x08, TRIGGER = 0x16, WORLDFORCE = 0x32 };
+        public enum BodyType { SIMPLE = 1, RIGID = 2, STATIC = 4, KINEMATIC = 8, TRIGGER = 16, WORLDFORCE = 32, INTERPOLATE = 64 };
         public enum CollisionType { START, STAY, STOP, NONE };
 
         public class PhysicsSettings
@@ -25,7 +28,7 @@ namespace MonoEngine.Physics
             public static int BOUNDINGBOX_ORDERS = 4;
             public static int BOUNDINGBOX_LARGEST = (int)Math.Pow(BOUNDINGBOX_SMALLEST, BOUNDINGBOX_ORDERS);
 
-            public static float MODEL_TRANSLATION_SCALE = 200.0f;
+            public static float MODEL_TRANSLATION_SCALE = 400.0f;
 
             public static Vector3 WORLD_FORCE = new Vector3(0, -9.8f, 0);
 

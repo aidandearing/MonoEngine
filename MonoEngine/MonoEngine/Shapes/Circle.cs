@@ -33,10 +33,10 @@ namespace MonoEngine.Shapes
                 // Circle intersect Circle
                 Vector3 delta = shape.transform.Position - transform.Position;
                 lastOverlap_delta = delta;
-                lastOverlap_radius = Radius() + ((Circle)shape).Radius();
+                lastOverlap_radius = Radius + ((Circle)shape).Radius;
 
                 // Check the Circle against the other shape as a circle
-                if (delta.Length() <= lastOverlap_radius)
+                if (delta.Length() < lastOverlap_radius)
                 {
                     return true;
                 }
@@ -45,12 +45,13 @@ namespace MonoEngine.Shapes
             {
                 // Circle intersect AABB
                 Vector3 delta = shape.transform.Position - transform.Position;
+                lastOverlap_delta = delta;
 
                 // Check the Circle against the bounding circle of the AABB
-                if (delta.Length() <= Radius() + ((AABB)shape).Diagonal())
+                if (delta.Length() < Radius + ((AABB)shape).Diagonal)
                 {
                     // This means the box is fully within the circle
-                    if (delta.Length() <= Radius() - ((AABB)shape).Diagonal())
+                    if (delta.Length() <= Radius - ((AABB)shape).Diagonal)
                     {
                         return true;
                     }
@@ -77,7 +78,7 @@ namespace MonoEngine.Shapes
         {
             Vector3 delta = point - transform.Position;
 
-            if (delta.Length() <= Radius())
+            if (delta.Length() <= Radius)
             {
                 return true;
             }
@@ -90,9 +91,17 @@ namespace MonoEngine.Shapes
             return new AABB(transform, points[0].Z * 2, points[0].Z * 2);
         }
 
-        public float Radius()
+        public float Radius
         {
-            return points[0].Z;
+            get
+            {
+                return points[0].Z;
+            }
+
+            set
+            {
+                points[0].Z = value;
+            }
         }
     }
 }

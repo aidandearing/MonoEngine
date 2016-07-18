@@ -4,6 +4,9 @@ namespace MonoEngine.Shapes
 {
     public class AABB : Shape
     {
+        private float diagonal;
+        private Vector3 dimensions;
+
         public AABB(Transform transform, float width, float height) : base(transform)
         {
             float halfwidth = width / 2;
@@ -12,6 +15,9 @@ namespace MonoEngine.Shapes
             points = new Vector3[2];
             points[0] = new Vector3(-halfwidth, 0, -halfheight);
             points[1] = new Vector3(halfwidth, 0, halfheight);
+
+            dimensions = new Vector3(width, 0, height);
+            diagonal = points[0].Length();
         }
 
         public override ShapeIntersection[] Intersects(Shape shape)
@@ -102,6 +108,16 @@ namespace MonoEngine.Shapes
             return transform.Position + new Vector3(0, 0, points[1].Z);
         }
 
+        public Vector3 Width()
+        {
+            return new Vector3(dimensions.X, 0, 0);
+        }
+
+        public Vector3 Height()
+        {
+            return new Vector3(0, 0, dimensions.Z);
+        }
+
         public Vector3 Min()
         {
             return transform.Position + points[0];
@@ -112,14 +128,34 @@ namespace MonoEngine.Shapes
             return transform.Position + points[1];
         }
 
-        public float Diagonal()
+        public float Diagonal
         {
-            return points[1].Length();
+            get
+            {
+                return diagonal;
+            }
         }
 
-        public Vector3 Dimensions()
+        public Vector3 Dimensions
         {
-            return new Vector3(points[1].X * 2, 0, points[1].Z * 2);
+            get
+            {
+                return dimensions;
+            }
+            set
+            {
+                dimensions = value;
+
+                float halfwidth = dimensions.X / 2;
+                float halfheight = dimensions.Z / 2;
+
+                points[0].X = -halfwidth;
+                points[0].Z = -halfheight;
+                points[1].X = halfwidth;
+                points[1].Z = halfheight;
+
+                diagonal = points[0].Length();
+            }
         }
     }
 }

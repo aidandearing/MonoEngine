@@ -58,6 +58,8 @@ namespace TestbedMonogame
             this.Components.Add(SoundManager.Instance(this));
             this.Components.Add(SongManager.Instance(this));
             this.Components.Add(PhysicsEngine.Instance(this, PhysicsEngine.EngineTypes.Physics2D));
+
+            PhysicsEngine.PhysicsSettings.WORLD_FORCE = new Vector3(0, -9.8f, 0);
         }
 
         /// <summary>
@@ -85,29 +87,26 @@ namespace TestbedMonogame
             GameObject obj = new GameObject("wall");
             obj.transform.Translate(new Vector3(0, 0, 0));
             obj.AddComponent(ModelRenderer.MakeModelRenderer(obj, "BasicWall"));
-            PhysicsBody2D body = new PhysicsBody2D("wall", new AABB(obj.transform, 1, 1), PhysicsEngine.BodyType.STATIC);
-            body.Mass = 10;
+            PhysicsBody2D body = new PhysicsBody2D(obj, "wall", new AABB(obj.transform, 1, 1), PhysicsEngine.BodyType.STATIC);
             obj.AddComponent(body);
             obj.AddComponent(new Camera("camera"));
 
             GameObjectManager.AddGameObject(obj);
 
             obj = new GameObject("floor");
-            obj.transform.Translate(new Vector3(0, 0, 0));
+            obj.transform.Translate(new Vector3(0f, 0, 0));
             obj.AddComponent(ModelRenderer.MakeModelRenderer(obj, "FloorTile"));
-            body = new PhysicsBody2D("floorA", new Circle(obj.transform, 1), PhysicsEngine.BodyType.SIMPLE);
-            body.Mass = 1;
-            body.RegisterCollisionCallback(new Collision2D.OnCollision(OnCollisionBody));
+            body = new PhysicsBody2D(obj, "floorA", new Circle(obj.transform, 0.5f), PhysicsEngine.BodyType.SIMPLE);
+            //body.RegisterCollisionCallback(new Collision2D.OnCollision(OnCollisionBody));
             obj.AddComponent(body);
 
             GameObjectManager.AddGameObject(obj);
 
-            obj = new GameObject("floor2");
-            obj.transform.Translate(new Vector3(0, 0, 0));
+            obj = new GameObjectReflectionTest("floor2");
+            obj.transform.Translate(new Vector3(0.1f, 0.25f, 0));
             obj.AddComponent(ModelRenderer.MakeModelRenderer(obj, "FloorTile"));
-            body = new PhysicsBody2D("floorB", new Circle(obj.transform, 1), PhysicsEngine.BodyType.SIMPLE);
-            body.Mass = 1;
-            body.RegisterCollisionCallback(new Collision2D.OnCollision(OnCollisionBody));
+            body = new PhysicsBody2D(obj, "floorB", new AABB(obj.transform, 1f, 1f), PhysicsEngine.BodyType.SIMPLE);
+            //body.RegisterCollisionCallback(new Collision2D.OnCollision(OnCollisionBody));
             obj.AddComponent(body);
 
             GameObjectManager.AddGameObject(obj);
@@ -151,7 +150,7 @@ namespace TestbedMonogame
 
         private void OnCollisionBody(Collision2D collision)
         {
-            System.Console.WriteLine(collision.BodyA.Name + " is colliding with " + collision.BodyB.Name);
+            System.Console.WriteLine(collision.BodyA.Name + " with: " + collision.BodyA.collisions.Count + " collisions is colliding with " + collision.BodyB.Name + " with: " + collision.BodyB.collisions.Count + " collisions");
         }
     }
 }
