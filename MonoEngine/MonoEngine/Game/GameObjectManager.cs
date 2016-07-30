@@ -16,18 +16,22 @@ namespace MonoEngine.Game
 
             return instance;
         }
+
         private GameObjectManager(Microsoft.Xna.Framework.Game game) : base(game)
         {
 
         }
+
         public static void AddGameObject(GameObject obj)
         {
             instance.gameObjects.Add(obj);
         }
+
         public static void RemoveGameObject(GameObject obj)
         {
             instance.gameObjectsDead.Add(obj);
         }
+
         public override void Initialize()
         {
             base.Initialize();
@@ -36,6 +40,7 @@ namespace MonoEngine.Game
 
             gameObjectsDead = new List<GameObject>();
         }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -50,6 +55,7 @@ namespace MonoEngine.Game
             }
             gameObjectsDead.Clear();
         }
+
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
@@ -62,7 +68,7 @@ namespace MonoEngine.Game
 
         public static GameObject GetGameObjectByName(string name)
         {
-            foreach(GameObject obj in instance.gameObjects)
+            foreach (GameObject obj in instance.gameObjects)
             {
                 if (obj.Name == name)
                     return obj;
@@ -99,7 +105,7 @@ namespace MonoEngine.Game
         {
             List<GameObject> objs = new List<GameObject>();
 
-            foreach(GameObject obj in instance.gameObjects)
+            foreach (GameObject obj in instance.gameObjects)
             {
                 if (obj is T)
                     objs.Add(obj);

@@ -11,7 +11,7 @@ namespace MonoEngine.Physics
         /// <summary>
         /// FLAGS: Or these together to create the specific body of your needs
         /// 
-        /// SIMPLE: Has no rotational motion, and does not conserve energy when colliding
+        /// SIMPLE: Has no rotational motion
         /// RIGID: Simulates real world rigidbody physics
         /// STATIC: Is unable to be moved by anything, also gets placed in the static bounding chunk system, for quick use
         /// KINEMATIC: Is unable to be stopped by anything
@@ -32,7 +32,13 @@ namespace MonoEngine.Physics
 
             public static Vector3 WORLD_FORCE = new Vector3(0, -9.8f, 0);
 
-            public static float DEFAULT_MASS = 1;
+            public static float WORLD_DRAG = 0.1f;
+
+            public static float DEFAULT_BODY2D_HEIGHT = 1.0f;
+
+            public static float DEFAULT_MATERIAL_FRICTION = 0.0f;
+            public static float DEFAULT_MATERIAL_RESTITUTION = 0.0f;
+            public static float DEFAULT_MATERIAL_DENSITY = 1.0f;
         }
 
         public enum EngineTypes { Physics2D = 0x01, Physics3D = 0x02 };

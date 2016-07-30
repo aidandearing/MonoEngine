@@ -103,5 +103,10 @@ namespace MonoEngine.Shapes
                 points[0].Z = value;
             }
         }
+
+        public override float GetSurfaceArea()
+        {
+            return 2 * MathHelper.Pi * Radius;
+        }
     }
 }

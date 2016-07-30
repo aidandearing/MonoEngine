@@ -11,6 +11,7 @@ namespace MonoEngine.Physics.Physics2D
         public short flagLayer = 0;
 
         public Shape shape;
+        private PhysicsMaterial material;
 
         // This list is referenced in Physic's callback registery
         public List<Collision2D.OnCollision> collisionCallbacks;
@@ -32,7 +33,85 @@ namespace MonoEngine.Physics.Physics2D
         private float mass;
         private float mass_i;
         private Vector3 moment_of_inertia;
-        // ETC, later
+
+        private float height;
+        public float Height
+        {
+            get
+            {
+                return height;
+            }
+
+            set
+            {
+                height = value;
+
+                if (flagBodyType.HasFlag(PhysicsEngine.BodyType.KINEMATIC) || flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
+                {
+                    // Static / Kinematic bodies are essentially infinite mass bodies, and as such, 
+                    // a max float is a good way of ensuring that no other body has sufficient mass 
+                    // in any physics to exert force on this one, while not immediately devolving any 
+                    // physics into a giant pile of float.infinitys
+                    Mass = float.MaxValue;
+                }
+                else
+                {
+                    Mass = shape.GetSurfaceArea() * height * material.Density;
+                }
+            }
+        }
+
+        public float Restitution
+        {
+            get
+            {
+                return material.Restitution;
+            }
+
+            set
+            {
+                material.Restitution = value;
+            }
+        }
+
+        public float Density
+        {
+            get
+            {
+                return material.Density;
+            }
+
+            set
+            {
+                material.Density = value;
+
+                if (flagBodyType.HasFlag(PhysicsEngine.BodyType.KINEMATIC) || flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
+                {
+                    // Static / Kinematic bodies are essentially infinite mass bodies, and as such, 
+                    // a max float is a good way of ensuring that no other body has sufficient mass 
+                    // in any physics to exert force on this one, while not immediately devolving any 
+                    // physics into a giant pile of float.infinitys
+                    Mass = float.MaxValue;
+                }
+                else
+                {
+                    Mass = shape.GetSurfaceArea() * height * material.Density;
+                }
+            }
+        }
+
+        public float Friction
+        {
+            get
+            {
+                return material.Friction;
+            }
+
+            set
+            {
+                material.Friction = value;
+            }
+        }
 
         public Vector3 Position
         {
@@ -98,9 +177,10 @@ namespace MonoEngine.Physics.Physics2D
             }
         }
 
-        public PhysicsBody2D(GameObject parent, string name, Shape shape, PhysicsEngine.BodyType bodyType) : base(name)
+        public PhysicsBody2D(GameObject parent, string name, Shape shape, PhysicsMaterial material, PhysicsEngine.BodyType bodyType) : base(name)
         {
             this.transform.parent = parent.transform;
+            this.material = material;
             this.shape = shape;
             //this.shape.transform.parent = this.transform;
             this.flagBodyType = bodyType;
@@ -112,7 +192,7 @@ namespace MonoEngine.Physics.Physics2D
             chunks = new List<PhysicsBoundingChunk2D>();
 
             // Set up some defaults, to ensure nothing goes horribly wrong
-            mass = PhysicsEngine.PhysicsSettings.DEFAULT_MASS;
+            Height = PhysicsEngine.PhysicsSettings.DEFAULT_BODY2D_HEIGHT;
 
             // A body flagged as static cannot be anything but static
             if (flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
@@ -131,19 +211,7 @@ namespace MonoEngine.Physics.Physics2D
                 }
             }
 
-            if (flagBodyType.HasFlag(PhysicsEngine.BodyType.KINEMATIC) || flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
-            {
-                // Static / Kinematic bodies are essentially infinite mass bodies, and as such, 
-                // a max float is a good way of ensuring that no other body has sufficient mass 
-                // in any physics to exert force on this one, while not immediately devolving any 
-                // physics into a giant pile of float.infinitys
-                mass = float.MaxValue;
-            }
-
             PhysicsEngine.AddPhysicsBody(this);
-
-            // Time saving calculation results stored in memory
-            mass_i = 1 / mass;
         }
 
         public override void Update()
@@ -153,6 +221,9 @@ namespace MonoEngine.Physics.Physics2D
             // Static bodies need not update any of their physics, as they are immune to all forces
             if (!flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
             {
+                velocity_last = velocity;
+                position_last = transform.parent.Position;
+
                 // If a body has been established to operate according to world forces
                 if (flagBodyType.HasFlag(PhysicsEngine.BodyType.WORLDFORCE))
                 {
@@ -172,8 +243,6 @@ namespace MonoEngine.Physics.Physics2D
                 transform.parent.Position += velocity;
 
                 force = Vector3.Zero;
-                velocity_last = velocity;
-                position_last = transform.parent.Position;
             }
 
             List<PhysicsBody2D> collisionTests = PhysicsEngine.GetCollisionPass(this);

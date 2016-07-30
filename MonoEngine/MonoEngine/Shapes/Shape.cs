@@ -60,5 +60,11 @@ namespace MonoEngine.Shapes
             // Get min and max values of cloud of points, build AABB that encompasses said points
             return null;
         }
+
+        public virtual float GetSurfaceArea()
+        {
+            // Calculate surface area by converting every vertex into a triangle with the next one and the center, then calculate the surface area of each of those and sum them
+            return 0;
+        }
     }
 }

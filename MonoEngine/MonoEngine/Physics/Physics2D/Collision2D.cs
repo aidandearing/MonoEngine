@@ -170,11 +170,11 @@ namespace MonoEngine.Physics.Physics2D
                             {
                                 if (BodyB.shape is Shapes.Circle)
                                 {
-                                    ResolveCircleCircle();
+                                    ResolveCircleCircleSimple();
                                 }
                                 else if (BodyB.shape is Shapes.AABB)
                                 {
-                                    ResolveCircleAABB();
+                                    ResolveCircleAABBSimple();
                                 }
                                 else
                                 {
@@ -185,11 +185,11 @@ namespace MonoEngine.Physics.Physics2D
                             {
                                 if (BodyB.shape is Shapes.Circle)
                                 {
-                                    ResolveCircleAABB();
+                                    ResolveCircleAABBSimple();
                                 }
                                 else if (BodyB.shape is Shapes.AABB)
                                 {
-                                    ResolveAABBAABB();
+                                    ResolveAABBAABBSimple();
                                 }
                                 else
                                 {
@@ -215,9 +215,8 @@ namespace MonoEngine.Physics.Physics2D
             }
         }
 
-        internal void ResolveCircleCircle()
+        internal void ResolveCircleCircleSimple()
         {
-            // TODO Circle Circle
             Shapes.Circle BA = BodyA.shape as Shapes.Circle;
             Shapes.Circle BB = BodyB.shape as Shapes.Circle;
             Vector3 dN = Vector3.Normalize(BA.lastOverlap_delta);
@@ -230,9 +229,20 @@ namespace MonoEngine.Physics.Physics2D
             Vector3 newCOM = BodyA.transform.Position * mA + BodyB.transform.Position * mB;
             BodyA.transform.parent.Position = newCOM - (dN * dR * (1 - mA));
             BodyB.transform.parent.Position = newCOM + (dN * dR * (1 - mB));
+
+            // Calculate the resulting velocities based on the restitution scalars for both bodies
+            if (BodyA.Velocity.LengthSquared() + BodyB.Velocity.LengthSquared() > 0)
+            {
+                //float e = (BodyA.Restitution + BodyB.Restitution) / 2;
+
+                float projection = (2 * (Vector3.Dot(BodyA.Velocity * BodyA.Restitution, dN) - Vector3.Dot(BodyB.Velocity * BodyB.Restitution, dN))) / (tM);
+
+                BodyA.Velocity = BodyA.Velocity - projection * BodyA.Mass * dN;
+                BodyB.Velocity = BodyB.Velocity + projection * BodyB.Mass * dN;
+            }
         }
 
-        internal void ResolveCircleAABB()
+        internal void ResolveCircleAABBSimple()
         {
             // TODO Circle AABB
             Shapes.Circle BA = (BodyA.shape is Shapes.Circle) ? BodyA.shape as Shapes.Circle : BodyB.shape as Shapes.Circle;
@@ -250,9 +260,9 @@ namespace MonoEngine.Physics.Physics2D
             // First lets determine the angle we are dealing with, using delta
             // Might as well normalize the delta while we are at it
             Vector3 dN = Vector3.Normalize(BA.lastOverlap_delta);
-            float theta = (float)Math.Atan(dN.Y / dN.X);
+            float theta = (float)Math.Atan(dN.Z / dN.X);
             // Next lets figure out what quad the angle is in
-            // This is important because it changes the knows for the equation
+            // This is important because it changes the knowns for the equation
             int quad = (int)Math.Floor(theta / MathHelper.PiOver2);
 
             float knownDim = 0;
@@ -263,7 +273,7 @@ namespace MonoEngine.Physics.Physics2D
                 // In Quads 1 & 3 the known is half the width
                 knownDim = BB.Dimensions.X / 2;
             }
-            else if (quad == 1 || quad == 4)
+            else if (quad == 1 || quad == 3)
             {
                 // Quad 2 & Quad 4 (they have the same knowns)
                 // In Quads 2 & 4 the known is half the height
@@ -276,10 +286,10 @@ namespace MonoEngine.Physics.Physics2D
             float angle = MathHelper.ToDegrees(theta);
 
             // Now lets use this angle and the known dimension to calculate the length to the edge
-            float length = (float)Math.Cos(theta) * knownDim + (float)Math.Sin(theta) * knownDim;
+            float length = (float)Math.Cos(theta) * knownDim;
 
-            // Time to move the circle and the aabb away from eachother along the normal
-            // Calculate a new center of mass for the system, and offset them both their radius away from this center of mass, along the normal, based on their mass percentage of the system
+            // Time to move the circle and the aabb away from each other along the normal
+            // Calculate a new center of mass for the system, and offset them both their radii away from this center of mass, along the normal, based on their mass percentage of the system
             float dR = length + BA.Radius;
             float tM = BodyA.Mass + BodyB.Mass;
             float mA = BodyA.Mass / tM;
@@ -289,7 +299,7 @@ namespace MonoEngine.Physics.Physics2D
             BodyB.transform.parent.Position = newCOM + (dN * dR * (1 - mB));
         }
 
-        internal void ResolveAABBAABB()
+        internal void ResolveAABBAABBSimple()
         {
             Shapes.AABB BA = BodyA.shape as Shapes.AABB;
             Shapes.AABB BB = BodyB.shape as Shapes.AABB;

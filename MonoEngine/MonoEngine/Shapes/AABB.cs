@@ -157,5 +157,10 @@ namespace MonoEngine.Shapes
                 diagonal = points[0].Length();
             }
         }
+
+        public override float GetSurfaceArea()
+        {
+            return dimensions.X * dimensions.Z;
+        }
     }
 }
