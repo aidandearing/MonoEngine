@@ -9,6 +9,7 @@ namespace MonoEngine.UI
 {
     public abstract class UIBehaviour
     {
+        
         public UIObject obj;
         public float duration;
 
