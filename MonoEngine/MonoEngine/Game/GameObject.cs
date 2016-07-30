@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using MonoEngine.Render;
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -41,14 +43,6 @@ namespace MonoEngine.Game
             foreach (GameObject component in components)
             {
                 component.Update();
-            }
-        }
-
-        public virtual void Render()
-        {
-            foreach (GameObject component in components)
-            {
-                component.Render();
             }
         }
 

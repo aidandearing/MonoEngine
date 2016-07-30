@@ -60,10 +60,10 @@ namespace MonoEngine.Game
         {
             base.Draw(gameTime);
 
-            foreach (GameObject obj in gameObjects)
-            {
-                obj.Render();
-            }
+            //foreach (GameObject obj in gameObjects)
+            //{
+            //    obj.Draw();
+            //}
         }
 
         public static GameObject GetGameObjectByName(string name)

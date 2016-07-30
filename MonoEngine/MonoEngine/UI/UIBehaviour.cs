@@ -7,11 +7,20 @@ using Microsoft.Xna.Framework;
 
 namespace MonoEngine.UI
 {
-    abstract class UIBehaviour
+    public abstract class UIBehaviour
     {
+        public UIObject obj;
+        public float duration;
+
+        public UIBehaviour(UIObject obj, float duration)
+        {
+            this.obj = obj;
+            this.duration = duration;
+        }
+
         public virtual void Update()
         {
-
+            duration -= Time.DeltaTime;
         }
     }
 }

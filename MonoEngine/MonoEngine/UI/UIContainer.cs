@@ -20,14 +20,14 @@ namespace MonoEngine.UI
                         case "bounds":
                             Alignment align = new Alignment();
                             Enum.TryParse<Alignment>(reader["origin"], out align);
-                            BoundsAlign = align;
-                            Bounds = ReaderToBounds(this, reader);
+                            this.BoundsAlign = align;
+                            this.Bounds = ReaderToBounds(this, reader);
                             break;
                         case "behaviours":
-                            Behaviours = ReaderToBehaviours(this, reader);
+                            this.Behaviours = ReaderToBehaviours(this, reader);
                             break;
                         case "objects":
-                            ComponentRefs = ReaderToObjectRefs(this, reader);
+                            this.ComponentRefs = ReaderToObjectRefs(this, reader);
                             break;
                     }
                 }
