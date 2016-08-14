@@ -58,6 +58,7 @@ namespace TestbedMonogame
             this.Components.Add(SoundManager.Instance(this));
             this.Components.Add(SongManager.Instance(this));
             this.Components.Add(PhysicsEngine.Instance(this, PhysicsEngine.EngineTypes.Physics2D));
+            this.Components.Add(RenderManager.Instance(this, spriteBatch));
 
             PhysicsEngine.PhysicsSettings.WORLD_FORCE = new Vector3(0, -9.8f, 0);
         }

@@ -10,7 +10,7 @@ using MonoEngine.UI;
 
 namespace MonoEngine.Render
 {
-    class RenderManager : DrawableGameComponent
+    public class RenderManager : DrawableGameComponent
     {
         public delegate void DrawCallBack();
 
@@ -31,8 +31,12 @@ namespace MonoEngine.Render
 
         public RenderManager(Microsoft.Xna.Framework.Game game) : base(game)
         {
-
+            CallBack_Model = new List<DrawCallBack>();
+            CallBack_Sprite = new List<DrawCallBack>();
+            CallBack_Text = new List<DrawCallBack>();
+            CallBack_UIModel = new List<DrawCallBack>();
         }
+
         //public static void AddToRenderQueue()
         //{
         //    foreach (GameObject obj in gameObjectRenderTargets)
@@ -65,18 +69,22 @@ namespace MonoEngine.Render
         {
             instance.CallBack_Model.Add(callback);
         }
+
         public static void UnRegisterDrawCallBack(ModelRenderer renderer, RenderManager.DrawCallBack callback)
         {
             instance.CallBack_Model.Remove(callback);
         }
+
         public static void RegisterDrawCallBack(SpriteRenderer renderer, RenderManager.DrawCallBack callback)
         {
             instance.CallBack_Model.Add(callback);
         }
+
         public static void UnRegisterDrawCallBack(SpriteRenderer renderer, RenderManager.DrawCallBack callback)
         {
             instance.CallBack_Model.Remove(callback);
         }
+
         public override void Draw(GameTime gameTime)
         {
             foreach (DrawCallBack draw in CallBack_Model)

@@ -9,13 +9,13 @@ using MonoEngine.UI;
 
 namespace MonoEngine.Render
 {
-    public class SpriteRenderer : UIVisual
+    public class SpriteRenderer : GameObject
     {
         private static Dictionary<string, Texture2D> sprites = new Dictionary<string, Texture2D>();
 
         public Texture2D sprite;
 
-        private SpriteRenderer(string name, Texture2D sprite) : base()
+        private SpriteRenderer(string name, Texture2D sprite) : base(name)
         {
             this.sprite = sprite;
             RenderManager.RegisterDrawCallBack(this, new RenderManager.DrawCallBack(Draw));
@@ -23,7 +23,7 @@ namespace MonoEngine.Render
         }
         public void Draw()
         {
-            RenderManager.spriteBatch.Draw(Sprite, Bounds, null, Colour[0] * Opacity[0], Rotation, Origin, SpriteEffects.None, Depth);
+            //RenderManager.spriteBatch.Draw(Sprite, Bounds, null, Colour[0] * Opacity[0], Rotation, Origin, SpriteEffects.None, Depth);
         }
 
         public static SpriteRenderer MakeSpriteRenderer(string name)
