@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace MonoEngine.Shapes
 {
@@ -156,6 +157,43 @@ namespace MonoEngine.Shapes
 
                 diagonal = points[0].Length();
             }
+        }
+
+        public float LengthAtAngle(float theta)
+        {
+            // -------x----------------
+            // |       \              |
+            // |        \             |
+            // |         \.           |
+            // |                      |
+            // |                      |
+            // ------------------------
+            // Given an angle from the center of an AABB determine the length from the center to the edge of the AABB on that angle
+
+            // Next lets figure out what quad the angle is in
+            // This is important because it changes the knowns for the equation
+            int quad = (int)Math.Floor(theta / MathHelper.PiOver2);
+
+            float knownDim = 0;
+
+            if (quad == 0 || quad == 2)
+            {
+                // Quad 1 & Quad 3 (they have the same knowns)
+                // In Quads 1 & 3 the known is half the width
+                knownDim = Dimensions.X;
+            }
+            else if (quad == 1 || quad == 3)
+            {
+                // Quad 2 & Quad 4 (they have the same knowns)
+                // In Quads 2 & 4 the known is half the height
+                knownDim = Dimensions.Z;
+            }
+
+            // Next lets isolate the angle to the quad we are in
+            theta = theta % MathHelper.PiOver2;
+
+            // Now lets use this angle and the known dimension to calculate the length to the edge
+            return (float)Math.Cos(theta) * knownDim / 2;
         }
 
         public override float GetSurfaceArea()

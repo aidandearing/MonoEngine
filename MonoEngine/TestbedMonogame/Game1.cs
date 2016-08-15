@@ -60,7 +60,7 @@ namespace TestbedMonogame
             this.Components.Add(PhysicsEngine.Instance(this, PhysicsEngine.EngineTypes.Physics2D));
             this.Components.Add(RenderManager.Instance(this, spriteBatch));
 
-            PhysicsEngine.PhysicsSettings.WORLD_FORCE = new Vector3(0, -9.8f, 0);
+            //PhysicsEngine.PhysicsSettings.WORLD_FORCE = new Vector3(0, -9.8f, 0);
         }
 
         /// <summary>
@@ -86,25 +86,24 @@ namespace TestbedMonogame
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             GameObject obj = new GameObject("wall");
-            obj.transform.Translate(new Vector3(0, 0, 0));
             obj.AddComponent(ModelRenderer.MakeModelRenderer(obj, "BasicWall"));
-            PhysicsBody2D body = new PhysicsBody2D(obj, "wall", new AABB(obj.transform, 1, 1), new PhysicsMaterial(1,0,0), PhysicsEngine.BodyType.STATIC);
+            PhysicsBody2D body = new PhysicsBody2D(obj, "wall", new AABB(obj.transform, 1, 1), new PhysicsMaterial(1,0,1), PhysicsEngine.BodyType.STATIC);
             obj.AddComponent(body);
             obj.AddComponent(new Camera("camera"));
 
             GameObjectManager.AddGameObject(obj);
 
-            obj = new GameObject("floor");
-            obj.transform.Translate(new Vector3(0f, 0, 0));
-            obj.AddComponent(ModelRenderer.MakeModelRenderer(obj, "FloorTile"));
-            body = new PhysicsBody2D(obj, "floorA", new Circle(obj.transform, 0.5f), new PhysicsMaterial(1,0,1f), PhysicsEngine.BodyType.SIMPLE);
-            body.Velocity = new Vector3(0.01f, 0, 0);
+            //obj = new GameObject("floor");
+            //obj.transform.Translate(new Vector3(0f, 0, 0));
+            //obj.AddComponent(ModelRenderer.MakeModelRenderer(obj, "FloorTile"));
+            //body = new PhysicsBody2D(obj, "floorA", new Circle(obj.transform, 0.5f), new PhysicsMaterial(1,0,1f), PhysicsEngine.BodyType.STATIC);
+            //body.Velocity = new Vector3(0.01f, 0, 0);
             //body.RegisterCollisionCallback(new Collision2D.OnCollision(OnCollision2DBody));
-            obj.AddComponent(body);
+            //obj.AddComponent(body);
 
-            GameObjectManager.AddGameObject(obj);
+            //GameObjectManager.AddGameObject(obj);
 
-            obj = new GameObjectReflectionTest("floor2");
+            obj = new GameObject("floor2");
             obj.transform.Translate(new Vector3(2f, 0, 0));
             obj.AddComponent(ModelRenderer.MakeModelRenderer(obj, "FloorTile"));
             body = new PhysicsBody2D(obj, "floorB", new Circle(obj.transform, 0.5f), new PhysicsMaterial(1,0,1f), PhysicsEngine.BodyType.SIMPLE);

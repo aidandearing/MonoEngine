@@ -19,7 +19,6 @@ namespace MonoEngine.Render
 
         public void Draw()
         {
-            
             //model.Draw(Physics.WorldToRender(Camera.Transformation.Transformation + parent.transform.Transformation), Camera.View, Camera.Projection);
             model.Draw(PhysicsEngine.WorldToRender(Camera.MainCamera.transform.Transformation + transform.Transformation), Camera.MainCamera.View, Camera.MainCamera.Projection);
         }

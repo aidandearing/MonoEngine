@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace MonoEngine.Shapes
 {
@@ -30,7 +31,7 @@ namespace MonoEngine.Shapes
             // Circle Intersect logic
             if (shape is Circle)
             {
-                // Circle intersect Circle
+                // Circle overlap Circle
                 Vector3 delta = shape.transform.Position - transform.Position;
                 lastOverlap_delta = delta;
                 lastOverlap_radius = Radius + ((Circle)shape).Radius;
@@ -46,12 +47,15 @@ namespace MonoEngine.Shapes
                 // Circle intersect AABB
                 Vector3 delta = shape.transform.Position - transform.Position;
                 lastOverlap_delta = delta;
+                Vector3 dN = Vector3.Normalize(delta);
+                float theta = (float)Math.Atan(dN.Z / dN.X);
+                float length = ((AABB)shape).LengthAtAngle(theta);
 
                 // Check the Circle against the bounding circle of the AABB
-                if (delta.Length() < Radius + ((AABB)shape).Diagonal)
+                if (delta.Length() < Radius + length)
                 {
                     // This means the box is fully within the circle
-                    if (delta.Length() <= Radius - ((AABB)shape).Diagonal)
+                    if (delta.Length() <= Radius - length)
                     {
                         return true;
                     }

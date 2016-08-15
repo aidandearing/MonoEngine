@@ -13,8 +13,26 @@ namespace MonoEngine.Physics.Physics2D
 
         private Collision2D(PhysicsBody2D A, PhysicsBody2D B)
         {
-            BodyA = A;
-            BodyB = B;
+            // For ease of computing around static dynamic collisions I have decided the static body should always be BodyA
+            if (A.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC) || A.flagBodyType.HasFlag(PhysicsEngine.BodyType.KINEMATIC) || B.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC) || B.flagBodyType.HasFlag(PhysicsEngine.BodyType.KINEMATIC))
+            {
+                if (A.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC) || A.flagBodyType.HasFlag(PhysicsEngine.BodyType.KINEMATIC))
+                {
+                    BodyA = A;
+                    BodyB = B;
+                }
+                else
+                {
+                    BodyA = B;
+                    BodyB = A;
+                }
+            }
+            else
+            {
+                BodyA = A;
+                BodyB = B;
+            }
+
             type = PhysicsEngine.CollisionType.NONE;
         }
 
@@ -147,13 +165,54 @@ namespace MonoEngine.Physics.Physics2D
                 if (!((BodyA.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC) || BodyA.flagBodyType.HasFlag(PhysicsEngine.BodyType.KINEMATIC)) && (BodyB.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC) || BodyB.flagBodyType.HasFlag(PhysicsEngine.BodyType.KINEMATIC))))
                 {
                     // The bodies are not all kinematic or static (1 could be either static or kinematic, but not both)
-                    if (BodyA.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC) || BodyA.flagBodyType.HasFlag(PhysicsEngine.BodyType.KINEMATIC))
+                    if (!(BodyB.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC) || BodyB.flagBodyType.HasFlag(PhysicsEngine.BodyType.KINEMATIC)))
                     {
-                        // BodyA is static or kinematic and therefore should not move
+                        if (BodyB.flagBodyType.HasFlag(PhysicsEngine.BodyType.RIGID))
+                        {
+                            throw new PhysicsExceptions.NotImplementedYet("Rigidbody 2D collision resolution is not yet implemented");
+                        }
+                        else
+                        {
+                            if (BodyA.shape is Shapes.Circle)
+                            {
+                                if (BodyB.shape is Shapes.Circle)
+                                {
+                                    ResolveCircleCircleStatic(BodyA, BodyB);
+                                }
+                                else if (BodyB.shape is Shapes.AABB)
+                                {
+                                    ResolveCircleAABBStatic(BodyA, BodyB);
+                                }
+                                else
+                                {
+                                    throw new PhysicsExceptions.NotImplementedYet("Poly2D collision resolution is not yet implemented");
+                                }
+                            }
+                            else if (BodyA.shape is Shapes.AABB)
+                            {
+                                if (BodyB.shape is Shapes.Circle)
+                                {
+                                    ResolveCircleAABBStatic(BodyA, BodyB);
+                                }
+                                else if (BodyB.shape is Shapes.AABB)
+                                {
+                                    ResolveAABBAABBStatic(BodyA, BodyB);
+                                }
+                                else
+                                {
+                                    throw new PhysicsExceptions.NotImplementedYet("Poly2D collision resolution is not yet implemented");
+                                }
+                            }
+                            else
+                            {
+                                throw new PhysicsExceptions.NotImplementedYet("Poly2D collision resolution is not yet implemented");
+                            }
+                        }
                     }
                     else if (BodyB.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC) || BodyB.flagBodyType.HasFlag(PhysicsEngine.BodyType.KINEMATIC))
                     {
-                        // BodyB is static or kinematic and therefore should not move
+                        // Both are static
+
                     }
                     else
                     {
@@ -165,7 +224,6 @@ namespace MonoEngine.Physics.Physics2D
                         else
                         {
                             // Both bodies are PhysicsEngine.BodyType.SIMPLE
-                            // Lets resolve BodyA first
                             if (BodyA.shape is Shapes.Circle)
                             {
                                 if (BodyB.shape is Shapes.Circle)
@@ -233,12 +291,28 @@ namespace MonoEngine.Physics.Physics2D
             // Calculate the resulting velocities based on the restitution scalars for both bodies
             if (BodyA.Velocity.LengthSquared() + BodyB.Velocity.LengthSquared() > 0)
             {
-                //float e = (BodyA.Restitution + BodyB.Restitution) / 2;
-
                 float projection = (2 * (Vector3.Dot(BodyA.Velocity * BodyA.Restitution, dN) - Vector3.Dot(BodyB.Velocity * BodyB.Restitution, dN))) / (tM);
 
                 BodyA.Velocity = BodyA.Velocity - projection * BodyA.Mass * dN;
                 BodyB.Velocity = BodyB.Velocity + projection * BodyB.Mass * dN;
+            }
+        }
+
+        // TODO fix Circle vs Circle Static collision resolution
+        internal void ResolveCircleCircleStatic(PhysicsBody2D BodyS, PhysicsBody2D BodyD)
+        {
+            Shapes.Circle BA = BodyS.shape as Shapes.Circle;
+            Shapes.Circle BB = BodyD.shape as Shapes.Circle;
+            Vector3 dN = Vector3.Normalize(BA.lastOverlap_delta);
+            float dR = BA.lastOverlap_radius;
+
+            BodyD.transform.parent.Position = BodyS.transform.Position + dN * dR;
+
+            if (BodyD.Velocity.LengthSquared() > 0)
+            {
+                float projection = 2 * -Vector3.Dot(BodyD.Velocity * Math.Min(BodyD.Restitution, BodyS.Restitution), dN);
+
+                BodyD.Velocity = BodyD.Velocity + projection * dN;
             }
         }
 
@@ -297,6 +371,77 @@ namespace MonoEngine.Physics.Physics2D
             Vector3 newCOM = BodyA.transform.Position * mA + BodyB.transform.Position * mB;
             BodyA.transform.parent.Position = newCOM - (dN * dR * (1 - mA));
             BodyB.transform.parent.Position = newCOM + (dN * dR * (1 - mB));
+
+            // Calculate the resulting velocities based on the restitution scalars for both bodies
+            if (BodyA.Velocity.LengthSquared() + BodyB.Velocity.LengthSquared() > 0)
+            {
+                float projection = (2 * (Vector3.Dot(BodyA.Velocity * BodyA.Restitution, dN) - Vector3.Dot(BodyB.Velocity * BodyB.Restitution, dN))) / (tM);
+
+                if (BodyA.shape is Shapes.AABB)
+                {
+                    BodyA.Velocity = BodyA.Velocity - projection * BodyA.Mass * dN;
+
+                    if (Math.Abs(dN.X) > Math.Abs(dN.Y))
+                    {
+                        BodyB.Velocity = new Vector3(-BodyB.Velocity.X, BodyB.Velocity.Y, BodyB.Velocity.Z);
+                    }
+                    else
+                    {
+                        BodyB.Velocity = new Vector3(BodyB.Velocity.X, BodyB.Velocity.Y, -BodyB.Velocity.Z);
+                    }
+                }
+                else
+                {
+                    BodyB.Velocity = BodyB.Velocity + projection * BodyB.Mass * dN;
+
+                    if (Math.Abs(dN.X) > Math.Abs(dN.Y))
+                    {
+                        BodyA.Velocity = new Vector3(-BodyA.Velocity.X, BodyA.Velocity.Y, BodyA.Velocity.Z);
+                    }
+                    else
+                    {
+                        BodyA.Velocity = new Vector3(BodyA.Velocity.X, BodyA.Velocity.Y, -BodyA.Velocity.Z);
+                    }
+                }
+            }
+        }
+
+        internal void ResolveCircleAABBStatic(PhysicsBody2D BodyS, PhysicsBody2D BodyD)
+        {
+            // TODO Circle AABB
+            Shapes.Circle BA = (BodyS.shape is Shapes.Circle) ? BodyS.shape as Shapes.Circle : BodyD.shape as Shapes.Circle;
+            Shapes.AABB BB = (BodyS.shape is Shapes.Circle) ? BodyD.shape as Shapes.AABB : BodyS.shape as Shapes.AABB;
+
+            // Might as well normalize the delta while we are at it
+            Vector3 dN = Vector3.Normalize(BA.lastOverlap_delta);
+            float theta = (float)Math.Atan(dN.Z / dN.X);
+            float length = BB.LengthAtAngle(theta);
+
+            // Time to move the circle and the aabb away from each other along the normal
+            // Calculate a new center of mass for the system, and offset them both their radii away from this center of mass, along the normal, based on their mass percentage of the system
+            float dR = length + BA.Radius;
+            BodyD.transform.parent.Position = BodyS.transform.Position + (dN * dR);
+
+            if (BodyB.Velocity.LengthSquared() > 0 && Vector3.Dot(Vector3.Normalize(BodyB.Velocity), dN) > 0)
+            {
+                float projection = 2 * -Vector3.Dot(BodyB.Velocity * MathHelper.Min(BodyB.Restitution, BodyA.Restitution), dN);
+
+                if (BodyA.shape is Shapes.AABB)
+                {
+                    if (Math.Abs(dN.X) > Math.Abs(dN.Y))
+                    {
+                        BodyB.Velocity = new Vector3(-BodyB.Velocity.X, BodyB.Velocity.Y, BodyB.Velocity.Z);
+                    }
+                    else
+                    {
+                        BodyB.Velocity = new Vector3(BodyB.Velocity.X, BodyB.Velocity.Y, -BodyB.Velocity.Z);
+                    }
+                }
+                else
+                {
+                    BodyB.Velocity = BodyB.Velocity + projection * BodyB.Mass * dN;
+                }
+            }
         }
 
         internal void ResolveAABBAABBSimple()
@@ -337,6 +482,38 @@ namespace MonoEngine.Physics.Physics2D
                 {// Bottom
                     BodyA.transform.parent.Position = newCOM - new Vector3(0, 0, tD.Z * mA);
                     BodyB.transform.parent.Position = newCOM + new Vector3(0, 0, tD.Z * mB);
+                }
+            }
+        }
+
+        internal void ResolveAABBAABBStatic(PhysicsBody2D BodyS, PhysicsBody2D BodyD)
+        {
+            Shapes.AABB BA = BodyS.shape as Shapes.AABB;
+            Shapes.AABB BB = BodyD.shape as Shapes.AABB;
+
+            Vector3 delta = BB.transform.Position - BA.transform.Position;
+            Vector3 tD = (BA.Dimensions + BB.Dimensions) / 2;
+
+            if (Math.Abs(delta.X) > Math.Abs(delta.Z))
+            {
+                if (delta.X < 0)
+                {// Left
+                    BodyD.transform.parent.Position = BodyS.transform.Position - new Vector3(tD.X, 0, 0);
+                }
+                else
+                {// Right
+                    BodyD.transform.parent.Position = BodyS.transform.Position + new Vector3(tD.X, 0, 0);
+                }
+            }
+            else
+            {
+                if (delta.Z < 0)
+                {// Top
+                    BodyD.transform.parent.Position = BodyS.transform.Position - new Vector3(0, 0, tD.Z);
+                }
+                else
+                {// Bottom
+                    BodyD.transform.parent.Position = BodyS.transform.Position + new Vector3(0, 0, tD.Z);
                 }
             }
         }
