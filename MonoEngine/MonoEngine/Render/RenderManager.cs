@@ -77,12 +77,21 @@ namespace MonoEngine.Render
 
         public static void RegisterDrawCallBack(SpriteRenderer renderer, RenderManager.DrawCallBack callback)
         {
-            instance.CallBack_Model.Add(callback);
+            instance.CallBack_Sprite.Add(callback);
         }
 
         public static void UnRegisterDrawCallBack(SpriteRenderer renderer, RenderManager.DrawCallBack callback)
         {
-            instance.CallBack_Model.Remove(callback);
+            instance.CallBack_Sprite.Remove(callback);
+        }
+        public static void RegisterDrawCallBack(TextRenderer renderer, RenderManager.DrawCallBack callback)
+        {
+            instance.CallBack_Text.Add(callback);
+        }
+
+        public static void UnRegisterDrawCallBack(TextRenderer renderer, RenderManager.DrawCallBack callback)
+        {
+            instance.CallBack_Text.Remove(callback);
         }
 
         public override void Draw(GameTime gameTime)
@@ -91,14 +100,21 @@ namespace MonoEngine.Render
             {
                 draw();
             }
+
+            spriteBatch.Begin();
+
             foreach (DrawCallBack draw in CallBack_Sprite)
             {
-                spriteBatch.Begin();
-
                 draw();
-
-                spriteBatch.End();
             }
+
+            foreach (DrawCallBack draw in CallBack_Text)
+            {
+                draw(); 
+            }
+
+            spriteBatch.End();
+
             base.Draw(gameTime);
         }
         

@@ -47,6 +47,7 @@
     <Compile Include="Physics\PhysicsMaterial.cs" />
     <Compile Include="Render\RenderManager.cs" />
     <Compile Include="Render\SpriteRenderer.cs" />
+    <Compile Include="Render\TextRenderer.cs" />
     <Compile Include="Shapes\AABB.cs" />
     <Compile Include="Game\Camera.cs" />
     <Compile Include="Shapes\Circle.cs" />
@@ -68,7 +69,9 @@
     <Compile Include="Audio\SoundManager.cs" />
     <Compile Include="Time.cs" />
     <Compile Include="Transform.cs" />
+    <Compile Include="Render\Font.cs" />
     <Compile Include="UI\UIAlignment.cs" />
+    <Compile Include="UI\UIText.cs" />
     <Compile Include="Value.cs" />
     <Compile Include="UI\UIBehaviour.cs" />
     <Compile Include="UI\UIManager.cs" />
