@@ -72,6 +72,7 @@ namespace TestbedMonogame
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            Resources.Initialise();
 
             base.Initialize();
         }
@@ -87,7 +88,7 @@ namespace TestbedMonogame
             this.Components.Add(RenderManager.Instance(this, spriteBatch));
 
             GameObject obj = new GameObject("wall");
-            obj.AddComponent(Resources.LoadModel("BasicWall"));
+            obj.AddComponent(ModelRenderer.MakeModelRenderer("BasicWall"));
             PhysicsBody2D body = new PhysicsBody2D(obj, "wall", new AABB(obj.transform, 1, 1), new PhysicsMaterial(1,0,1), PhysicsEngine.BodyType.STATIC);
             obj.AddComponent(body);
             obj.AddComponent(new Camera("camera"));
@@ -106,7 +107,7 @@ namespace TestbedMonogame
 
             obj = new GameObject("floor2");
             obj.transform.Translate(new Vector3(2f, 0, 0));
-            obj.AddComponent(Resources.LoadModel("FloorTile"));
+            obj.AddComponent(ModelRenderer.MakeModelRenderer("FloorTile"));
             body = new PhysicsBody2D(obj, "floorB", new Circle(obj.transform, 0.5f), new PhysicsMaterial(1,0,1f), PhysicsEngine.BodyType.SIMPLE);
             body.Velocity = new Vector3(-0.01f, 0, 0);
             //body.RegisterCollisionCallback(new Collision2D.OnCollision(OnCollision2DBody));

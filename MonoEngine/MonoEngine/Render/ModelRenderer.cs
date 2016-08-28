@@ -20,5 +20,10 @@ namespace MonoEngine.Render
             //model.Draw(Physics.WorldToRender(Camera.Transformation.Transformation + parent.transform.Transformation), Camera.View, Camera.Projection);
             model.Draw(PhysicsEngine.WorldToRender(Camera.MainCamera.transform.Transformation + transform.Transformation), Camera.MainCamera.View, Camera.MainCamera.Projection);
         }
+
+        public static ModelRenderer MakeModelRenderer(string name)
+        {
+            return new ModelRenderer(name, Resources.LoadModel(name));
+        }
     }
 }

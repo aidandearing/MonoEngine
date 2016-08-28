@@ -3,14 +3,17 @@ using System.IO;
 using MonoEngine.Render;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MonoEngine
+namespace MonoEngine.Assets
 {
     public class Resources
     {
         private static Resources instance;
         private Resources()
         {
-
+            models = new Dictionary<string, Model>();
+            fonts = new Dictionary<string, Font>();
+            texture2Ds = new Dictionary<string, Texture2D>();
+            renderTarget2Ds = new Dictionary<string, RenderTarget2D>();
         }
 
         public static Resources Initialise()
@@ -24,7 +27,7 @@ namespace MonoEngine
         private Dictionary<string, Texture2D> texture2Ds;
         private Dictionary<string, RenderTarget2D> renderTarget2Ds;
 
-        public static ModelRenderer LoadModel(string name)
+        public static Model LoadModel(string name)
         {
             // Load a model from a name at the Assets/Models/ + name.xnb pathway
 
@@ -37,7 +40,7 @@ namespace MonoEngine
                 instance.models.Add(name, model);
             }
             // Pass the model at that key in the dictionary
-            return new ModelRenderer(name, instance.models[name]);
+            return instance.models[name];
         }
 
         public static Font LoadFont(string name)
