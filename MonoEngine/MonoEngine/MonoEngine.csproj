@@ -47,6 +47,7 @@
     <Compile Include="Physics\PhysicsEngine.cs" />
     <Compile Include="Physics\PhysicsExceptions.cs" />
     <Compile Include="Physics\PhysicsMaterial.cs" />
+    <Compile Include="Assets\Font.cs" />
     <Compile Include="Render\RenderExceptions.cs" />
     <Compile Include="Render\RenderManager.cs" />
     <Compile Include="Render\SpriteRenderer.cs" />
@@ -73,7 +74,6 @@
     <Compile Include="Audio\SoundManager.cs" />
     <Compile Include="Time.cs" />
     <Compile Include="Transform.cs" />
-    <Compile Include="Render\Font.cs" />
     <Compile Include="UI\UIAlignment.cs" />
     <Compile Include="UI\UIText.cs" />
     <Compile Include="Value.cs" />
