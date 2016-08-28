@@ -21,6 +21,14 @@ namespace MonoEngine.Game
         }
 
         // Scenes need to be retrieved from a .scene file (xml) in the Assets/Scenes/ directory
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            gameObjects = new List<GameObject>();
+
+            gameObjectsDead = new List<GameObject>();
+        }
 
         // Scenes need to be loaded to the game (1 scene is loaded at any one time)
 

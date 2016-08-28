@@ -47,7 +47,15 @@ namespace MonoEngine.Assets
         {
             // Load a font from a name at the Assets/Fonts/ + name#.xnb pathway (plus all it's sizes)
 
-            string[] paths = Directory.GetFiles(@".\Content\Assets\Fonts\", name + "*.xnb");
+            string[] paths = Directory.GetFiles(@".\Content\Assets\Fonts\", name + "_*.xnb");
+
+            char[] delimiters = { '.', '\\', '_' };
+            foreach (string path in paths)
+            {
+                string[] split = path.Split(delimiters);
+                // path looks like this .\\Content\\Assets\\Fonts\\name_*.xnb
+                // delimited it becomes split[0] = "" | split[1] = "" | split[2] = "Content" | split[3] = "Assets" | split[4] = "Fonts" | split[5] = "name" | split[6] = "*" | split[7] = "xnb"
+            }
 
             // Verified that all paths are name+# and not some other random characters
             // Sort them smallest number to largest

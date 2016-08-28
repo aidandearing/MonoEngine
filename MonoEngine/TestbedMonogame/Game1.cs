@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoEngine;
+using MonoEngine.Assets;
 using MonoEngine.Audio;
 using MonoEngine.Game;
 using MonoEngine.Physics;
