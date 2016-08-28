@@ -17,8 +17,8 @@ namespace MonoEngine.Render
         {
             this.fontSizes = fontSizes;
             this.fontStyles = fontStyles;
-
             fonts = new Dictionary<string, Font>();
+            
         }
 
         public SpriteFont GetFont(int size)

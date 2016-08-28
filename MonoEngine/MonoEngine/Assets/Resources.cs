@@ -2,6 +2,7 @@
 using System.IO;
 using MonoEngine.Render;
 using Microsoft.Xna.Framework.Graphics;
+using System.Linq;
 
 namespace MonoEngine.Assets
 {
@@ -50,19 +51,40 @@ namespace MonoEngine.Assets
             string[] paths = Directory.GetFiles(@".\Content\Assets\Fonts\", name + "_*.xnb");
 
             char[] delimiters = { '.', '\\', '_' };
+
+            List<int> sizes = null;
+            int size = 0;
+            List<SpriteFont> fonts = new List<SpriteFont>();
             foreach (string path in paths)
             {
                 string[] split = path.Split(delimiters);
                 // path looks like this .\\Content\\Assets\\Fonts\\name_*.xnb
                 // delimited it becomes split[0] = "" | split[1] = "" | split[2] = "Content" | split[3] = "Assets" | split[4] = "Fonts" | split[5] = "name" | split[6] = "*" | split[7] = "xnb"
+                int.TryParse(split[6], out size);
+
+                if (split[6] != null)
+                {
+                    if (sizes == null)
+                    {
+                        sizes = new List<int>();
+                        sizes.Add(size);
+                        fonts.Add(ContentHelper.Content.Load<SpriteFont>("Assets/Fonts/" + name + "_" + split[6]));
+                    }
+                    else
+                    {
+                        for (int i = 0; i < sizes.Count; i++)
+                        {
+                            if (size < sizes[i])
+                            {
+                                sizes.Insert(i, size);
+                                fonts.Insert(i, ContentHelper.Content.Load<SpriteFont>("Assets/Fonts/" + name + "_" + split[6]));
+                            }
+                        }
+                    }
+                    
+                }
+                return new Font(sizes.ToArray(), fonts.ToArray());
             }
-
-            // Verified that all paths are name+# and not some other random characters
-            // Sort them smallest number to largest
-            // Store the sizes in an array of ints (smallest to largest)
-            // Store the loaded sprite fonts in an array of spritefonts (smallest to largest)
-
-            // Return the font, not null
             return null;
         }
 
