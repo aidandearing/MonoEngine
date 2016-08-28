@@ -124,6 +124,7 @@ namespace TestbedMonogame
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
+            SceneManager.UnloadScene();
         }
 
         /// <summary>
