@@ -51,7 +51,7 @@
     <Compile Include="Render\RenderManager.cs" />
     <Compile Include="Render\SpriteRenderer.cs" />
     <Compile Include="Render\TextRenderer.cs" />
-    <Compile Include="Resources.cs" />
+    <Compile Include="Assets\Resources.cs" />
     <Compile Include="Shapes\AABB.cs" />
     <Compile Include="Game\Camera.cs" />
     <Compile Include="Shapes\Circle.cs" />
