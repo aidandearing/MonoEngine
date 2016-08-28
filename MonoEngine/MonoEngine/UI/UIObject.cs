@@ -37,9 +37,6 @@ namespace MonoEngine.UI
             bounds.Y = (int)boundsAlignment.Y;
 
             origin = alignment.GetAlignment(this, this);
-
-            
-            
         }
 
         public void AddUIObject(UIObject obj)

@@ -12,6 +12,7 @@ namespace MonoEngine.Render
     public class TextRenderer : GameObject
     {
         private static Dictionary<string, string> textSnippets = new Dictionary<string, string>();
+
         private TextRenderer(string name, string text) : base(name)
         {
             RenderManager.RegisterDrawCallBack(this, new RenderManager.DrawCallBack(Draw));
