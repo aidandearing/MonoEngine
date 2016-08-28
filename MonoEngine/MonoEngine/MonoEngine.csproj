@@ -41,13 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Game\Scene.cs" />
+    <Compile Include="Game\SceneManager.cs" />
     <Compile Include="Physics\Physics2D\Ray2D.cs" />
     <Compile Include="Physics\PhysicsEngine.cs" />
     <Compile Include="Physics\PhysicsExceptions.cs" />
     <Compile Include="Physics\PhysicsMaterial.cs" />
+    <Compile Include="Render\RenderExceptions.cs" />
     <Compile Include="Render\RenderManager.cs" />
     <Compile Include="Render\SpriteRenderer.cs" />
     <Compile Include="Render\TextRenderer.cs" />
+    <Compile Include="Resources.cs" />
     <Compile Include="Shapes\AABB.cs" />
     <Compile Include="Game\Camera.cs" />
     <Compile Include="Shapes\Circle.cs" />

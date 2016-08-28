@@ -23,6 +23,7 @@ namespace TestbedMonogame
         {
             graphics = new GraphicsDeviceManager(this);
             GraphicsHelper.graphics = graphics;
+            GraphicsHelper.graphicsDevice = GraphicsDevice;
             Content.RootDirectory = "Content";
             ContentHelper.Content = Content;
 
@@ -58,7 +59,6 @@ namespace TestbedMonogame
             this.Components.Add(SoundManager.Instance(this));
             this.Components.Add(SongManager.Instance(this));
             this.Components.Add(PhysicsEngine.Instance(this, PhysicsEngine.EngineTypes.Physics2D));
-            this.Components.Add(RenderManager.Instance(this, spriteBatch));
 
             //PhysicsEngine.PhysicsSettings.WORLD_FORCE = new Vector3(0, -9.8f, 0);
         }
@@ -84,9 +84,10 @@ namespace TestbedMonogame
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            this.Components.Add(RenderManager.Instance(this, spriteBatch));
 
             GameObject obj = new GameObject("wall");
-            obj.AddComponent(ModelRenderer.MakeModelRenderer(obj, "BasicWall"));
+            obj.AddComponent(Resources.LoadModel("BasicWall"));
             PhysicsBody2D body = new PhysicsBody2D(obj, "wall", new AABB(obj.transform, 1, 1), new PhysicsMaterial(1,0,1), PhysicsEngine.BodyType.STATIC);
             obj.AddComponent(body);
             obj.AddComponent(new Camera("camera"));
@@ -105,7 +106,7 @@ namespace TestbedMonogame
 
             obj = new GameObject("floor2");
             obj.transform.Translate(new Vector3(2f, 0, 0));
-            obj.AddComponent(ModelRenderer.MakeModelRenderer(obj, "FloorTile"));
+            obj.AddComponent(Resources.LoadModel("FloorTile"));
             body = new PhysicsBody2D(obj, "floorB", new Circle(obj.transform, 0.5f), new PhysicsMaterial(1,0,1f), PhysicsEngine.BodyType.SIMPLE);
             body.Velocity = new Vector3(-0.01f, 0, 0);
             //body.RegisterCollisionCallback(new Collision2D.OnCollision(OnCollision2DBody));

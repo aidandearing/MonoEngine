@@ -81,13 +81,14 @@
     <None Include="Content\Assets\Models\ShortWall.FBX" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Content\Assets\Fonts\" />
     <Folder Include="Content\Assets\Sounds\" />
     <Folder Include="Content\Assets\Textures\" />
+    <Folder Include="Content\Assets\UI\Screens\" />
+    <Folder Include="Content\Assets\UI\Widgets\" />
+    <Folder Include="Content\Assets\World\Maps\" />
+    <Folder Include="Content\Assets\World\XML\" />
     <Folder Include="Content\Assets\XML\" />
-    <Folder Include="Content\UI\Screens\" />
-    <Folder Include="Content\UI\Widgets\" />
-    <Folder Include="Content\World\Maps\" />
-    <Folder Include="Content\World\XML\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

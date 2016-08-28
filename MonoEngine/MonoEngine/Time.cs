@@ -12,12 +12,6 @@ namespace MonoEngine
             {
                 return instance.deltaTime;
             }
-
-            internal set
-            {
-                LastDeltaTime = instance.deltaTime;
-                instance.deltaTime = value;
-            }
         }
 
         private float deltaTime_last;
@@ -28,11 +22,6 @@ namespace MonoEngine
             {
                 return instance.deltaTime_last;
             }
-
-            internal set
-            {
-                instance.deltaTime_last = value;
-            }
         }
 
         private float elapsedTime;
@@ -42,11 +31,6 @@ namespace MonoEngine
             get
             {
                 return instance.elapsedTime;
-            }
-
-            internal set
-            {
-                instance.elapsedTime = value;
             }
         }
 
