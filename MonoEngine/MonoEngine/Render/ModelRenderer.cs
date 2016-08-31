@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using MonoEngine.Assets;
 using MonoEngine.Game;
 using MonoEngine.Physics;
 
@@ -23,7 +24,7 @@ namespace MonoEngine.Render
 
         public static ModelRenderer MakeModelRenderer(string name)
         {
-            return new ModelRenderer(name, Resources.LoadModel(name));
+            return new ModelRenderer(name, Resources.LoadModel(name, SceneManager.activeScene));
         }
     }
 }

@@ -1,9 +1,12 @@
 ﻿using System.Xml;
+using MonoEngine.Assets;
 
 namespace MonoEngine.Game
 {
     public class Scene
     {
+        public SceneAssetsPackage assets;
+
         internal Scene (XmlReader reader)
         {
             // Read down the xml and load all the references, via their xml based constructors
