@@ -44,7 +44,6 @@ namespace MonoEngine.Game
         public static void UnloadScene()
         {
             activeScene = null;
-            // More Garbage Collection magic. Uhhhh, refer to the above paragraph.
         }
     }
 }

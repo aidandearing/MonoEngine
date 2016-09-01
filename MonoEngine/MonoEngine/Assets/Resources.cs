@@ -1,14 +1,168 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Xml;
 using MonoEngine.Render;
 using Microsoft.Xna.Framework.Graphics;
 using MonoEngine.Game;
+using MonoEngine.Physics;
+using MonoEngine.Physics.Physics2D;
+using MonoEngine.Physics.Physics3D;
 using MonoEngine.UI;
 
 namespace MonoEngine.Assets
 {
     public class Resources
     {
+        /// <summary>
+        /// An enumerator for all Types of Resources
+        /// </summary>
+        public enum Type { Camera, GameObject, Model, ModelRenderer, PhysicsBody2D, PhysicsMaterial, SpriteRenderer, TextRenderer }
+
+        public static object Ref(XmlReader reader, out Type type)
+        {
+            // This will be called whenever a reader has found a <ref> element and should do whatever is appropriate to make that <ref> into an object
+
+            Enum.TryParse(reader["type"], out type);
+
+            switch (type)
+            {
+                case Type.Camera:
+                    return instance.MakeCamera(reader);
+                case Type.GameObject:
+                    return instance.MakeGameObject(reader);
+                case Type.Model:
+                    return instance.MakeModel(reader);
+                case Type.ModelRenderer:
+                    return instance.MakeModelRenderer(reader);
+                case Type.PhysicsBody2D:
+                    return null;
+                case Type.PhysicsMaterial:
+                    return null;
+                case Type.SpriteRenderer:
+                    return null;
+                case Type.TextRenderer:
+                    return null;
+                default:
+                    return null;
+            }
+        }
+
+        public static object Find(XmlReader reader, out Type type)
+        {
+            Enum.TryParse(reader["type"], out type);
+
+            return null;
+        }
+
+        public static object Make(XmlReader reader, out Type type)
+        {
+            Enum.TryParse(reader["type"], out type);
+
+            return null;
+        }
+
+        private Camera MakeCamera(XmlReader reader)
+        {
+            return null;
+        }
+
+        private GameObject MakeGameObject(XmlReader reader)
+        {
+            int depth = reader.Depth;
+
+            GameObject gameObject = null;
+
+            while (reader.Read() && depth < reader.Depth)
+            {
+                if (reader.IsStartElement())
+                {
+                    switch(reader.Name)
+                    {
+                        case "name":
+                            if (gameObjects.ContainsKey(reader.Value))
+                                gameObject = gameObjects[reader.Value];
+                            else
+                                gameObject = new GameObject(reader.Value);
+                            break;
+                        case "transform":
+                            // This is an optional xml node
+                            gameObject.transform = Transform.XmlToTransform(reader);
+                            break;
+                        case "ref":
+                            Type type;
+                            object obj = Ref(reader, out type);
+                            AttachRefToGameObject(type, gameObject, obj);
+                            break;
+                    }
+                }
+            }
+
+            return gameObject;
+        }
+
+        private void AttachRefToGameObject(Type type, GameObject gameObject, object obj)
+        {
+            switch (type)
+            {
+                case Type.Camera:
+                    gameObject.AddComponent(obj as Camera);
+                    break;
+                case Type.GameObject:
+                    gameObject.AddComponent(obj as GameObject);
+                    break;
+                case Type.Model:
+                    // Log a warning that GameObjects don't support having raw models as components, instead make it a model renderer
+                    break;
+                case Type.ModelRenderer:
+                    gameObject.AddComponent(obj as ModelRenderer);
+                    break;
+                case Type.PhysicsBody2D:
+                    gameObject.AddComponent(obj as PhysicsBody2D);
+                    break;
+                case Type.PhysicsMaterial:
+                    // Log a warning that GameObjects don't support having a physics material as a component
+                    break;
+                case Type.SpriteRenderer:
+                    gameObject.AddComponent(obj as SpriteRenderer);
+                    break;
+                case Type.TextRenderer:
+                    gameObject.AddComponent(obj as TextRenderer);
+                    break;
+            }
+        }
+
+        private Model MakeModel(XmlReader reader)
+        {
+            return null;
+        }
+
+        private ModelRenderer MakeModelRenderer(XmlReader reader)
+        {
+            return null;
+        }
+
+        private PhysicsBody2D MakePhysicsBody2D(XmlReader reader)
+        {
+            return null;
+        }
+
+        private PhysicsMaterial MakePhysicsMaterial(XmlReader reader)
+        {
+            return null;
+        }
+
+        private SpriteRenderer MakeSpriteRenderer(XmlReader reader)
+        {
+            return null;
+        }
+
+        private UIObject MakeUIObject(XmlReader reader)
+        {
+            // Take the reader, and make a UIObject from it
+            return null;
+        }
+
         private static Resources instance;
         private Resources()
         {

@@ -1,10 +1,36 @@
 ﻿using System;
+using System.Xml;
 using Microsoft.Xna.Framework;
 
 namespace MonoEngine
 {
     public class Transform
     {
+        public static Transform XmlToTransform(XmlReader reader)
+        {
+            Transform newTransform = null;
+
+            int depth = reader.Depth;
+
+            while (reader.Read() && depth < reader.Depth)
+            {
+                if (reader.IsStartElement())
+                {
+                    switch(reader.Name)
+                    {
+                        case "vector4":
+                            break;
+                        case "vector3":
+                            break;
+                        case "vector2":
+                            break;
+                    }
+                }
+            }
+
+            return newTransform;
+        }
+
         public Transform parent;
 
         private Matrix transformation;

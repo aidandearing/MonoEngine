@@ -27,6 +27,11 @@ namespace MonoEngine.Assets
             this.parent = parent;
         }
 
+        /// <summary>
+        /// Given another SceneAssetsPackage this method will return a SceneAssetsPackage that contains only the assets that this SceneAssetsPackage does not have in common with the other (The ones this one has and the other doesn't)
+        /// </summary>
+        /// <param name="other">The SceneAssetsPackage to compare against</param>
+        /// <returns>A SceneAssetsPackage with only the assets this package has and the other does not.</returns>
         public SceneAssetsPackage Difference(SceneAssetsPackage other)
         {
             SceneAssetsPackage package = new SceneAssetsPackage();

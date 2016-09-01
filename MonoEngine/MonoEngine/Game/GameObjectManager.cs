@@ -6,6 +6,7 @@ namespace MonoEngine.Game
     public class GameObjectManager : DrawableGameComponent
     {
         private List<GameObject> gameObjects;
+        private Dictionary<string, GameObject> lookup;
         private List<GameObject> gameObjectsDead;
 
         private static GameObjectManager instance;
@@ -25,6 +26,7 @@ namespace MonoEngine.Game
         public static void AddGameObject(GameObject obj)
         {
             instance.gameObjects.Add(obj);
+            instance.lookup.Add(obj.Name, obj);
         }
 
         public static void RemoveGameObject(GameObject obj)
@@ -52,6 +54,7 @@ namespace MonoEngine.Game
             foreach (GameObject obj in gameObjectsDead)
             {
                 gameObjects.Remove(obj);
+                lookup.Remove(obj.Name);
             }
             gameObjectsDead.Clear();
         }
@@ -66,30 +69,11 @@ namespace MonoEngine.Game
             //}
         }
 
-        public static GameObject GetGameObjectByName(string name)
-        {
-            foreach (GameObject obj in instance.gameObjects)
-            {
-                if (obj.Name == name)
-                    return obj;
-            }
-
-            return null;
-        }
-
-        public static List<GameObject> GetGameObjectsByName(string name)
-        {
-            List<GameObject> objs = new List<GameObject>();
-
-            foreach (GameObject obj in instance.gameObjects)
-            {
-                if (obj.Name == name)
-                    objs.Add(obj);
-            }
-
-            return objs;
-        }
-
+        /// <summary>
+        /// Finds the first game object of a specific type
+        /// </summary>
+        /// <typeparam name="T">The type of game object being looked for</typeparam>
+        /// <returns>Null or the found object</returns>
         public static GameObject GetGameObject<T>()
         {
             foreach (GameObject obj in instance.gameObjects)
@@ -101,6 +85,11 @@ namespace MonoEngine.Game
             return null;
         }
 
+        /// <summary>
+        /// Finds all game objects of a specific type
+        /// </summary>
+        /// <typeparam name="T">The type of game object being looked for</typeparam>
+        /// <returns>An empty list or all instances of a specific type</returns>
         public static List<GameObject> GetGameObjects<T>()
         {
             List<GameObject> objs = new List<GameObject>();
@@ -108,6 +97,55 @@ namespace MonoEngine.Game
             foreach (GameObject obj in instance.gameObjects)
             {
                 if (obj is T)
+                    objs.Add(obj);
+            }
+
+            return objs;
+        }
+
+        /// <summary>
+        /// Finds all game objects that come from a Resources template
+        /// </summary>
+        /// <param name="name">The name of the template</param>
+        /// <returns>An empty list or all instances of the template</returns>
+        public static List<GameObject> GetGameObjectsByTemplate(string name)
+        {
+            List<GameObject> objs = new List<GameObject>();
+
+            foreach(GameObject obj in instance.gameObjects)
+            {
+                if (obj.template == name)
+                    objs.Add(obj);
+            }
+
+            return objs;
+        }
+
+        /// <summary>
+        /// Finds the first game object of a specific name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static GameObject GetGameObjectByName(string name)
+        {
+            if (instance.lookup.ContainsKey(name))
+                return instance.lookup[name];
+
+            return null;
+        }
+
+        /// <summary>
+        /// Finds all game objects that contain the name string in their name
+        /// </summary>
+        /// <param name="name">The string they must have in their name</param>
+        /// <returns>A list of all game objects that meet the name contain criteria</returns>
+        public static List<GameObject> GetGameObjectsByName(string name)
+        {
+            List<GameObject> objs = new List<GameObject>();
+
+            foreach (GameObject obj in instance.gameObjects)
+            {
+                if (obj.Name.Contains(name))
                     objs.Add(obj);
             }
 

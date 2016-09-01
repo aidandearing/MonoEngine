@@ -6,6 +6,11 @@ namespace MonoEngine.Game
 {
     public class GameObject
     {
+        /// <summary>
+        /// The template object this object comes from in Resources
+        /// </summary>
+        public string template;
+
         public GameObject parent;
         /// <summary>
         /// This is the list of all components this GameObject has
