@@ -20,6 +20,7 @@ namespace MonoEngine.Render
         private List<RenderManager.DrawCallBack> CallBack_Sprite = new List<RenderManager.DrawCallBack>();
         private List<RenderManager.DrawCallBack> CallBack_Text = new List<RenderManager.DrawCallBack>();
         private List<RenderManager.DrawCallBack> CallBack_UIModel = new List<RenderManager.DrawCallBack>();
+        private List<RenderManager.DrawCallBack> CallBack_RenderTarget = new List<RenderManager.DrawCallBack>();
 
         private static RenderManager instance;
         public static RenderManager Instance(Microsoft.Xna.Framework.Game game, SpriteBatch spiteBatch)
@@ -35,6 +36,7 @@ namespace MonoEngine.Render
             CallBack_Sprite = new List<DrawCallBack>();
             CallBack_Text = new List<DrawCallBack>();
             CallBack_UIModel = new List<DrawCallBack>();
+            CallBack_RenderTarget = new List<DrawCallBack>();
         }
 
         //public static void AddToRenderQueue()
@@ -84,6 +86,7 @@ namespace MonoEngine.Render
         {
             instance.CallBack_Sprite.Remove(callback);
         }
+
         public static void RegisterDrawCallBack(TextRenderer renderer, RenderManager.DrawCallBack callback)
         {
             instance.CallBack_Text.Add(callback);
@@ -92,6 +95,16 @@ namespace MonoEngine.Render
         public static void UnRegisterDrawCallBack(TextRenderer renderer, RenderManager.DrawCallBack callback)
         {
             instance.CallBack_Text.Remove(callback);
+        }
+
+        public static void RegisterDrawCallBack(RenderTargetRenderer renderer, RenderManager.DrawCallBack callback)
+        {
+            instance.CallBack_RenderTarget.Add(callback);
+        }
+
+        public static void UnregisterDrawCallBack(RenderTargetRenderer renderer, RenderManager.DrawCallBack callback)
+        {
+            instance.CallBack_RenderTarget.Remove(callback);
         }
 
         public override void Draw(GameTime gameTime)
@@ -111,6 +124,11 @@ namespace MonoEngine.Render
             foreach (DrawCallBack draw in CallBack_Text)
             {
                 draw(); 
+            }
+
+            foreach (DrawCallBack draw in CallBack_RenderTarget)
+            {
+                draw();
             }
 
             spriteBatch.End();

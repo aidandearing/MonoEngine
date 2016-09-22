@@ -19,7 +19,6 @@ namespace MonoEngine.Render
         {
             this.sprite = sprite;
             RenderManager.RegisterDrawCallBack(this, new RenderManager.DrawCallBack(Draw));
-
         }
         public void Draw()
         {

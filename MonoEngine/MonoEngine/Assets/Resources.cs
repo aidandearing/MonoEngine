@@ -186,6 +186,42 @@ namespace MonoEngine.Assets
         private Dictionary<string, RenderTarget2D> renderTarget2Ds;
         private Dictionary<string, UIObject> uiWidgets;
 
+        public static bool CheckForGameObject(string name)
+        {
+            return instance.gameObjects.ContainsKey(name);
+        }
+        public static bool CheckForFont(string name)
+        {
+            return instance.fonts.ContainsKey(name);
+        }
+        public static bool CheckForModel(string name)
+        {
+            return instance.models.ContainsKey(name);
+        }
+        public static bool CheckForTexture2D(string name)
+        {
+            return instance.texture2Ds.ContainsKey(name);
+        }
+        public static bool CheckForRenderTarget2D(string name)
+        {
+            return instance.renderTarget2Ds.ContainsKey(name);
+        }
+        public static bool CheckForUIWidget(string name)
+        {
+            return instance.uiWidgets.ContainsKey(name);
+        }
+        public static RenderTarget2D GetRenderTarget2D(string name)
+        {
+            if (renderTarget2Ds.ContainsKey(name))
+            {
+                return renderTarget2Ds[name];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public static GameObject LoadGameObject(string name, Scene parent)
         {
             return null;
@@ -227,7 +263,6 @@ namespace MonoEngine.Assets
                             }
                         }
                     }
-
                 }
             }
 
@@ -240,7 +275,7 @@ namespace MonoEngine.Assets
                 // TODO: Log a warning that unbound assets will not unload when a scene switch occurs
             }
 
-            return new Font(sizes.ToArray(), fonts.ToArray());
+            return new Font(sizes.ToArray(), fonts.ToArray(),name);
         }
 
         public static Model LoadModel(string name, Scene parent)

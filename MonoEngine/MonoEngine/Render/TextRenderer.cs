@@ -11,7 +11,9 @@ namespace MonoEngine.Render
 {
     public class TextRenderer : GameObject
     {
-        private static Dictionary<string, string> textSnippets = new Dictionary<string, string>();
+        //TODO: implement drawing to rendertargets that are used as textures for models
+        //public Model model { get; set; }
+        public Font font { get; set; }
 
         private TextRenderer(string name, string text) : base(name)
         {
@@ -20,16 +22,6 @@ namespace MonoEngine.Render
         public void Draw()
         {
             
-        }
-        public static TextRenderer MakeTextRenderer(string name)
-        {
-            string text = "";
-
-            if (!textSnippets.ContainsKey(name))
-            {
-                
-            }
-            return new TextRenderer(name, text);
         }
     }
 }

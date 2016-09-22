@@ -57,8 +57,5 @@ namespace MonoEngine.UI
                 namedObj.RemoveUIObject(obj);
             }
         }
-
-
-
     }
 }

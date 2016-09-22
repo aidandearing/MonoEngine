@@ -22,7 +22,7 @@ namespace MonoEngine.Audio
         private SongManager(Microsoft.Xna.Framework.Game game) : base(game)
         {
         }
-        //Load a song from Content and add it to the list
+        //Load a song from Content and add it to the dictionary
         public static void LoadSong(string songName)
         {
             instance.songList.Add(songName, ContentHelper.Content.Load<Song>("Assets/Music/" + songName));

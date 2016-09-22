@@ -41,6 +41,8 @@ namespace MonoEngine.Game
             gameObjects = new List<GameObject>();
 
             gameObjectsDead = new List<GameObject>();
+
+            lookup = new Dictionary<string, GameObject>();
         }
 
         public override void Update(GameTime gameTime)
