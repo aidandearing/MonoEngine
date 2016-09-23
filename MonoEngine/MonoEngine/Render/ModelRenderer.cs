@@ -10,10 +10,19 @@ namespace MonoEngine.Render
     {
         private Model model;
 
-        internal ModelRenderer(string name, Model model) : base(name)
+        internal ModelRenderer(string name, Model model, string targetName = null) : base(name)
         {
             this.model = model;
-            RenderManager.RegisterDrawCallBack(this, new RenderManager.DrawCallBack(Draw));
+
+            if (targetName == null)
+            {
+                RenderManager.RegisterDrawCallback("default", new RenderTargetBatch.DrawCallback(Draw));
+            }
+            else
+            {
+                RenderManager.RegisterDrawCallback(targetName, new RenderTargetBatch.DrawCallback(Draw));
+            }
+            
         }
 
         public void Draw()

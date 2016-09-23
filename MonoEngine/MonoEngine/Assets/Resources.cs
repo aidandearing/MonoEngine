@@ -212,9 +212,9 @@ namespace MonoEngine.Assets
         }
         public static RenderTarget2D GetRenderTarget2D(string name)
         {
-            if (renderTarget2Ds.ContainsKey(name))
+            if (instance.renderTarget2Ds.ContainsKey(name))
             {
-                return renderTarget2Ds[name];
+                return instance.renderTarget2Ds[name];
             }
             else
             {
@@ -344,6 +344,8 @@ namespace MonoEngine.Assets
             else
             {
                 instance.renderTarget2Ds.Add(name, target);
+                RenderTargetBatch batch = new RenderTargetBatch(name, target);
+                RenderManager.AddRenderTargetBatch(batch);
             }
 
             if (parent != null)

@@ -7,36 +7,96 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoEngine.Game;
 using MonoEngine.UI;
+using MonoEngine.Assets;
 
 namespace MonoEngine.Render
 {
     public class RenderManager : DrawableGameComponent
     {
-        public delegate void DrawCallBack();
+        public delegate void RenderTargetDrawCallback();
 
-        internal static SpriteBatch spriteBatch;
+        public List<RenderTargetDrawCallback> callbacks;
 
-        private List<RenderManager.DrawCallBack> CallBack_Model = new List<RenderManager.DrawCallBack>();
-        private List<RenderManager.DrawCallBack> CallBack_Sprite = new List<RenderManager.DrawCallBack>();
-        private List<RenderManager.DrawCallBack> CallBack_Text = new List<RenderManager.DrawCallBack>();
-        private List<RenderManager.DrawCallBack> CallBack_UIModel = new List<RenderManager.DrawCallBack>();
-        private List<RenderManager.DrawCallBack> CallBack_RenderTarget = new List<RenderManager.DrawCallBack>();
+        public SpriteBatch spriteBatch;
+        
+        private Dictionary<string, RenderTargetBatch> renderTargetBatches;
 
+        private bool isInit;
         private static RenderManager instance;
         public static RenderManager Instance(Microsoft.Xna.Framework.Game game, SpriteBatch spiteBatch)
         {
             instance = (instance == null) ? new RenderManager(game) : instance;
-            RenderManager.spriteBatch = spiteBatch;
+
             return instance;
         }
 
         public RenderManager(Microsoft.Xna.Framework.Game game) : base(game)
         {
-            CallBack_Model = new List<DrawCallBack>();
-            CallBack_Sprite = new List<DrawCallBack>();
-            CallBack_Text = new List<DrawCallBack>();
-            CallBack_UIModel = new List<DrawCallBack>();
-            CallBack_RenderTarget = new List<DrawCallBack>();
+            callbacks = new List<RenderTargetDrawCallback>();
+            renderTargetBatches = new Dictionary<string, RenderTargetBatch>();
+        }
+        public override void Initialize()
+        {
+            if (isInit)
+                return;
+
+            Resources.LoadRenderTarget2D("default", SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, true, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
+
+            Resources.LoadRenderTarget2D("UI", SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents);
+
+            isInit = true;
+        }
+
+        public static void RegisterDrawCallback(string name, RenderTargetBatch.DrawCallback callback)
+        {
+            if (!instance.isInit)
+            {
+                instance.Initialize();
+            }
+            instance.renderTargetBatches[name].RegisterDrawCallBack(callback);
+        }
+        public static void UnRegisterDrawCallback(string name, RenderTargetBatch.DrawCallback callback)
+        {
+            instance.renderTargetBatches[name].UnRegisterDrawCallBack(callback);
+        }
+        
+        public static void RegisterDrawCallback(RenderTargetDrawCallback callback, RenderTargetRenderer renderTargetRenderer)
+        {
+            instance.callbacks.Add(callback);
+        }
+        public static void UnRegisterDrawCallback(RenderTargetDrawCallback callback, RenderTargetRenderer renderTargetRenderer)
+        {
+            instance.callbacks.Remove(callback);
+        }
+
+        public static RenderTargetBatch GetRenderTargetBatch(string name)
+        {
+            if (instance.renderTargetBatches.ContainsKey(name))
+            {
+                return instance.renderTargetBatches[name];
+            }
+            else
+            {
+                return null;
+            }
+        }
+        //make a new rendertargetbatch
+        public static void AddRenderTargetBatch(RenderTargetBatch renderTargetBatch)
+        {
+            //add it to the list of batches 
+            instance.renderTargetBatches.Add(renderTargetBatch.Name, renderTargetBatch);
+        }
+        public override void Draw(GameTime gameTime)
+        {
+            foreach (KeyValuePair<string, RenderTargetBatch> batch in renderTargetBatches)
+            {
+                batch.Value.spriteBatch = spriteBatch;
+                batch.Value.Draw();
+            }
+            foreach (RenderTargetDrawCallback draw in callbacks)
+            {
+                draw();
+            }
         }
 
         //public static void AddToRenderQueue()
@@ -67,75 +127,5 @@ namespace MonoEngine.Render
 
         //    spriteBatch.End();
         //}
-        public static void RegisterDrawCallBack(ModelRenderer renderer, RenderManager.DrawCallBack callback)
-        {
-            instance.CallBack_Model.Add(callback);
-        }
-
-        public static void UnRegisterDrawCallBack(ModelRenderer renderer, RenderManager.DrawCallBack callback)
-        {
-            instance.CallBack_Model.Remove(callback);
-        }
-
-        public static void RegisterDrawCallBack(SpriteRenderer renderer, RenderManager.DrawCallBack callback)
-        {
-            instance.CallBack_Sprite.Add(callback);
-        }
-
-        public static void UnRegisterDrawCallBack(SpriteRenderer renderer, RenderManager.DrawCallBack callback)
-        {
-            instance.CallBack_Sprite.Remove(callback);
-        }
-
-        public static void RegisterDrawCallBack(TextRenderer renderer, RenderManager.DrawCallBack callback)
-        {
-            instance.CallBack_Text.Add(callback);
-        }
-
-        public static void UnRegisterDrawCallBack(TextRenderer renderer, RenderManager.DrawCallBack callback)
-        {
-            instance.CallBack_Text.Remove(callback);
-        }
-
-        public static void RegisterDrawCallBack(RenderTargetRenderer renderer, RenderManager.DrawCallBack callback)
-        {
-            instance.CallBack_RenderTarget.Add(callback);
-        }
-
-        public static void UnregisterDrawCallBack(RenderTargetRenderer renderer, RenderManager.DrawCallBack callback)
-        {
-            instance.CallBack_RenderTarget.Remove(callback);
-        }
-
-        public override void Draw(GameTime gameTime)
-        {
-            foreach (DrawCallBack draw in CallBack_Model)
-            {
-                draw();
-            }
-
-            spriteBatch.Begin();
-
-            foreach (DrawCallBack draw in CallBack_Sprite)
-            {
-                draw();
-            }
-
-            foreach (DrawCallBack draw in CallBack_Text)
-            {
-                draw(); 
-            }
-
-            foreach (DrawCallBack draw in CallBack_RenderTarget)
-            {
-                draw();
-            }
-
-            spriteBatch.End();
-
-            base.Draw(gameTime);
-        }
-        
-
     }
 }

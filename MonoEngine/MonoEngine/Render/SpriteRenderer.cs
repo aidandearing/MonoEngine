@@ -15,10 +15,19 @@ namespace MonoEngine.Render
 
         public Texture2D sprite;
 
-        private SpriteRenderer(string name, Texture2D sprite) : base(name)
+        private SpriteRenderer(string name, Texture2D sprite, string targetName = null) : base(name)
         {
             this.sprite = sprite;
-            RenderManager.RegisterDrawCallBack(this, new RenderManager.DrawCallBack(Draw));
+
+            if (targetName == null)
+            {
+                RenderManager.RegisterDrawCallback("UI", new RenderTargetBatch.DrawCallback(Draw));
+            }
+            else
+            {
+                RenderManager.RegisterDrawCallback(targetName, new RenderTargetBatch.DrawCallback(Draw));
+            }
+
         }
         public void Draw()
         {

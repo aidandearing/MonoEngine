@@ -13,11 +13,12 @@ namespace MonoEngine.Render
     public class RenderTargetRenderer : GameObject
     {
         private RenderTarget2D renderTarget;
+
         private static Dictionary<string, RenderTargetRenderer> renderTargetInstances;
         internal RenderTargetRenderer(string name, RenderTarget2D renderable) : base(name)
         {
             renderTarget = renderable;
-            RenderManager.RegisterDrawCallBack(this, new RenderManager.DrawCallBack(Draw));
+            RenderManager.RegisterDrawCallback(new RenderManager.RenderTargetDrawCallback(Draw), this);
 
             if (renderTargetInstances == null)
             {
@@ -26,7 +27,7 @@ namespace MonoEngine.Render
         }
         public void Draw()
         {
-            RenderManager.spriteBatch.Draw(renderTarget, renderTarget.Bounds, Microsoft.Xna.Framework.Color.White);
+            //RenderManager.spriteBatch.Draw(renderTarget, renderTarget.Bounds, Microsoft.Xna.Framework.Color.White);
         }
 
         public static RenderTargetRenderer MakeRenderTargetRenderer(string name)

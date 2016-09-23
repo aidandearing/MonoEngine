@@ -15,9 +15,16 @@ namespace MonoEngine.Render
         //public Model model { get; set; }
         public Font font { get; set; }
 
-        private TextRenderer(string name, string text) : base(name)
+        private TextRenderer(string name, string text, string targetName = null) : base(name)
         {
-            RenderManager.RegisterDrawCallBack(this, new RenderManager.DrawCallBack(Draw));
+            if (targetName == null)
+            {
+                RenderManager.RegisterDrawCallback("UI", new RenderTargetBatch.DrawCallback(Draw));
+            }
+            else
+            {
+                RenderManager.RegisterDrawCallback(targetName, new RenderTargetBatch.DrawCallback(Draw));
+            }
         }
         public void Draw()
         {
