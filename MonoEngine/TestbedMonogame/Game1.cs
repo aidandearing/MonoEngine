@@ -24,7 +24,6 @@ namespace TestbedMonogame
         {
             graphics = new GraphicsDeviceManager(this);
             GraphicsHelper.graphics = graphics;
-            GraphicsHelper.graphicsDevice = GraphicsDevice;
             Content.RootDirectory = "Content";
             ContentHelper.Content = Content;
 
@@ -86,6 +85,7 @@ namespace TestbedMonogame
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            GraphicsHelper.graphicsDevice = GraphicsDevice;
             this.Components.Add(RenderManager.Instance(this, spriteBatch));
 
             GameObject obj = new GameObject("wall");
