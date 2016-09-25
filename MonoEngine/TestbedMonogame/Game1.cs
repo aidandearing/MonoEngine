@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Xml;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoEngine;
@@ -115,6 +116,24 @@ namespace TestbedMonogame
             obj.AddComponent(body);
 
             GameObjectManager.AddGameObject(obj);
+
+            // Testing whether xml to transform works.
+            using (XmlReader reader = XmlReader.Create(@"./Content/Assets/Scenes/XMLFile1.xml"))
+            {
+                while (reader.Read())
+                {
+                    if (reader.IsStartElement())
+                    {
+                        switch(reader.Name)
+                        {
+                            case "transform":
+                                Transform transform = Transform.XmlToTransform(reader);
+                                break;
+                        }
+                    }
+                }
+            }
+            // It does.
         }
 
         /// <summary>

@@ -1,16 +1,28 @@
 ﻿using System;
 using System.Xml;
 using Microsoft.Xna.Framework;
+using MonoEngine.Assets;
 
 namespace MonoEngine
 {
     public class Transform
     {
+        private enum ReaderFormat { vectors, transformations, none };
         public static Transform XmlToTransform(XmlReader reader)
         {
             Transform newTransform = null;
 
             int depth = reader.Depth;
+            int depth_inner_1;
+
+            int currentVector = -1;
+
+            ReaderFormat format = ReaderFormat.none;
+
+            Vector4 v1 = new Vector4();
+            Vector4 v2 = new Vector4();
+            Vector4 v3 = new Vector4();
+            Vector4 v4 = new Vector4();
 
             while (reader.Read() && depth < reader.Depth)
             {
@@ -19,14 +31,239 @@ namespace MonoEngine
                     switch(reader.Name)
                     {
                         case "vector4":
+                            if (format == ReaderFormat.none)
+                                format = ReaderFormat.vectors;
+                            else if (format == ReaderFormat.transformations)
+                                throw new AssetExceptions.TransformFromXMLFormat("The transform xml is incorrectly formatted, and mixes both transformation format (translation, rotation, scale) with vector format.");
+
+                            currentVector++;
+                            depth_inner_1 = reader.Depth;
+
+                            while (reader.Read() && depth_inner_1 < reader.Depth)
+                            {
+                                if (reader.IsStartElement())
+                                {
+                                    switch(reader.Name)
+                                    {
+                                        case "x":
+                                            reader.Read();
+                                            if (currentVector == 0)
+                                            {
+                                                v1.X = float.Parse(reader.Value);
+                                            }
+                                            else if (currentVector == 1)
+                                            {
+                                                v2.X = float.Parse(reader.Value);
+                                            }
+                                            else if (currentVector == 2)
+                                            {
+                                                v3.X = float.Parse(reader.Value);
+                                            }
+                                            else
+                                            {
+                                                v4.X = float.Parse(reader.Value);
+                                            }
+                                            break;
+                                        case "y":
+                                            reader.Read();
+                                            if (currentVector == 0)
+                                            { 
+                                                v1.Y = float.Parse(reader.Value);
+                                            }
+                                            else if (currentVector == 1)
+                                            {
+                                                v2.Y = float.Parse(reader.Value);
+                                            }
+                                            else if (currentVector == 2)
+                                            {
+                                                v3.Y = float.Parse(reader.Value);
+                                            }
+                                            else
+                                            {
+                                                v4.Y = float.Parse(reader.Value);
+                                            }
+                                            break;
+                                        case "z":
+                                            reader.Read();
+                                            if (currentVector == 0)
+                                            {
+                                                v1.Z = float.Parse(reader.Value);
+                                            }
+                                            else if (currentVector == 1)
+                                            {
+                                                v2.Z = float.Parse(reader.Value);
+                                            }
+                                            else if (currentVector == 2)
+                                            {
+                                                v3.Z = float.Parse(reader.Value);
+                                            }
+                                            else
+                                            {
+                                                v4.Z = float.Parse(reader.Value);
+                                            }
+                                            break;
+                                        case "w":
+                                            reader.Read();
+                                            if (currentVector == 0)
+                                            {
+                                                v1.W = float.Parse(reader.Value);
+                                            }
+                                            else if (currentVector == 1)
+                                            {
+                                                v2.W = float.Parse(reader.Value);
+                                            }
+                                            else if (currentVector == 2)
+                                            {
+                                                v3.W = float.Parse(reader.Value);
+                                            }
+                                            else
+                                            {
+                                                v4.W = float.Parse(reader.Value);
+                                            }
+                                            break;
+                                    }
+                                }
+                            }
                             break;
                         case "vector3":
+                            if (format == ReaderFormat.none)
+                                format = ReaderFormat.vectors;
+                            else if (format == ReaderFormat.transformations)
+                                throw new AssetExceptions.TransformFromXMLFormat("The transform xml is incorrectly formatted, and mixes both transformation format (translation, rotation, scale) with vector format.");
+
+                            currentVector++;
+                            depth_inner_1 = reader.Depth;
+
+                            while (reader.Read() && depth_inner_1 < reader.Depth)
+                            {
+                                if (reader.IsStartElement())
+                                {
+                                    switch (reader.Name)
+                                    {
+                                        case "x":
+                                            reader.Read();
+                                            if (currentVector == 0)
+                                            {
+                                                v1.X = float.Parse(reader.Value);
+                                            }
+                                            else if (currentVector == 1)
+                                            {
+                                                v2.X = float.Parse(reader.Value);
+                                            }
+                                            else if (currentVector == 2)
+                                            {
+                                                v3.X = float.Parse(reader.Value);
+                                            }
+                                            else
+                                            {
+                                                v4.X = float.Parse(reader.Value);
+                                            }
+                                            break;
+                                        case "y":
+                                            reader.Read();
+                                            if (currentVector == 0)
+                                            {
+                                                v1.Y = float.Parse(reader.Value);
+                                            }
+                                            else if (currentVector == 1)
+                                            {
+                                                v2.Y = float.Parse(reader.Value);
+                                            }
+                                            else if (currentVector == 2)
+                                            {
+                                                v3.Y = float.Parse(reader.Value);
+                                            }
+                                            else
+                                            {
+                                                v4.Y = float.Parse(reader.Value);
+                                            }
+                                            break;
+                                        case "z":
+                                            reader.Read();
+                                            if (currentVector == 0)
+                                            {
+                                                v1.Z = float.Parse(reader.Value);
+                                            }
+                                            else if (currentVector == 1)
+                                            {
+                                                v2.Z = float.Parse(reader.Value);
+                                            }
+                                            else if (currentVector == 2)
+                                            {
+                                                v3.Z = float.Parse(reader.Value);
+                                            }
+                                            else
+                                            {
+                                                v4.Z = float.Parse(reader.Value);
+                                            }
+                                            break;
+                                    }
+                                }
+                            }
                             break;
                         case "vector2":
+                            if (format == ReaderFormat.none)
+                                format = ReaderFormat.vectors;
+                            else if (format == ReaderFormat.transformations)
+                                throw new AssetExceptions.TransformFromXMLFormat("The transform xml is incorrectly formatted, and mixes both transformation format (translation, rotation, scale) with vector format.");
+
+                            currentVector++;
+                            depth_inner_1 = reader.Depth;
+
+                            while (reader.Read() && depth_inner_1 < reader.Depth)
+                            {
+                                if (reader.IsStartElement())
+                                {
+                                    switch (reader.Name)
+                                    {
+                                        case "x":
+                                            reader.Read();
+                                            if (currentVector == 0)
+                                            {
+                                                v1.X = float.Parse(reader.Value);
+                                            }
+                                            else if (currentVector == 1)
+                                            {
+                                                v2.X = float.Parse(reader.Value);
+                                            }
+                                            else if (currentVector == 2)
+                                            {
+                                                v3.X = float.Parse(reader.Value);
+                                            }
+                                            else
+                                            {
+                                                v4.X = float.Parse(reader.Value);
+                                            }
+                                            break;
+                                        case "y":
+                                            reader.Read();
+                                            if (currentVector == 0)
+                                            {
+                                                v1.Y = float.Parse(reader.Value);
+                                            }
+                                            else if (currentVector == 1)
+                                            {
+                                                v2.Y = float.Parse(reader.Value);
+                                            }
+                                            else if (currentVector == 2)
+                                            {
+                                                v3.Y = float.Parse(reader.Value);
+                                            }
+                                            else
+                                            {
+                                                v4.Y = float.Parse(reader.Value);
+                                            }
+                                            break;
+                                    }
+                                }
+                            }
                             break;
                     }
                 }
             }
+
+            Matrix m = new Matrix(v1, v2, v3, v4);
+            newTransform = new Transform(m);
 
             return newTransform;
         }

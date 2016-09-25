@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\AssetExceptions.cs" />
     <Compile Include="Assets\SceneAssetsPackage.cs" />
     <Compile Include="Game\Scene.cs" />
     <Compile Include="Game\SceneManager.cs" />
@@ -50,7 +51,6 @@
     <Compile Include="Physics\PhysicsExceptions.cs" />
     <Compile Include="Physics\PhysicsMaterial.cs" />
     <Compile Include="Assets\Font.cs" />
-    <Compile Include="Render\RenderExceptions.cs" />
     <Compile Include="Render\RenderManager.cs" />
     <Compile Include="Render\RenderTargetBatch.cs" />
     <Compile Include="Render\RenderTargetRenderer.cs" />
