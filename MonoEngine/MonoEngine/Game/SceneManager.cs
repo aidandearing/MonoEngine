@@ -37,7 +37,7 @@ namespace MonoEngine.Game
             }
 
             // The last step of scene loading is to ensure that old assets are removed via the UnLoadScene method in Resources
-            Resources.UnLoadScene(newScene);
+            Resources.UnloadScene(newScene);
         }
         
         // Scenes need to be unloaded when the game ends

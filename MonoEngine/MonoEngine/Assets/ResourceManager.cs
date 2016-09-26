@@ -19,6 +19,8 @@ namespace MonoEngine.Assets
         }
 
         public abstract bool ContainsResource(string name);
+
+        public abstract void RemoveResource(string name);
     }
 
     public class ResourceManager<T> : ResourceMetaData
@@ -35,10 +37,16 @@ namespace MonoEngine.Assets
             dictionary.Add(name, asset);
         }
 
+        public override void RemoveResource(string name)
+        {
+            dictionary.Remove(name);
+        }
+
         public override bool ContainsResource(string name)
         {
             return dictionary.ContainsKey(name);
         }
+
         public T GetResource(string name)
         {
             return dictionary[name];

@@ -28,13 +28,13 @@ namespace MonoEngine.Assets
             switch (type)
             {
                 case TypeOfRef.Camera:
-                    return instance.MakeCamera(reader);
+                    return instance.LoadCamera(reader);
                 case TypeOfRef.GameObject:
                     return instance.LoadGameObject(reader);
                 case TypeOfRef.Model:
-                    return instance.MakeModel(reader);
+                    return instance.LoadModel(reader);
                 case TypeOfRef.ModelRenderer:
-                    return instance.MakeModelRenderer(reader);
+                    return instance.LoadModelRenderer(reader);
                 case TypeOfRef.PhysicsBody2D:
                     return null;
                 case TypeOfRef.PhysicsMaterial:
@@ -166,12 +166,20 @@ namespace MonoEngine.Assets
         private Resources()
         {
             resourceManagers = new Dictionary<Type, ResourceMetaData>();
-            resourceManagers.Add(typeof(GameObject), new ResourceManager<GameObject>("Assets/Objects"));
-            resourceManagers.Add(typeof(Model), new ResourceManager<GameObject>("Assets/Models"));
-            resourceManagers.Add(typeof(Font), new ResourceManager<GameObject>("Assets/Fonts"));
-            resourceManagers.Add(typeof(Texture2D), new ResourceManager<GameObject>("Assets/Textures"));
-            resourceManagers.Add(typeof(RenderTarget2D), new ResourceManager<GameObject>("Assets/Shaders"));
-            resourceManagers.Add(typeof(UIObject), new ResourceManager<UIObject>("Assets/UI"));
+
+            handler_GameObject = new ResourceManager<GameObject>("Assets/Objects");
+            handler_Model = new ResourceManager<Model>("Assets/Models");
+            handler_Font = new ResourceManager<Font>("Assets/Fonts");
+            handler_Texture2D = new ResourceManager<Texture2D>("Assets/Textures");
+            handler_RenderTarget2D = new ResourceManager<RenderTarget2D>("Assets/Shaders");
+            handler_UIObject = new ResourceManager<UIObject>("Assets/UI");
+
+            resourceManagers.Add(typeof(GameObject), handler_GameObject);
+            resourceManagers.Add(typeof(Model), handler_Model);
+            resourceManagers.Add(typeof(Font), handler_Font);
+            resourceManagers.Add(typeof(Texture2D), handler_Texture2D);
+            resourceManagers.Add(typeof(RenderTarget2D), handler_RenderTarget2D);
+            resourceManagers.Add(typeof(UIObject), handler_UIObject);
         }
 
         public static Resources Initialise()
@@ -180,19 +188,32 @@ namespace MonoEngine.Assets
             return instance;
         }
 
-        // The strange dictionary of all resource managers
+        // The strange dictionary of all resource managers, keyed by Type
         private Dictionary<Type, ResourceMetaData> resourceManagers;
+
+        // Quick access handlers to each ResourceManager supported by default
+        private ResourceManager<GameObject> handler_GameObject;
+        private ResourceManager<Model> handler_Model;
+        private ResourceManager<Font> handler_Font;
+        private ResourceManager<Texture2D> handler_Texture2D;
+        private ResourceManager<RenderTarget2D> handler_RenderTarget2D;
+        private ResourceManager<UIObject> handler_UIObject;
 
         public static bool CheckForAsset<Type>(string name)
         {
             return ((ResourceManager<Type>)instance.resourceManagers[typeof(Type)]).ContainsResource(name);
         }
 
+        public static void RemoveAsset<Type>(string name)
+        {
+            (instance.resourceManagers[typeof(Type)] as ResourceManager<Type>).RemoveResource(name);
+        }
+
         public static RenderTarget2D GetRenderTarget2D(string name)
         {
             if (instance.resourceManagers[typeof(RenderTarget2D)].ContainsResource(name))
             {
-                return (instance.resourceManagers[typeof(RenderTarget2D)] as ResourceManager<RenderTarget2D>).GetResource(name);
+                return instance.handler_RenderTarget2D.GetResource(name);
             }
             else
             {
@@ -205,22 +226,22 @@ namespace MonoEngine.Assets
             // Load a resource from a file at the path + name.xnb pathway
 
             // If the model isn't already loaded (it's key isn't found in the dictionary)
-            if (!instance.resourceManagers[typeof(GameObject)].ContainsResource(name))
+            if (!instance.handler_GameObject.ContainsResource(name))
             {
                 // Needs to try to get the model at that name in the models path & load it
                 GameObject asset = null;
-                using (XmlReader reader = XmlReader.Create(@"./Content/" + instance.resourceManagers[typeof(GameObject)].Path + name + ".xml"))
+                using (XmlReader reader = XmlReader.Create(@"./Content/" + instance.handler_GameObject.Path + name + ".xml"))
                 {
                     asset = instance.LoadGameObject(reader);
                 }
                 // add the model into the dictionary
-                (instance.resourceManagers[typeof(GameObject)] as ResourceManager<GameObject>).AddResource(name, asset);
+                instance.handler_GameObject.AddResource(name, asset);
                 return asset;
             }
 
             if (parent != null)
             {
-                parent.assets.AddAsset(name, instance.resourceManagers[typeof(GameObject)].Path);
+                parent.assets.AddAsset(name, typeof(GameObject));
             }
             else
             {
@@ -228,58 +249,65 @@ namespace MonoEngine.Assets
             }
 
             // Pass the texture at that key in the dictionary
-            return (instance.resourceManagers[typeof(GameObject)] as ResourceManager<GameObject>).GetResource(name);
+            return instance.handler_GameObject.GetResource(name);
         }
 
         public static Font LoadFont(string name, Scene parent)
         {
             // Load a font from a name at the Assets/Fonts/ + name#.xnb pathway (plus all it's sizes)
-
-            string[] paths = Directory.GetFiles(@".\Content\Assets\Fonts\", name + "_*.xnb");
-
-            char[] delimiters = { '.', '\\', '_' };
-
-            List<int> sizes = null;
-            int size = 0;
-            List<SpriteFont> fonts = new List<SpriteFont>();
-            foreach (string path in paths)
+            if (!instance.handler_Font.ContainsResource(name))
             {
-                string[] split = path.Split(delimiters);
-                // path looks like this .\\Content\\Assets\\Fonts\\name_*.xnb
-                // delimited it becomes split[0] = "" | split[1] = "" | split[2] = "Content" | split[3] = "Assets" | split[4] = "Fonts" | split[5] = "name" | split[6] = "*" | split[7] = "xnb"
+                string[] paths = Directory.GetFiles(@"./Content/" + instance.handler_Font.Path, name + "_*.xnb");
 
-                if (split[6] != null && int.TryParse(split[6], out size))
+                char[] delimiters = { '.', '\\', '_' };
+
+                List<int> sizes = null;
+                int size = 0;
+                List<SpriteFont> fonts = new List<SpriteFont>();
+                foreach (string path in paths)
                 {
-                    if (sizes == null)
+                    string[] split = path.Split(delimiters);
+                    // path looks like this .\\Content\\Assets\\Fonts\\name_*.xnb
+                    // delimited it becomes split[0] = "" | split[1] = "" | split[2] = "Content" | split[3] = "Assets" | split[4] = "Fonts" | split[5] = "name" | split[6] = "*" | split[7] = "xnb"
+
+                    if (split[6] != null && int.TryParse(split[6], out size))
                     {
-                        sizes = new List<int>();
-                        sizes.Add(size);
-                        fonts.Add(ContentHelper.Content.Load<SpriteFont>("Assets/Fonts/" + name + "_" + split[6]));
-                    }
-                    else
-                    {
-                        for (int i = 0; i < sizes.Count; i++)
+                        if (sizes == null)
                         {
-                            if (size < sizes[i])
+                            sizes = new List<int>();
+                            sizes.Add(size);
+                            fonts.Add(ContentHelper.Content.Load<SpriteFont>("Assets/Fonts/" + name + "_" + split[6]));
+                        }
+                        else
+                        {
+                            for (int i = 0; i < sizes.Count; i++)
                             {
-                                sizes.Insert(i, size);
-                                fonts.Insert(i, ContentHelper.Content.Load<SpriteFont>("Assets/Fonts/" + name + "_" + split[6]));
+                                if (size < sizes[i])
+                                {
+                                    sizes.Insert(i, size);
+                                    fonts.Insert(i, ContentHelper.Content.Load<SpriteFont>("Assets/Fonts/" + name + "_" + split[6]));
+                                }
                             }
                         }
                     }
                 }
+
+                if (parent != null)
+                {
+                    parent.assets.assets[typeof(Font)].Add(name);
+                }
+                else
+                {
+                    // TODO: Log a warning that unbound assets will not unload when a scene switch occurs
+                }
+
+                Font font = new Font(sizes.ToArray(), fonts.ToArray(), name);
+                instance.handler_Font.AddResource(name, font);
+                return font;
+                
             }
 
-            if (parent != null)
-            {
-                parent.assets.assets["Assets/Fonts"].Add(name);
-            }
-            else
-            {
-                // TODO: Log a warning that unbound assets will not unload when a scene switch occurs
-            }
-
-            return new Font(sizes.ToArray(), fonts.ToArray(), name);
+            return instance.handler_Font.GetResource(name);
         }
 
         public static Model LoadModel(string name, Scene parent)
@@ -287,17 +315,18 @@ namespace MonoEngine.Assets
             // Load a model from a name at the Assets/Models/ + name.xnb pathway
 
             // If the model isn't already loaded (it's key isn't found in the dictionary)
-            if (!instance.models.ContainsKey(name))
+            if (!instance.handler_Model.ContainsResource(name))
             {
                 // Needs to try to get the model at that name in the models path & load it
                 Model model = ContentHelper.Content.Load<Model>("Assets/Models/" + name);
                 // add the model into the dictionary
-                instance.models.Add(name, model);
+                instance.handler_Model.AddResource(name, model);
+                return model;
             }
 
             if (parent != null)
             {
-                parent.assets.assets["Assets/Models"].Add(name);
+                parent.assets.assets[typeof(Model)].Add(name);
             }
             else
             {
@@ -305,7 +334,7 @@ namespace MonoEngine.Assets
             }
 
             // Pass the model at that key in the dictionary
-            return instance.models[name];
+            return instance.handler_Model.GetResource(name);
         }
 
         public static Texture2D LoadTexture2D(string name, Scene parent)
@@ -313,17 +342,17 @@ namespace MonoEngine.Assets
             // Load a texture from a texture at the Assets/Textures/ + name.xnb pathway
 
             // If the model isn't already loaded (it's key isn't found in the dictionary)
-            if (!instance.texture2Ds.ContainsKey(name))
+            if (!instance.handler_Texture2D.ContainsResource(name))
             {
                 // Needs to try to get the model at that name in the models path & load it
                 Texture2D texture = ContentHelper.Content.Load<Texture2D>("Assets/Textures/" + name);
                 // add the model into the dictionary
-                instance.texture2Ds.Add(name, texture);
+                instance.handler_Texture2D.AddResource(name, texture);
             }
 
             if (parent != null)
             {
-                parent.assets.assets["Assets/Textures"].Add(name);
+                parent.assets.assets[typeof(Texture2D)].Add(name);
             }
             else
             {
@@ -331,69 +360,53 @@ namespace MonoEngine.Assets
             }
 
             // Pass the texture at that key in the dictionary
-            return instance.texture2Ds[name];
+            return instance.handler_Texture2D.GetResource(name);
         }
 
         public static RenderTarget2D LoadRenderTarget2D(string name, Scene parent, int width, int height, bool mipMap, SurfaceFormat surfaceFormat, DepthFormat depthFormat, int multiSampleCount, RenderTargetUsage usage)
         {
             RenderTarget2D target = new RenderTarget2D(GraphicsHelper.graphicsDevice, width, height, mipMap, surfaceFormat, depthFormat, multiSampleCount, usage);
 
-            if (instance.renderTarget2Ds.ContainsKey(name))
+            if (instance.handler_RenderTarget2D.ContainsResource(name))
             {
-                if (target != instance.renderTarget2Ds[name])
+                if (target != instance.handler_RenderTarget2D.GetResource(name))
                 {
-                    throw new AssetExceptions.AssetAlreadyExists("Cannot resolve difference between existing RenderTarget2D and new RenderTarget2D\nExisting RenderTarget2D: " + instance.renderTarget2Ds[name] + "\nNew RenderTarget2D" + target);
+                    throw new AssetExceptions.AssetAlreadyExists("Cannot resolve difference between existing RenderTarget2D and new RenderTarget2D\nExisting RenderTarget2D: " + instance.handler_RenderTarget2D.GetResource(name) + "\nNew RenderTarget2D" + target);
                 }
             }
             else
             {
-                instance.renderTarget2Ds.Add(name, target);
+                instance.handler_RenderTarget2D.AddResource(name, target);
                 RenderTargetBatch batch = new RenderTargetBatch(name, target);
                 RenderManager.AddRenderTargetBatch(batch);
+                return target;
             }
 
             if (parent != null)
             {
-                parent.assets.assets["renderTargets"].Add(name);
+                parent.assets.assets[typeof(RenderTarget2D)].Add(name);
             }
             else
             {
                 // TODO: Log a warning that unbound assets will not unload when a scene switch occurs
             }
 
-            return instance.renderTarget2Ds[name];
+            return instance.handler_RenderTarget2D.GetResource(name);
         }
 
-        public static void UnLoadScene(Scene newScene)
+        public static void UnloadScene(Scene newScene)
         {
             SceneAssetsPackage difference = SceneManager.activeScene.assets.Difference(newScene.assets);
 
             // By finding the difference between the current scene and the newScene I am given a list of all the assets only found in the current scene,
             // which must all be unloaded, as they will no longer be used
 
-            foreach (string str in difference.gameObjects)
+            foreach (KeyValuePair<Type, List<string>> assets in difference.assets)
             {
-                instance.gameObjects.Remove(str);
-            }
-            foreach (string str in difference.fonts)
-            {
-                instance.fonts.Remove(str);
-            }
-            foreach (string str in difference.models)
-            {
-                instance.models.Remove(str);
-            }
-            foreach (string str in difference.texture2Ds)
-            {
-                instance.texture2Ds.Remove(str);
-            }
-            foreach (string str in difference.renderTarget2Ds)
-            {
-                instance.renderTarget2Ds.Remove(str);
-            }
-            foreach (string str in difference.uiWidgets)
-            {
-                instance.uiWidgets.Remove(str);
+                foreach (string asset in assets.Value)
+                {
+                    instance.resourceManagers[assets.Key].RemoveResource(asset);
+                }
             }
         }
 
@@ -403,7 +416,7 @@ namespace MonoEngine.Assets
 
             if (parent != null)
             {
-                parent.assets.uiWidgets.Add(name);
+                parent.assets.assets[typeof(UIObject)].Add(name);
             }
             else
             {

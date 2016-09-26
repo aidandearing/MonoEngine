@@ -40,7 +40,7 @@ namespace MonoEngine.Render
             else
             {
                 //there is not a rendertargetrenderer so check to see if there is a rendertarget
-                if (Resources.CheckForRenderTarget2D(name))
+                if (Resources.CheckForAsset<RenderTarget2D>(name))
                 {
                     //make a new rendertargetrenderer with the rendertarget found
                     return new RenderTargetRenderer(name, Resources.GetRenderTarget2D(name));

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MonoEngine.Render;
 using Microsoft.Xna.Framework.Graphics;
 using MonoEngine.Game;
@@ -10,7 +11,7 @@ namespace MonoEngine.Assets
     /// </summary>
     public class SceneAssetsPackage
     {
-        public Dictionary<string, List<string>> assets;
+        public Dictionary<Type, List<string>> assets;
 
         public Scene parent;
 
@@ -22,7 +23,7 @@ namespace MonoEngine.Assets
             this.parent = parent;
         }
 
-        public void AddAsset(string name, string type)
+        public void AddAsset(string name, Type type)
         {
             if (!assets.ContainsKey(type))
             {
@@ -45,7 +46,7 @@ namespace MonoEngine.Assets
         {
             SceneAssetsPackage package = new SceneAssetsPackage();
 
-            foreach (KeyValuePair<string, List<string>> assetList in assets)
+            foreach (KeyValuePair<Type, List<string>> assetList in assets)
             {
                 foreach (string str in assetList.Value)
                 {
@@ -67,14 +68,14 @@ namespace MonoEngine.Assets
         {
             SceneAssetsPackage[] packages = new SceneAssetsPackage[3];
 
-            Dictionary<string, List<string>> allAssets = new Dictionary<string, List<string>>();
+            Dictionary<Type, List<string>> allAssets = new Dictionary<Type, List<string>>();
 
-            foreach(KeyValuePair<string, List<string>> assets in this.assets)
+            foreach(KeyValuePair<Type, List<string>> assets in this.assets)
             {
                 allAssets.Add(assets.Key, assets.Value);
             }
 
-            foreach(KeyValuePair<string, List<string>> assets in other.assets)
+            foreach(KeyValuePair<Type, List<string>> assets in other.assets)
             {
                 if (allAssets.ContainsKey(assets.Key))
                 {
@@ -86,7 +87,7 @@ namespace MonoEngine.Assets
                 }
             }
 
-            foreach(KeyValuePair<string, List<string>> assets in allAssets)
+            foreach(KeyValuePair<Type, List<string>> assets in allAssets)
             {
                 foreach(string asset in assets.Value)
                 {
