@@ -10,12 +10,7 @@ namespace MonoEngine.Assets
     /// </summary>
     public class SceneAssetsPackage
     {
-        public List<string> gameObjects;
-        public List<string> fonts;
-        public List<string> models;
-        public List<string> texture2Ds;
-        public List<string> renderTarget2Ds;
-        public List<string> uiWidgets;
+        public Dictionary<string, List<string>> assets;
 
         public Scene parent;
 
@@ -27,6 +22,20 @@ namespace MonoEngine.Assets
             this.parent = parent;
         }
 
+        public void AddAsset(string name, string type)
+        {
+            if (!assets.ContainsKey(type))
+            {
+                List<string> list = new List<string>();
+                list.Add(name);
+                assets.Add(type, list);
+            }
+            else
+            {
+                assets[type].Add(name);
+            }
+        }
+
         /// <summary>
         /// Given another SceneAssetsPackage this method will return a SceneAssetsPackage that contains only the assets that this SceneAssetsPackage does not have in common with the other (The ones this one has and the other doesn't)
         /// </summary>
@@ -36,40 +45,13 @@ namespace MonoEngine.Assets
         {
             SceneAssetsPackage package = new SceneAssetsPackage();
 
-            foreach(string str in gameObjects)
+            foreach (KeyValuePair<string, List<string>> assetList in assets)
             {
-                if (!other.gameObjects.Contains(str))
-                    package.gameObjects.Add(str);
-            }
-
-            foreach (string str in fonts)
-            {
-                if (!other.fonts.Contains(str))
-                    package.fonts.Add(str);
-            }
-
-            foreach (string str in models)
-            {
-                if (!other.models.Contains(str))
-                    package.models.Add(str);
-            }
-
-            foreach (string str in texture2Ds)
-            {
-                if (!other.texture2Ds.Contains(str))
-                    package.texture2Ds.Add(str);
-            }
-
-            foreach (string str in renderTarget2Ds)
-            {
-                if (!other.renderTarget2Ds.Contains(str))
-                    package.renderTarget2Ds.Add(str);
-            }
-
-            foreach (string str in uiWidgets)
-            {
-                if (!other.uiWidgets.Contains(str))
-                    package.uiWidgets.Add(str);
+                foreach (string str in assetList.Value)
+                {
+                    if (!other.assets[assetList.Key].Contains(str))
+                        package.AddAsset(str, assetList.Key);
+                }
             }
 
             return package;
@@ -85,88 +67,42 @@ namespace MonoEngine.Assets
         {
             SceneAssetsPackage[] packages = new SceneAssetsPackage[3];
 
-            List<string> allGameObjects = new List<string>();
-            allGameObjects.AddRange(gameObjects);
-            allGameObjects.AddRange(other.gameObjects);
+            Dictionary<string, List<string>> allAssets = new Dictionary<string, List<string>>();
 
-            List<string> allFonts = new List<string>();
-            allFonts.AddRange(gameObjects);
-            allFonts.AddRange(other.gameObjects);
-
-            List<string> allModels = new List<string>();
-            allModels.AddRange(gameObjects);
-            allModels.AddRange(other.gameObjects);
-
-            List<string> allTextures = new List<string>();
-            allTextures.AddRange(gameObjects);
-            allTextures.AddRange(other.gameObjects);
-
-            List<string> allTargets = new List<string>();
-            allTargets.AddRange(gameObjects);
-            allTargets.AddRange(other.gameObjects);
-
-            List<string> allWidgets = new List<string>();
-            allWidgets.AddRange(gameObjects);
-            allWidgets.AddRange(other.gameObjects);
-
-            foreach (string str in allGameObjects)
+            foreach(KeyValuePair<string, List<string>> assets in this.assets)
             {
-                if (!other.gameObjects.Contains(str))
-                    packages[0].gameObjects.Add(str);
-                else if (gameObjects.Contains(str))
-                    packages[1].gameObjects.Add(str);
-                else
-                    packages[2].gameObjects.Add(str);
+                allAssets.Add(assets.Key, assets.Value);
             }
 
-            foreach (string str in allFonts)
+            foreach(KeyValuePair<string, List<string>> assets in other.assets)
             {
-                if (!other.fonts.Contains(str))
-                    packages[0].fonts.Add(str);
-                else if (fonts.Contains(str))
-                    packages[1].fonts.Add(str);
+                if (allAssets.ContainsKey(assets.Key))
+                {
+                    allAssets[assets.Key].AddRange(assets.Value);
+                }
                 else
-                    packages[2].fonts.Add(str);
+                {
+                    allAssets.Add(assets.Key, assets.Value);
+                }
             }
 
-            foreach (string str in allModels)
+            foreach(KeyValuePair<string, List<string>> assets in allAssets)
             {
-                if (!other.models.Contains(str))
-                    packages[0].models.Add(str);
-                else if (models.Contains(str))
-                    packages[1].models.Add(str);
-                else
-                    packages[2].models.Add(str);
-            }
-
-            foreach (string str in allTextures)
-            {
-                if (!other.texture2Ds.Contains(str))
-                    packages[0].texture2Ds.Add(str);
-                else if (texture2Ds.Contains(str))
-                    packages[1].texture2Ds.Add(str);
-                else
-                    packages[2].texture2Ds.Add(str);
-            }
-
-            foreach (string str in allTargets)
-            {
-                if (!other.renderTarget2Ds.Contains(str))
-                    packages[0].renderTarget2Ds.Add(str);
-                else if (renderTarget2Ds.Contains(str))
-                    packages[1].renderTarget2Ds.Add(str);
-                else
-                    packages[2].renderTarget2Ds.Add(str);
-            }
-
-            foreach (string str in allWidgets)
-            {
-                if (!other.uiWidgets.Contains(str))
-                    packages[0].uiWidgets.Add(str);
-                else if (uiWidgets.Contains(str))
-                    packages[1].uiWidgets.Add(str);
-                else
-                    packages[2].uiWidgets.Add(str);
+                foreach(string asset in assets.Value)
+                {
+                    if (!other.assets[assets.Key].Contains(asset))
+                    {
+                        packages[0].AddAsset(asset, assets.Key);
+                    }
+                    else if (this.assets[assets.Key].Contains(asset))
+                    {
+                        packages[1].AddAsset(asset, assets.Key);
+                    }
+                    else
+                    {
+                        packages[2].AddAsset(asset, assets.Key);
+                    }
+                }
             }
 
             return packages;

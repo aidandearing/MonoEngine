@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\AssetExceptions.cs" />
+    <Compile Include="Assets\ResourceManager.cs" />
     <Compile Include="Assets\SceneAssetsPackage.cs" />
     <Compile Include="Game\Scene.cs" />
     <Compile Include="Game\SceneManager.cs" />

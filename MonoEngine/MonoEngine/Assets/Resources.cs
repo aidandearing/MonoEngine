@@ -17,9 +17,9 @@ namespace MonoEngine.Assets
         /// <summary>
         /// An enumerator for all Types of Resources
         /// </summary>
-        public enum Type { Camera, GameObject, Model, ModelRenderer, PhysicsBody2D, PhysicsMaterial, SpriteRenderer, TextRenderer }
+        public enum TypeOfRef { Camera, GameObject, Model, ModelRenderer, PhysicsBody2D, PhysicsMaterial, SpriteRenderer, TextRenderer }
 
-        public static object Ref(XmlReader reader, out Type type)
+        public static object Ref(XmlReader reader, out TypeOfRef type)
         {
             // This will be called whenever a reader has found a <ref> element and should do whatever is appropriate to make that <ref> into an object
 
@@ -27,61 +27,60 @@ namespace MonoEngine.Assets
 
             switch (type)
             {
-                case Type.Camera:
+                case TypeOfRef.Camera:
                     return instance.MakeCamera(reader);
-                case Type.GameObject:
-                    return instance.MakeGameObject(reader);
-                case Type.Model:
+                case TypeOfRef.GameObject:
+                    return instance.LoadGameObject(reader);
+                case TypeOfRef.Model:
                     return instance.MakeModel(reader);
-                case Type.ModelRenderer:
+                case TypeOfRef.ModelRenderer:
                     return instance.MakeModelRenderer(reader);
-                case Type.PhysicsBody2D:
+                case TypeOfRef.PhysicsBody2D:
                     return null;
-                case Type.PhysicsMaterial:
+                case TypeOfRef.PhysicsMaterial:
                     return null;
-                case Type.SpriteRenderer:
+                case TypeOfRef.SpriteRenderer:
                     return null;
-                case Type.TextRenderer:
+                case TypeOfRef.TextRenderer:
                     return null;
                 default:
                     return null;
             }
         }
 
-        public static object Find(XmlReader reader, out Type type)
+        public static object Find(XmlReader reader, out TypeOfRef type)
         {
             Enum.TryParse(reader["type"], out type);
 
             return null;
         }
 
-        public static object Make(XmlReader reader, out Type type)
+        public static object Make(XmlReader reader, out TypeOfRef type)
         {
             Enum.TryParse(reader["type"], out type);
 
             return null;
         }
 
-        private Camera MakeCamera(XmlReader reader)
+        private Camera LoadCamera(XmlReader reader)
         {
             return null;
         }
 
-        private GameObject MakeGameObject(XmlReader reader)
+        private GameObject LoadGameObject(XmlReader reader)
         {
-            int depth = reader.Depth;
-
             GameObject gameObject = null;
+            int depth = reader.Depth;
 
             while (reader.Read() && depth < reader.Depth)
             {
                 if (reader.IsStartElement())
                 {
-                    switch(reader.Name)
+                    switch (reader.Name)
                     {
                         case "name":
-                            if (gameObjects.ContainsKey(reader.Value))
-                                gameObject = gameObjects[reader.Value];
+                            if (resourceManagers[typeof(GameObject)].ContainsResource(reader.Value))
+                                gameObject = (resourceManagers[typeof(GameObject)] as ResourceManager<GameObject>).GetResource(reader.Value);
                             else
                                 gameObject = new GameObject(reader.Value);
                             break;
@@ -90,7 +89,7 @@ namespace MonoEngine.Assets
                             gameObject.transform = Transform.XmlToTransform(reader);
                             break;
                         case "ref":
-                            Type type;
+                            TypeOfRef type;
                             object obj = Ref(reader, out type);
                             AttachRefToGameObject(type, gameObject, obj);
                             break;
@@ -101,63 +100,63 @@ namespace MonoEngine.Assets
             return gameObject;
         }
 
-        private void AttachRefToGameObject(Type type, GameObject gameObject, object obj)
+        private void AttachRefToGameObject(TypeOfRef type, GameObject gameObject, object obj)
         {
             switch (type)
             {
-                case Type.Camera:
+                case TypeOfRef.Camera:
                     gameObject.AddComponent(obj as Camera);
                     break;
-                case Type.GameObject:
+                case TypeOfRef.GameObject:
                     gameObject.AddComponent(obj as GameObject);
                     break;
-                case Type.Model:
+                case TypeOfRef.Model:
                     // Log a warning that GameObjects don't support having raw models as components, instead make it a model renderer
                     break;
-                case Type.ModelRenderer:
+                case TypeOfRef.ModelRenderer:
                     gameObject.AddComponent(obj as ModelRenderer);
                     break;
-                case Type.PhysicsBody2D:
+                case TypeOfRef.PhysicsBody2D:
                     gameObject.AddComponent(obj as PhysicsBody2D);
                     break;
-                case Type.PhysicsMaterial:
+                case TypeOfRef.PhysicsMaterial:
                     // Log a warning that GameObjects don't support having a physics material as a component
                     break;
-                case Type.SpriteRenderer:
+                case TypeOfRef.SpriteRenderer:
                     gameObject.AddComponent(obj as SpriteRenderer);
                     break;
-                case Type.TextRenderer:
+                case TypeOfRef.TextRenderer:
                     gameObject.AddComponent(obj as TextRenderer);
                     break;
             }
         }
 
-        private Model MakeModel(XmlReader reader)
+        private Model LoadModel(XmlReader reader)
         {
             return null;
         }
 
-        private ModelRenderer MakeModelRenderer(XmlReader reader)
+        private ModelRenderer LoadModelRenderer(XmlReader reader)
         {
             return null;
         }
 
-        private PhysicsBody2D MakePhysicsBody2D(XmlReader reader)
+        private PhysicsBody2D LoadPhysicsBody2D(XmlReader reader)
         {
             return null;
         }
 
-        private PhysicsMaterial MakePhysicsMaterial(XmlReader reader)
+        private PhysicsMaterial LoadPhysicsMaterial(XmlReader reader)
         {
             return null;
         }
 
-        private SpriteRenderer MakeSpriteRenderer(XmlReader reader)
+        private SpriteRenderer LoadSpriteRenderer(XmlReader reader)
         {
             return null;
         }
 
-        private UIObject MakeUIObject(XmlReader reader)
+        private UIObject LoadUIObject(XmlReader reader)
         {
             // Take the reader, and make a UIObject from it
             return null;
@@ -166,10 +165,13 @@ namespace MonoEngine.Assets
         private static Resources instance;
         private Resources()
         {
-            models = new Dictionary<string, Model>();
-            fonts = new Dictionary<string, Font>();
-            texture2Ds = new Dictionary<string, Texture2D>();
-            renderTarget2Ds = new Dictionary<string, RenderTarget2D>();
+            resourceManagers = new Dictionary<Type, ResourceMetaData>();
+            resourceManagers.Add(typeof(GameObject), new ResourceManager<GameObject>("Assets/Objects"));
+            resourceManagers.Add(typeof(Model), new ResourceManager<GameObject>("Assets/Models"));
+            resourceManagers.Add(typeof(Font), new ResourceManager<GameObject>("Assets/Fonts"));
+            resourceManagers.Add(typeof(Texture2D), new ResourceManager<GameObject>("Assets/Textures"));
+            resourceManagers.Add(typeof(RenderTarget2D), new ResourceManager<GameObject>("Assets/Shaders"));
+            resourceManagers.Add(typeof(UIObject), new ResourceManager<UIObject>("Assets/UI"));
         }
 
         public static Resources Initialise()
@@ -177,44 +179,20 @@ namespace MonoEngine.Assets
             instance = (instance == null) ? new Resources() : instance;
             return instance;
         }
-        
-        // There want to be as many lists with the same name here as there are in SceneAssetsPackage
-        private Dictionary<string, GameObject> gameObjects;
-        private Dictionary<string, Font> fonts;
-        private Dictionary<string, Model> models;
-        private Dictionary<string, Texture2D> texture2Ds;
-        private Dictionary<string, RenderTarget2D> renderTarget2Ds;
-        private Dictionary<string, UIObject> uiWidgets;
 
-        public static bool CheckForGameObject(string name)
+        // The strange dictionary of all resource managers
+        private Dictionary<Type, ResourceMetaData> resourceManagers;
+
+        public static bool CheckForAsset<Type>(string name)
         {
-            return instance.gameObjects.ContainsKey(name);
+            return ((ResourceManager<Type>)instance.resourceManagers[typeof(Type)]).ContainsResource(name);
         }
-        public static bool CheckForFont(string name)
-        {
-            return instance.fonts.ContainsKey(name);
-        }
-        public static bool CheckForModel(string name)
-        {
-            return instance.models.ContainsKey(name);
-        }
-        public static bool CheckForTexture2D(string name)
-        {
-            return instance.texture2Ds.ContainsKey(name);
-        }
-        public static bool CheckForRenderTarget2D(string name)
-        {
-            return instance.renderTarget2Ds.ContainsKey(name);
-        }
-        public static bool CheckForUIWidget(string name)
-        {
-            return instance.uiWidgets.ContainsKey(name);
-        }
+
         public static RenderTarget2D GetRenderTarget2D(string name)
         {
-            if (instance.renderTarget2Ds.ContainsKey(name))
+            if (instance.resourceManagers[typeof(RenderTarget2D)].ContainsResource(name))
             {
-                return instance.renderTarget2Ds[name];
+                return (instance.resourceManagers[typeof(RenderTarget2D)] as ResourceManager<RenderTarget2D>).GetResource(name);
             }
             else
             {
@@ -224,7 +202,33 @@ namespace MonoEngine.Assets
 
         public static GameObject LoadGameObject(string name, Scene parent)
         {
-            return null;
+            // Load a resource from a file at the path + name.xnb pathway
+
+            // If the model isn't already loaded (it's key isn't found in the dictionary)
+            if (!instance.resourceManagers[typeof(GameObject)].ContainsResource(name))
+            {
+                // Needs to try to get the model at that name in the models path & load it
+                GameObject asset = null;
+                using (XmlReader reader = XmlReader.Create(@"./Content/" + instance.resourceManagers[typeof(GameObject)].Path + name + ".xml"))
+                {
+                    asset = instance.LoadGameObject(reader);
+                }
+                // add the model into the dictionary
+                (instance.resourceManagers[typeof(GameObject)] as ResourceManager<GameObject>).AddResource(name, asset);
+                return asset;
+            }
+
+            if (parent != null)
+            {
+                parent.assets.AddAsset(name, instance.resourceManagers[typeof(GameObject)].Path);
+            }
+            else
+            {
+                // TODO: Log a warning that unbound assets will not unload when a scene switch occurs
+            }
+
+            // Pass the texture at that key in the dictionary
+            return (instance.resourceManagers[typeof(GameObject)] as ResourceManager<GameObject>).GetResource(name);
         }
 
         public static Font LoadFont(string name, Scene parent)
@@ -268,14 +272,14 @@ namespace MonoEngine.Assets
 
             if (parent != null)
             {
-                parent.assets.fonts.Add(name);
+                parent.assets.assets["Assets/Fonts"].Add(name);
             }
             else
             {
                 // TODO: Log a warning that unbound assets will not unload when a scene switch occurs
             }
 
-            return new Font(sizes.ToArray(), fonts.ToArray(),name);
+            return new Font(sizes.ToArray(), fonts.ToArray(), name);
         }
 
         public static Model LoadModel(string name, Scene parent)
@@ -293,7 +297,7 @@ namespace MonoEngine.Assets
 
             if (parent != null)
             {
-                parent.assets.models.Add(name);
+                parent.assets.assets["Assets/Models"].Add(name);
             }
             else
             {
@@ -319,7 +323,7 @@ namespace MonoEngine.Assets
 
             if (parent != null)
             {
-                parent.assets.texture2Ds.Add(name);
+                parent.assets.assets["Assets/Textures"].Add(name);
             }
             else
             {
@@ -333,7 +337,7 @@ namespace MonoEngine.Assets
         public static RenderTarget2D LoadRenderTarget2D(string name, Scene parent, int width, int height, bool mipMap, SurfaceFormat surfaceFormat, DepthFormat depthFormat, int multiSampleCount, RenderTargetUsage usage)
         {
             RenderTarget2D target = new RenderTarget2D(GraphicsHelper.graphicsDevice, width, height, mipMap, surfaceFormat, depthFormat, multiSampleCount, usage);
-            
+
             if (instance.renderTarget2Ds.ContainsKey(name))
             {
                 if (target != instance.renderTarget2Ds[name])
@@ -350,7 +354,7 @@ namespace MonoEngine.Assets
 
             if (parent != null)
             {
-                parent.assets.renderTarget2Ds.Add(name);
+                parent.assets.assets["renderTargets"].Add(name);
             }
             else
             {
@@ -367,7 +371,7 @@ namespace MonoEngine.Assets
             // By finding the difference between the current scene and the newScene I am given a list of all the assets only found in the current scene,
             // which must all be unloaded, as they will no longer be used
 
-            foreach(string str in difference.gameObjects)
+            foreach (string str in difference.gameObjects)
             {
                 instance.gameObjects.Remove(str);
             }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 ﻿using System;
 using System.Reflection;
+using System.Xml;
 
 namespace MonoEngine.Game
 {
@@ -72,6 +73,8 @@ namespace MonoEngine.Game
 
             return returnComponents;
         }
+
+        // Reflection based method calling by name on scene tree
 
         public void Broadcast(object obj, string methodName)
         {
