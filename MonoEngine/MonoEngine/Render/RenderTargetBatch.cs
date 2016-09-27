@@ -11,7 +11,13 @@ namespace MonoEngine.Render
     public class RenderTargetBatch
     {
         public delegate void DrawCallback();
-        public SpriteBatch spriteBatch;
+        private RenderTarget2D renderTarget;
+        public RenderTarget2D RenderTarget
+        {
+            get { return renderTarget; }
+            set { renderTarget = value; }
+        }
+
         private string name;
         public string Name
         {
@@ -25,6 +31,7 @@ namespace MonoEngine.Render
         {
             callbacks = new List<DrawCallback>();
             Name = name;
+            this.renderTarget = renderTarget;
         }
 
         public void RegisterDrawCallBack(DrawCallback callback)
@@ -39,10 +46,22 @@ namespace MonoEngine.Render
 
         public void Draw()
         {
+            
+            //set the rendertarget
+            GraphicsHelper.graphicsDevice.SetRenderTarget(renderTarget);
+            //clear the screen
+            GraphicsHelper.graphicsDevice.Clear(Color.White * 0);
+            //open the spritebatch
+            GraphicsHelper.spriteBatch.Begin();
+
             foreach (DrawCallback draw in callbacks)
             {
                 draw();
             }
+            //close the spritebatch
+            GraphicsHelper.spriteBatch.End();
+            //default the graphicsDevice to draw back to the screen again
+            GraphicsHelper.graphicsDevice.SetRenderTarget(null);
         }
     }
 }

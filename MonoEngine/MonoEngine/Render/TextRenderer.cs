@@ -15,20 +15,22 @@ namespace MonoEngine.Render
         //public Model model { get; set; }
         public Font font { get; set; }
 
+        private RenderTargetBatch batch;
+
         private TextRenderer(string name, string text, string targetName = null) : base(name)
         {
             if (targetName == null)
             {
-                RenderManager.RegisterDrawCallback("UI", new RenderTargetBatch.DrawCallback(Draw));
+                batch = RenderManager.RegisterDrawCallback("UI", new RenderTargetBatch.DrawCallback(Draw));
             }
             else
             {
-                RenderManager.RegisterDrawCallback(targetName, new RenderTargetBatch.DrawCallback(Draw));
+                batch = RenderManager.RegisterDrawCallback(targetName, new RenderTargetBatch.DrawCallback(Draw));
             }
         }
         public void Draw()
         {
-            
+            //batch.spriteBatch.DrawString()
         }
     }
 }

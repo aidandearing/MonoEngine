@@ -6,26 +6,29 @@ using System.Threading.Tasks;
 using MonoEngine.Game;
 using Microsoft.Xna.Framework.Graphics;
 using MonoEngine.UI;
+using MonoEngine.Assets;
 
 namespace MonoEngine.Render
 {
     public class SpriteRenderer : GameObject
     {
-        private static Dictionary<string, Texture2D> sprites = new Dictionary<string, Texture2D>();
+        //private static Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
 
-        public Texture2D sprite;
+        public Sprite sprite;
 
-        private SpriteRenderer(string name, Texture2D sprite, string targetName = null) : base(name)
+        private RenderTargetBatch batch;
+
+        private SpriteRenderer(string name, Sprite sprite, string targetName = null) : base(name)
         {
             this.sprite = sprite;
 
             if (targetName == null)
             {
-                RenderManager.RegisterDrawCallback("UI", new RenderTargetBatch.DrawCallback(Draw));
+                batch = RenderManager.RegisterDrawCallback("UI", new RenderTargetBatch.DrawCallback(Draw));
             }
             else
             {
-                RenderManager.RegisterDrawCallback(targetName, new RenderTargetBatch.DrawCallback(Draw));
+                batch = RenderManager.RegisterDrawCallback(targetName, new RenderTargetBatch.DrawCallback(Draw));
             }
 
         }

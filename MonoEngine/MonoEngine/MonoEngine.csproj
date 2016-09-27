@@ -77,6 +77,7 @@
     <Compile Include="Shapes\ShapeIntersection.cs" />
     <Compile Include="Audio\SongManager.cs" />
     <Compile Include="Audio\SoundManager.cs" />
+    <Compile Include="Assets\Sprite.cs" />
     <Compile Include="Time.cs" />
     <Compile Include="Transform.cs" />
     <Compile Include="UI\UIAlignment.cs" />

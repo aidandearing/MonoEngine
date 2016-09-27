@@ -15,15 +15,15 @@ namespace MonoEngine.Render
     {
         public delegate void RenderTargetDrawCallback();
 
-        public List<RenderTargetDrawCallback> callbacks;
-
-        public SpriteBatch spriteBatch;
+        public SortedList<int,RenderTargetDrawCallback> callbacks;
         
         private Dictionary<string, RenderTargetBatch> renderTargetBatches;
 
+        
+
         private bool isInit;
         private static RenderManager instance;
-        public static RenderManager Instance(Microsoft.Xna.Framework.Game game, SpriteBatch spiteBatch)
+        public static RenderManager Instance(Microsoft.Xna.Framework.Game game)
         {
             instance = (instance == null) ? new RenderManager(game) : instance;
 
@@ -32,7 +32,7 @@ namespace MonoEngine.Render
 
         public RenderManager(Microsoft.Xna.Framework.Game game) : base(game)
         {
-            callbacks = new List<RenderTargetDrawCallback>();
+            callbacks = new SortedList<int,RenderTargetDrawCallback>();
             renderTargetBatches = new Dictionary<string, RenderTargetBatch>();
         }
         public override void Initialize()
@@ -44,16 +44,24 @@ namespace MonoEngine.Render
 
             Resources.LoadRenderTarget2D("UI", SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents);
 
+            Resources.LoadRenderTarget2D("screen", SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, true, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
+
+            RenderTargetRenderer.MakeRenderTargetRenderer("default", 0);
+
+            RenderTargetRenderer.MakeRenderTargetRenderer("UI", 1);
+
             isInit = true;
         }
 
-        public static void RegisterDrawCallback(string name, RenderTargetBatch.DrawCallback callback)
+        public static RenderTargetBatch RegisterDrawCallback(string name, RenderTargetBatch.DrawCallback callback)
         {
             if (!instance.isInit)
             {
                 instance.Initialize();
             }
             instance.renderTargetBatches[name].RegisterDrawCallBack(callback);
+
+            return instance.renderTargetBatches[name];
         }
         public static void UnRegisterDrawCallback(string name, RenderTargetBatch.DrawCallback callback)
         {
@@ -62,11 +70,11 @@ namespace MonoEngine.Render
         
         public static void RegisterDrawCallback(RenderTargetDrawCallback callback, RenderTargetRenderer renderTargetRenderer)
         {
-            instance.callbacks.Add(callback);
+            instance.callbacks.Add(renderTargetRenderer.Priority,callback);
         }
         public static void UnRegisterDrawCallback(RenderTargetDrawCallback callback, RenderTargetRenderer renderTargetRenderer)
         {
-            instance.callbacks.Remove(callback);
+            instance.callbacks.Remove(renderTargetRenderer.Priority);
         }
 
         public static RenderTargetBatch GetRenderTargetBatch(string name)
@@ -90,42 +98,17 @@ namespace MonoEngine.Render
         {
             foreach (KeyValuePair<string, RenderTargetBatch> batch in renderTargetBatches)
             {
-                batch.Value.spriteBatch = spriteBatch;
                 batch.Value.Draw();
             }
-            foreach (RenderTargetDrawCallback draw in callbacks)
+            foreach (KeyValuePair<int, RenderTargetDrawCallback> draw in callbacks)
             {
-                draw();
+                draw.Value(); 
             }
+            //this is the final draw that guarantees that the "screen" draws to the screen
+            GraphicsHelper.graphicsDevice.SetRenderTarget(null);
+            GraphicsHelper.spriteBatch.Begin();
+            GraphicsHelper.spriteBatch.Draw(Resources.GetRenderTarget2D("screen"), GraphicsHelper.screen, Color.White);
+            GraphicsHelper.spriteBatch.End();
         }
-
-        //public static void AddToRenderQueue()
-        //{
-        //    foreach (GameObject obj in gameObjectRenderTargets)
-        //    {
-        //        gameObjectRenderTargets.Add(obj);
-        //    }
-        //    foreach (UIVisual obj in UIRenderTargets)
-        //    {
-        //        UIRenderTargets.Add(obj);
-        //    }
-            
-        //}
-        //public void Render(SpriteBatch spriteBatch)
-        //{
-        //    spriteBatch.Begin();
-
-        //    foreach (GameObject obj in gameObjectRenderTargets)
-        //    {
-        //        //spriteBatch.Draw()
-        //    }
-        //    foreach (UIVisual obj in UIRenderTargets)
-        //    {
-        //        //                                            focus stuff not implimented yet
-        //        spriteBatch.Draw(obj.Sprite, obj.Bounds, null, obj.Colour[0] * obj.Opacity[0], obj.Rotation, obj.Origin, SpriteEffects.None, obj.Depth);
-        //    }
-
-        //    spriteBatch.End();
-        //}
     }
 }

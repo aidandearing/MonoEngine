@@ -10,5 +10,7 @@ namespace MonoEngine.Render
         public static GraphicsDevice graphicsDevice;
 
         public static Rectangle screen;
+
+        public static SpriteBatch spriteBatch;
     }
 }

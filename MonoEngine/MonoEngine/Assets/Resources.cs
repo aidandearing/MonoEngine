@@ -4,11 +4,13 @@ using System.IO;
 using System.Xml;
 using MonoEngine.Render;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 using MonoEngine.Game;
 using MonoEngine.Physics;
 using MonoEngine.Physics.Physics2D;
 using MonoEngine.Physics.Physics3D;
 using MonoEngine.UI;
+using MonoEngine.Assets;
 
 namespace MonoEngine.Assets
 {
@@ -170,16 +172,19 @@ namespace MonoEngine.Assets
             handler_GameObject = new ResourceManager<GameObject>("Assets/Objects");
             handler_Model = new ResourceManager<Model>("Assets/Models");
             handler_Font = new ResourceManager<Font>("Assets/Fonts");
-            handler_Texture2D = new ResourceManager<Texture2D>("Assets/Textures");
+            handler_Sprite = new ResourceManager<Sprite>("Assets/Textures");
             handler_RenderTarget2D = new ResourceManager<RenderTarget2D>("Assets/Shaders");
             handler_UIObject = new ResourceManager<UIObject>("Assets/UI");
 
             resourceManagers.Add(typeof(GameObject), handler_GameObject);
             resourceManagers.Add(typeof(Model), handler_Model);
             resourceManagers.Add(typeof(Font), handler_Font);
-            resourceManagers.Add(typeof(Texture2D), handler_Texture2D);
+            resourceManagers.Add(typeof(Sprite), handler_Sprite);
             resourceManagers.Add(typeof(RenderTarget2D), handler_RenderTarget2D);
             resourceManagers.Add(typeof(UIObject), handler_UIObject);
+
+            
+
         }
 
         public static Resources Initialise()
@@ -195,7 +200,7 @@ namespace MonoEngine.Assets
         private ResourceManager<GameObject> handler_GameObject;
         private ResourceManager<Model> handler_Model;
         private ResourceManager<Font> handler_Font;
-        private ResourceManager<Texture2D> handler_Texture2D;
+        private ResourceManager<Sprite> handler_Sprite;
         private ResourceManager<RenderTarget2D> handler_RenderTarget2D;
         private ResourceManager<UIObject> handler_UIObject;
 
@@ -337,17 +342,19 @@ namespace MonoEngine.Assets
             return instance.handler_Model.GetResource(name);
         }
 
-        public static Texture2D LoadTexture2D(string name, Scene parent)
+        public static Sprite LoadTexture2D(string name, Scene parent)
         {
             // Load a texture from a texture at the Assets/Textures/ + name.xnb pathway
 
             // If the model isn't already loaded (it's key isn't found in the dictionary)
-            if (!instance.handler_Texture2D.ContainsResource(name))
+            if (!instance.handler_Sprite.ContainsResource(name))
             {
                 // Needs to try to get the model at that name in the models path & load it
                 Texture2D texture = ContentHelper.Content.Load<Texture2D>("Assets/Textures/" + name);
                 // add the model into the dictionary
-                instance.handler_Texture2D.AddResource(name, texture);
+                Sprite sprite = new Sprite(texture, texture.Bounds, texture.Bounds, Color.White, 0.0f, 1.0f, SpriteEffects.None);
+                instance.handler_Sprite.AddResource(name, sprite);
+                return sprite;
             }
 
             if (parent != null)
@@ -360,7 +367,7 @@ namespace MonoEngine.Assets
             }
 
             // Pass the texture at that key in the dictionary
-            return instance.handler_Texture2D.GetResource(name);
+            return instance.handler_Sprite.GetResource(name);
         }
 
         public static RenderTarget2D LoadRenderTarget2D(string name, Scene parent, int width, int height, bool mipMap, SurfaceFormat surfaceFormat, DepthFormat depthFormat, int multiSampleCount, RenderTargetUsage usage)

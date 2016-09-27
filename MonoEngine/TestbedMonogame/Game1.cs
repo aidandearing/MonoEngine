@@ -86,8 +86,9 @@ namespace TestbedMonogame
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            GraphicsHelper.spriteBatch = spriteBatch;
             GraphicsHelper.graphicsDevice = GraphicsDevice;
-            this.Components.Add(RenderManager.Instance(this, spriteBatch));
+            this.Components.Add(RenderManager.Instance(this));
 
             GameObject obj = new GameObject("wall");
             obj.AddComponent(ModelRenderer.MakeModelRenderer("BasicWall"));
