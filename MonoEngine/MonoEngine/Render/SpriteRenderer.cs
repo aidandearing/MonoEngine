@@ -34,21 +34,12 @@ namespace MonoEngine.Render
         }
         public void Draw()
         {
+            //batch.spriteBatch.Draw(sprite.Image, sprite.ImageRect, sprite.SourceRect, sprite.Color, sprite.Rotation, sprite.SourceRect.Center, sprite.SpriteEffects, 0.0f);
             //RenderManager.spriteBatch.Draw(Sprite, Bounds, null, Colour[0] * Opacity[0], Rotation, Origin, SpriteEffects.None, Depth);
         }
-
         public static SpriteRenderer MakeSpriteRenderer(string name)
         {
-            //if the dictionary doesnt contain the key 
-            if (!sprites.ContainsKey(name))
-            {
-                //load the sprite 
-                Texture2D sprite = ContentHelper.Content.Load<Texture2D>("Assets/Sprites/" + name);
-
-                //add to the dictionary
-                sprites.Add(name, sprite);
-            }
-            return new SpriteRenderer(name, sprites[name]);
+            return new SpriteRenderer(name, Resources.LoadTexture2D(name, SceneManager.activeScene));
         }
 
         
