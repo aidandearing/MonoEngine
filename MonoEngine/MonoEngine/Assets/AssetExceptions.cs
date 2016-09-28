@@ -42,5 +42,24 @@ namespace MonoEngine.Assets
             {
             }
         }
+
+        public class ResourceManagerOfTypeAlreadyExists : Exception
+        {
+            public ResourceManagerOfTypeAlreadyExists()
+            {
+            }
+
+            public ResourceManagerOfTypeAlreadyExists(string message) : base(message)
+            {
+            }
+
+            public ResourceManagerOfTypeAlreadyExists(string message, Exception innerException) : base(message, innerException)
+            {
+            }
+
+            protected ResourceManagerOfTypeAlreadyExists(SerializationInfo info, StreamingContext context) : base(info, context)
+            {
+            }
+        }
     }
 }

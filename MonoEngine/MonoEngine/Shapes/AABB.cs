@@ -172,7 +172,7 @@ namespace MonoEngine.Shapes
 
             // Next lets figure out what quad the angle is in
             // This is important because it changes the knowns for the equation
-            int quad = (int)Math.Floor(theta / MathHelper.PiOver2);
+            int quad = (int)Math.Floor(((theta + MathHelper.PiOver4 / 2) % MathHelper.TwoPi) / MathHelper.PiOver2);
 
             float knownDim = 0;
 
@@ -193,7 +193,7 @@ namespace MonoEngine.Shapes
             theta = theta % MathHelper.PiOver2;
 
             // Now lets use this angle and the known dimension to calculate the length to the edge
-            return (float)Math.Cos(theta) * knownDim / 2;
+            return  (knownDim / 2) / (float)Math.Cos(theta);
         }
 
         public override float GetSurfaceArea()

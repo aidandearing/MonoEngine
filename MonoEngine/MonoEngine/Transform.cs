@@ -28,7 +28,7 @@ namespace MonoEngine
             {
                 if (reader.IsStartElement())
                 {
-                    switch(reader.Name)
+                    switch (reader.Name)
                     {
                         case "vector4":
                             if (format == ReaderFormat.none)
@@ -43,7 +43,7 @@ namespace MonoEngine
                             {
                                 if (reader.IsStartElement())
                                 {
-                                    switch(reader.Name)
+                                    switch (reader.Name)
                                     {
                                         case "x":
                                             reader.Read();
@@ -67,7 +67,7 @@ namespace MonoEngine
                                         case "y":
                                             reader.Read();
                                             if (currentVector == 0)
-                                            { 
+                                            {
                                                 v1.Y = float.Parse(reader.Value);
                                             }
                                             else if (currentVector == 1)
@@ -324,7 +324,7 @@ namespace MonoEngine
                 }
             }
         }
-        
+
         public Vector3 Forward
         {
             get
@@ -442,6 +442,39 @@ namespace MonoEngine
         public void PureRotate(Vector3 axis, float angle)
         {
             transformation *= Matrix.CreateFromAxisAngle(axis, angle);
+        }
+
+        //////////////////////////////////////////////////////////////////////////////
+        // CASTS
+        //////////////////////////////////////////////////////////////////////////////
+
+        public override string ToString()
+        {
+            return "\n\t<Vector4>\n" +
+                "\t\t<x>" + transformation.M11 + "</x>\n" +
+                "\t\t<y>" + transformation.M12 + "</y>\n" +
+                "\t\t<z>" + transformation.M13 + "</z>\n" +
+                "\t\t<w>" + transformation.M14 + "</w>\n" +
+                "\t</Vector4>\n" +
+                "\t<Vector4>\n" +
+                "\t\t<x>" + transformation.M21 + "</x>\n" +
+                "\t\t<y>" + transformation.M22 + "</y>\n" +
+                "\t\t<z>" + transformation.M23 + "</z>\n" +
+                "\t\t<w>" + transformation.M24 + "</w>\n" +
+                "\t</Vector4>\n" +
+                "\t<Vector4>\n" +
+                "\t\t<x>" + transformation.M31 + "</x>\n" +
+                "\t\t<y>" + transformation.M32 + "</y>\n" +
+                "\t\t<z>" + transformation.M33 + "</z>\n" +
+                "\t\t<w>" + transformation.M34 + "</w>\n" +
+                "\t</Vector4>\n" +
+                "\t<Vector4>\n" +
+                "\t\t<x>" + transformation.M41 + "</x>\n" +
+                "\t\t<y>" + transformation.M42 + "</y>\n" +
+                "\t\t<z>" + transformation.M43 + "</z>\n" +
+                "\t\t<w>" + transformation.M44 + "</w>\n" +
+                "\t</Vector4>\n";
+
         }
     }
 }

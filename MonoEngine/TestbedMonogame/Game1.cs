@@ -92,7 +92,7 @@ namespace TestbedMonogame
 
             GameObject obj = new GameObject("wall");
             obj.AddComponent(ModelRenderer.MakeModelRenderer("BasicWall"));
-            PhysicsBody2D body = new PhysicsBody2D(obj, "wall", new AABB(obj.transform, 1, 1), new PhysicsMaterial(1,0,1), PhysicsEngine.BodyType.STATIC);
+            PhysicsBody2D body = new PhysicsBody2D(obj, "wall", new AABB(obj.transform, 1, 1), new PhysicsMaterial(1,0,1), PhysicsEngine.BodyType.SIMPLE);
             obj.AddComponent(body);
             obj.AddComponent(new Camera("camera"));
 
@@ -117,6 +117,9 @@ namespace TestbedMonogame
             obj.AddComponent(body);
 
             GameObjectManager.AddGameObject(obj);
+
+            GameObject ob = new GameObject("furfur");
+            ob.LoadToXML();
 
             // Testing whether xml to transform works.
             using (XmlReader reader = XmlReader.Create(@"./Content/Assets/Scenes/XMLFile1.xml"))

@@ -19,8 +19,6 @@ namespace MonoEngine.Render
         
         private Dictionary<string, RenderTargetBatch> renderTargetBatches;
 
-        
-
         private bool isInit;
         private static RenderManager instance;
         public static RenderManager Instance(Microsoft.Xna.Framework.Game game)
@@ -40,11 +38,11 @@ namespace MonoEngine.Render
             if (isInit)
                 return;
 
-            Resources.LoadRenderTarget2D("default", SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, true, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
+            Resources.LoadRenderTarget2D("default", SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, true, SurfaceFormat.Color, DepthFormat.Depth16, 0, RenderTargetUsage.DiscardContents);
 
             Resources.LoadRenderTarget2D("UI", SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents);
 
-            Resources.LoadRenderTarget2D("screen", SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, true, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
+            Resources.LoadRenderTarget2D("screen", SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, true, SurfaceFormat.Color, DepthFormat.Depth16, 0, RenderTargetUsage.DiscardContents);
 
             RenderTargetRenderer.MakeRenderTargetRenderer("default", 0);
 
@@ -63,6 +61,7 @@ namespace MonoEngine.Render
 
             return instance.renderTargetBatches[name];
         }
+
         public static void UnRegisterDrawCallback(string name, RenderTargetBatch.DrawCallback callback)
         {
             instance.renderTargetBatches[name].UnRegisterDrawCallBack(callback);
@@ -72,6 +71,7 @@ namespace MonoEngine.Render
         {
             instance.callbacks.Add(renderTargetRenderer.Priority,callback);
         }
+
         public static void UnRegisterDrawCallback(RenderTargetDrawCallback callback, RenderTargetRenderer renderTargetRenderer)
         {
             instance.callbacks.Remove(renderTargetRenderer.Priority);
@@ -94,6 +94,7 @@ namespace MonoEngine.Render
             //add it to the list of batches 
             instance.renderTargetBatches.Add(renderTargetBatch.Name, renderTargetBatch);
         }
+
         public override void Draw(GameTime gameTime)
         {
             foreach (KeyValuePair<string, RenderTargetBatch> batch in renderTargetBatches)

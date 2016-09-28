@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-﻿using System;
+using System;
 using System.Reflection;
 using System.Xml;
 
@@ -40,6 +40,8 @@ namespace MonoEngine.Game
             Name = name;
 
             components = new List<GameObject>();
+
+            template = "";
         }
 
         public virtual void Update()
@@ -165,6 +167,50 @@ namespace MonoEngine.Game
             {
                 component.Message(obj, methodName);
             }
+        }
+
+        internal static GameObject LoadFromXML(string path)
+        {
+            GameObject obj = null;
+            return obj;
+        }
+
+        public void LoadToXML()
+        {
+            // This is where all the other spooky reflection magic happens
+            string name = this.GetType().Name;
+
+            // Get the field info from both this instance, and it's parent instance
+            FieldInfo[] infos = this.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
+
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.NewLineChars = "\n";
+
+            // Start by creating an XMLWriter
+            using (XmlWriter writer = XmlWriter.Create(@"Content/Assets/Objects/" + name + ".prefab", settings))
+            {
+                writer.WriteStartElement(name);
+
+                foreach (FieldInfo info in infos)
+                {
+                    writer.WriteStartElement(info.Name);
+                    writer.WriteAttributeString("type", info.FieldType.ToString());
+                    object val = info.GetValue(this);
+                    if (val != null)
+                    {
+                        writer.WriteRaw(val.ToString());
+                    }
+                    writer.WriteEndElement();
+                }
+                writer.WriteEndElement();
+            }
+
+            // Write the start node with name of this class
+            // Then for every parameter write its name as the node, type of the variable, then its value is the value of the parameter
+            // End (easy, lol)
+
+            //base.LoadToXML();
         }
     }
 }

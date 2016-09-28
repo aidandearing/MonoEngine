@@ -32,7 +32,7 @@ namespace MonoEngine.Shapes
             if (shape is Circle)
             {
                 // Circle overlap Circle
-                Vector3 delta = shape.transform.Position - transform.Position;
+                Vector3 delta =  transform.Position- shape.transform.Position;
                 lastOverlap_delta = delta;
                 lastOverlap_radius = Radius + ((Circle)shape).Radius;
 
@@ -45,28 +45,42 @@ namespace MonoEngine.Shapes
             else if (shape is AABB)
             {
                 // Circle intersect AABB
-                Vector3 delta = shape.transform.Position - transform.Position;
+                Vector3 delta = transform.Position - shape.transform.Position;
                 lastOverlap_delta = delta;
-                Vector3 dN = Vector3.Normalize(delta);
-                float theta = (float)Math.Atan(dN.Z / dN.X);
-                float length = ((AABB)shape).LengthAtAngle(theta);
+                //Vector3 dN = Vector3.Normalize(delta);
 
-                // Check the Circle against the bounding circle of the AABB
-                if (delta.Length() < Radius + length)
+                if (delta.Length() <= Radius + (shape as AABB).Diagonal)
                 {
-                    // This means the box is fully within the circle
-                    if (delta.Length() <= Radius - length)
+                    // The Circle and the AABB bounding circle are overlapping
+                    if (this.GetBoundingBox().OverlapTest(shape))
                     {
                         return true;
                     }
-                    else
-                    {
-                        // Now find out if the point on the circles edge along the normal towards the AABB is within the AABB
-                        delta.Normalize();
-                        delta *= points[0].Z;
-                        return ((AABB)shape).Overlap(delta);
-                    }
                 }
+
+                //// Circle intersect AABB
+                //Vector3 delta = shape.transform.Position - transform.Position;
+                //lastOverlap_delta = delta;
+                //Vector3 dN = Vector3.Normalize(delta);
+                //float theta = (float)Math.Atan(dN.Z / dN.X);
+                //float length = ((AABB)shape).LengthAtAngle(theta);
+
+                //// Check the Circle against the bounding circle of the AABB
+                //if (delta.Length() < Radius + length)
+                //{
+                //    // This means the box is fully within the circle
+                //    if (delta.Length() <= Radius - length)
+                //    {
+                //        return true;
+                //    }
+                //    else
+                //    {
+                //        // Now find out if the point on the circles edge along the normal towards the AABB is within the AABB
+                //        delta.Normalize();
+                //        delta *= points[0].Z;
+                //        return ((AABB)shape).Overlap(delta);
+                //    }
+                //}
 
                 return false;
             }

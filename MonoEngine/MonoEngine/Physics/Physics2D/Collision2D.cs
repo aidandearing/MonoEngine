@@ -177,11 +177,11 @@ namespace MonoEngine.Physics.Physics2D
                             {
                                 if (BodyB.shape is Shapes.Circle)
                                 {
-                                    ResolveCircleCircleStatic(BodyA, BodyB);
+                                    ResolveCircleCircleSimple();
                                 }
                                 else if (BodyB.shape is Shapes.AABB)
                                 {
-                                    ResolveCircleAABBStatic(BodyA, BodyB);
+                                    ResolveCircleAABBSimple();
                                 }
                                 else
                                 {
@@ -192,11 +192,11 @@ namespace MonoEngine.Physics.Physics2D
                             {
                                 if (BodyB.shape is Shapes.Circle)
                                 {
-                                    ResolveCircleAABBStatic(BodyA, BodyB);
+                                    ResolveCircleAABBSimple();
                                 }
                                 else if (BodyB.shape is Shapes.AABB)
                                 {
-                                    ResolveAABBAABBStatic(BodyA, BodyB);
+                                    ResolveAABBAABBSimple();
                                 }
                                 else
                                 {
@@ -228,11 +228,11 @@ namespace MonoEngine.Physics.Physics2D
                             {
                                 if (BodyB.shape is Shapes.Circle)
                                 {
-                                    ResolveCircleCircleSimple();
+                                    ResolveCircleCircleStatic(BodyA, BodyB);
                                 }
                                 else if (BodyB.shape is Shapes.AABB)
                                 {
-                                    ResolveCircleAABBSimple();
+                                    ResolveCircleAABBStatic(BodyA, BodyB);
                                 }
                                 else
                                 {
@@ -243,11 +243,11 @@ namespace MonoEngine.Physics.Physics2D
                             {
                                 if (BodyB.shape is Shapes.Circle)
                                 {
-                                    ResolveCircleAABBSimple();
+                                    ResolveCircleAABBStatic(BodyA, BodyB);
                                 }
                                 else if (BodyB.shape is Shapes.AABB)
                                 {
-                                    ResolveAABBAABBSimple();
+                                    ResolveAABBAABBStatic(BodyA, BodyB);
                                 }
                                 else
                                 {
@@ -322,45 +322,10 @@ namespace MonoEngine.Physics.Physics2D
             Shapes.Circle BA = (BodyA.shape is Shapes.Circle) ? BodyA.shape as Shapes.Circle : BodyB.shape as Shapes.Circle;
             Shapes.AABB BB = (BodyA.shape is Shapes.Circle) ? BodyB.shape as Shapes.AABB : BodyA.shape as Shapes.AABB;
 
-            // -------x----------------
-            // |       \              |
-            // |        \             |
-            // |         \.           |
-            // |                      |
-            // |                      |
-            // ------------------------
-            // Given an angle from the center of an AABB determine the length from the center to the edge of the AABB on that angle
-
-            // First lets determine the angle we are dealing with, using delta
-            // Might as well normalize the delta while we are at it
             Vector3 dN = Vector3.Normalize(BA.lastOverlap_delta);
             float theta = (float)Math.Atan(dN.Z / dN.X);
-            // Next lets figure out what quad the angle is in
-            // This is important because it changes the knowns for the equation
-            int quad = (int)Math.Floor(theta / MathHelper.PiOver2);
-
-            float knownDim = 0;
-
-            if (quad == 0 || quad == 2)
-            {
-                // Quad 1 & Quad 3 (they have the same knowns)
-                // In Quads 1 & 3 the known is half the width
-                knownDim = BB.Dimensions.X / 2;
-            }
-            else if (quad == 1 || quad == 3)
-            {
-                // Quad 2 & Quad 4 (they have the same knowns)
-                // In Quads 2 & 4 the known is half the height
-                knownDim = BB.Dimensions.Z / 2;
-            }
-
-            // Next lets isolate the angle to the quad we are in
-            theta = theta % MathHelper.PiOver2;
-
-            float angle = MathHelper.ToDegrees(theta);
-
-            // Now lets use this angle and the known dimension to calculate the length to the edge
-            float length = (float)Math.Cos(theta) * knownDim;
+            
+            float length = BB.LengthAtAngle(theta);
 
             // Time to move the circle and the aabb away from each other along the normal
             // Calculate a new center of mass for the system, and offset them both their radii away from this center of mass, along the normal, based on their mass percentage of the system

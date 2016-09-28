@@ -401,6 +401,22 @@ namespace MonoEngine.Assets
             return instance.handler_RenderTarget2D.GetResource(name);
         }
 
+        public static UIObject LoadUIObject(string name, Scene parent)
+        {
+            // TODO: UIWidget load logic
+
+            if (parent != null)
+            {
+                parent.assets.assets[typeof(UIObject)].Add(name);
+            }
+            else
+            {
+                // TODO: Log a warning that unbound assets will not unload when a scene switch occurs
+            }
+
+            return null;
+        }
+
         public static void UnloadScene(Scene newScene)
         {
             SceneAssetsPackage difference = SceneManager.activeScene.assets.Difference(newScene.assets);
@@ -417,20 +433,24 @@ namespace MonoEngine.Assets
             }
         }
 
-        public static UIObject LoadUIObject(string name, Scene parent)
+        public static void AddResourceManager<T>(string path)
         {
-            // TODO: UIWidget load logic
-
-            if (parent != null)
+            if (!instance.resourceManagers.ContainsKey(typeof(T)))
             {
-                parent.assets.assets[typeof(UIObject)].Add(name);
+                instance.resourceManagers.Add(typeof(T), new ResourceManager<T>(path));
             }
             else
             {
-                // TODO: Log a warning that unbound assets will not unload when a scene switch occurs
+                throw new AssetExceptions.ResourceManagerOfTypeAlreadyExists("Cannot create ResourceManager of type " + typeof(T) + " with path " + path + " as a ResourceManager of that type already exists");
             }
+        }
 
-            return null;
+        public static void RemoveResourceManager<T>()
+        {
+            if (!instance.resourceManagers.ContainsKey(typeof(T)))
+            {
+                instance.resourceManagers.Remove(typeof(T));
+            }
         }
     }
 }
