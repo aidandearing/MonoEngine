@@ -11,7 +11,7 @@ using MonoEngine.Assets;
 
 namespace MonoEngine.Render
 {
-    public class RenderManager : DrawableGameComponent
+    public abstract class RenderManager : DrawableGameComponent
     {
         public delegate void RenderTargetDrawCallback();
 
@@ -111,5 +111,7 @@ namespace MonoEngine.Render
             GraphicsHelper.spriteBatch.Draw(Resources.GetRenderTarget2D("screen"), GraphicsHelper.screen, Color.White);
             GraphicsHelper.spriteBatch.End();
         }
+
+        
     }
 }

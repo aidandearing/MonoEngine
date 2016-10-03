@@ -34,6 +34,14 @@ namespace MonoEngine.Game
 
         public string Name { get; set; }
 
+        /// <summary>
+        /// This constructor does nothing, and is only used to create instances of GameObjects in order to get their type
+        /// </summary>
+        internal GameObject()
+        {
+
+        }
+
         public GameObject(string name)
         {
             transform = new Transform();
