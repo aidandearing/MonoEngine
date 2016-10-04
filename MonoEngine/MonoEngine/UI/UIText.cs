@@ -24,14 +24,14 @@ namespace MonoEngine.UI
         {
             get { return font.fontName; }
 
-            set { font = Resources.LoadFont(value, SceneManager.activeScene); }
+            set { font = Resources.LoadAsset(new Font().GetType(), value, SceneManager.activeScene) as Font; }
         }
         
         public UIText(string name, Rectangle bounds, UIAlignment boundsAlign, UIAlignment alignment, flags flag, string fontName, string text, uint fontSize) : base(name, bounds, boundsAlign, alignment, flag)
         {
             this.fontSize = fontSize;
             this.text = text;
-            font = Resources.LoadFont(fontName, SceneManager.activeScene);
+            font = Resources.LoadAsset(new Font().GetType(), fontName, SceneManager.activeScene) as Font;
         }
 
         

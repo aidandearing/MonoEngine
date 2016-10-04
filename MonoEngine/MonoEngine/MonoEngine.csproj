@@ -45,6 +45,9 @@
     <Compile Include="Assets\AssetExceptions.cs" />
     <Compile Include="Assets\LoaderFont.cs" />
     <Compile Include="Assets\LoaderModel.cs" />
+    <Compile Include="Assets\LoaderSprite.cs" />
+    <Compile Include="Assets\ModelWrapper.cs" />
+    <Compile Include="Assets\RenderTarget2DWrapper.cs" />
     <Compile Include="Assets\ResourceManagerLoader.cs" />
     <Compile Include="Assets\LoaderGameObject.cs" />
     <Compile Include="Assets\ResourceManager.cs" />

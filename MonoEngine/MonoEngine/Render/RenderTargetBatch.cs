@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using MonoEngine.Assets;
 
 namespace MonoEngine.Render
 {
     public class RenderTargetBatch
     {
         public delegate void DrawCallback();
-        private RenderTarget2D renderTarget;
-        public RenderTarget2D RenderTarget
+        private RenderTarget2DWrapper renderTarget;
+        public RenderTarget2DWrapper RenderTarget
         {
             get { return renderTarget; }
             set { renderTarget = value; }
@@ -27,7 +27,7 @@ namespace MonoEngine.Render
 
         public List<DrawCallback> callbacks;
 
-        public RenderTargetBatch(string name, RenderTarget2D renderTarget)
+        public RenderTargetBatch(string name, RenderTarget2DWrapper renderTarget)
         {
             callbacks = new List<DrawCallback>();
             Name = name;

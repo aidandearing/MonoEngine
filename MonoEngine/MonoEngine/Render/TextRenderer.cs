@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoEngine.Game;
+using MonoEngine.Assets;
 
 namespace MonoEngine.Render
 {

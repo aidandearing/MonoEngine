@@ -12,11 +12,11 @@ namespace MonoEngine.Assets
         {
             // Load a model from a name at the Assets/Models/ + name.xnb pathwa
             // Needs to try to get the model at that name in the models path & load it
-            Model model = ContentHelper.Content.Load<Model>("Assets/Models/" + name);
+            ModelWrapper model = new ModelWrapper(ContentHelper.Content.Load<Model>("Assets/Models/" + name));
 
             if (parent != null)
             {
-                parent.assets.assets[typeof(Model)].Add(name);
+                parent.assets.assets[typeof(ModelWrapper)].Add(name);
             }
             else
             {

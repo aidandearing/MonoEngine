@@ -8,9 +8,9 @@ namespace MonoEngine.Render
 {
     public class ModelRenderer : GameObject
     {
-        private Model model;
+        private ModelWrapper model;
 
-        internal ModelRenderer(string name, Model model, string targetName = null) : base(name)
+        internal ModelRenderer(string name, ModelWrapper model, string targetName = null) : base(name)
         {
             this.model = model;
 
@@ -28,12 +28,12 @@ namespace MonoEngine.Render
         public void Draw()
         {
             //model.Draw(Physics.WorldToRender(Camera.Transformation.Transformation + parent.transform.Transformation), Camera.View, Camera.Projection);
-            model.Draw(PhysicsEngine.WorldToRender(Camera.MainCamera.transform.Transformation + transform.Transformation), Camera.MainCamera.View, Camera.MainCamera.Projection);
+            ((Model)model).Draw(PhysicsEngine.WorldToRender(Camera.MainCamera.transform.Transformation + transform.Transformation), Camera.MainCamera.View, Camera.MainCamera.Projection);
         }
 
         public static ModelRenderer MakeModelRenderer(string name)
         {
-            return new ModelRenderer(name, Resources.LoadModel(name, SceneManager.activeScene));
+            return new ModelRenderer(name, Resources.LoadAsset(new ModelWrapper().GetType(), name, SceneManager.activeScene) as ModelWrapper);
         }
     }
 }

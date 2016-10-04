@@ -16,11 +16,6 @@ namespace MonoEngine.Assets
 {
     public class Resources
     {
-        /// <summary>
-        /// An enumerator for all Types of Resources
-        /// </summary>
-        public enum TypeOfRef { Camera, GameObject, Model, ModelRenderer, PhysicsBody2D, PhysicsMaterial, SpriteRenderer, TextRenderer }
-
         public static object Ref(XmlReader reader)
         {
             // This will be called whenever a reader has found a <ref> element and should do whatever is appropriate to make that <ref> into an object
@@ -34,16 +29,18 @@ namespace MonoEngine.Assets
             return null;
         }
 
-        public static object Find(XmlReader reader, out TypeOfRef type)
+        public static object Find(XmlReader reader)
         {
-            Enum.TryParse(reader["type"], out type);
+            Type type = null;
+
+            type = Type.GetType(reader["type"], true, true);
 
             return null;
         }
 
-        public static object Make(XmlReader reader, out TypeOfRef type)
+        public static object Make(XmlReader reader)
         {
-            Enum.TryParse(reader["type"], out type);
+            
 
             return null;
         }
@@ -53,40 +50,7 @@ namespace MonoEngine.Assets
             return null;
         }
 
-        //private GameObject LoadGameObject(XmlReader reader)
-        //{
-        //    GameObject gameObject = null;
-        //    int depth = reader.Depth;
-
-        //    while (reader.Read() && depth < reader.Depth)
-        //    {
-        //        if (reader.IsStartElement())
-        //        {
-        //            switch (reader.Name)
-        //            {
-        //                case "name":
-        //                    if (resourceManagers[typeof(GameObject)].ContainsResource(reader.Value))
-        //                        gameObject = resourceManagers[typeof(GameObject)].GetResource(reader.Value);
-        //                    else
-        //                        gameObject = new GameObject(reader.Value);
-        //                    break;
-        //                case "transform":
-        //                    // This is an optional xml node
-        //                    gameObject.transform = Transform.XmlToTransform(reader);
-        //                    break;
-        //                case "ref":
-        //                    TypeOfRef type;
-        //                    object obj = Ref(reader, out type);
-        //                    AttachRefToGameObject(type, gameObject, obj);
-        //                    break;
-        //            }
-        //        }
-        //    }
-
-        //    return gameObject;
-        //}
-
-        private Model LoadModel(XmlReader reader)
+        private ModelWrapper LoadModel(XmlReader reader)
         {
             return null;
         }
@@ -126,24 +90,22 @@ namespace MonoEngine.Assets
             LoaderGameObject loaderGO = new LoaderGameObject(type);
             resourceManagers.Add(type, new ResourceManager("Assets/Objects", type, loaderGO));
 
-            type = new GameObject().GetType();
+            // TODO: THIS MAY EXPLODE HORRIBLY
+            type = new ModelWrapper().GetType();
             LoaderModel loaderM = new LoaderModel(type);
             resourceManagers.Add(type, new ResourceManager("Assets/Models", type, loaderM));
 
-            handler_Font = new ResourceManager<Font>("Assets/Fonts");
-            handler_Sprite = new ResourceManager<Sprite>("Assets/Textures");
-            handler_RenderTarget2D = new ResourceManager<RenderTarget2D>("Assets/Shaders");
-            handler_UIObject = new ResourceManager<UIObject>("Assets/UI");
+            type = new Font().GetType();
+            LoaderFont loaderF = new LoaderFont(type);
+            resourceManagers.Add(type, new ResourceManager("Assets/Fonts", type, loaderF));
 
-            resourceManagers.Add(typeof(GameObject), handler_GameObject);
-            resourceManagers.Add(typeof(Model), handler_Model);
-            resourceManagers.Add(typeof(Font), handler_Font);
-            resourceManagers.Add(typeof(Sprite), handler_Sprite);
-            resourceManagers.Add(typeof(RenderTarget2D), handler_RenderTarget2D);
-            resourceManagers.Add(typeof(UIObject), handler_UIObject);
+            type = new Sprite().GetType();
+            LoaderSprite loaderS = new LoaderSprite(typeof(Sprite));
+            resourceManagers.Add(type, new ResourceManager("Assets/Textures", type, loaderS));
 
-            
-
+            type = new RenderTarget2DWrapper().GetType();
+            resourceManager_renderTarget2D = new ResourceManager("Assets/Shaders", type, loaderS);
+            resourceManagers.Add(type, resourceManager_renderTarget2D);
         }
 
         public static Resources Initialise()
@@ -154,6 +116,7 @@ namespace MonoEngine.Assets
 
         // The strange dictionary of all resource managers, keyed by Type
         private Dictionary<Type, ResourceManager> resourceManagers;
+        private ResourceManager resourceManager_renderTarget2D;
 
         public static bool CheckForAsset(string name, Type type)
         {
@@ -183,11 +146,12 @@ namespace MonoEngine.Assets
             }
         }
 
-        public static RenderTarget2D GetRenderTarget2D(string name)
+        public static RenderTarget2DWrapper GetRenderTarget2D(string name)
         {
-            if (instance.resourceManagers[typeof(RenderTarget2D)].ContainsResource(name))
+            
+            if (instance.resourceManager_renderTarget2D.ContainsResource(name))
             {
-                return instance.handler_RenderTarget2D.GetResource(name);
+                return instance.resourceManager_renderTarget2D.GetResource(name) as RenderTarget2DWrapper;
             }
             else
             {
@@ -195,106 +159,21 @@ namespace MonoEngine.Assets
             }
         }
 
-        public static Font LoadFont(string name, Scene parent)
+        public static RenderTarget2DWrapper LoadRenderTarget2D(string name, Scene parent, int width, int height, bool mipMap, SurfaceFormat surfaceFormat, DepthFormat depthFormat, int multiSampleCount, RenderTargetUsage usage)
         {
-            // Load a font from a name at the Assets/Fonts/ + name#.xnb pathway (plus all it's sizes)
-            if (!instance.handler_Font.ContainsResource(name))
+            RenderTarget2DWrapper target = new RenderTarget2DWrapper(new RenderTarget2D(GraphicsHelper.graphicsDevice, width, height, mipMap, surfaceFormat, depthFormat, multiSampleCount, usage));
+            ResourceManager manager = instance.resourceManagers[target.GetType()];
+
+            if (manager.ContainsResource(name))
             {
-                string[] paths = Directory.GetFiles(@"./Content/" + instance.handler_Font.Path, name + "_*.xnb");
-
-                char[] delimiters = { '.', '\\', '_' };
-
-                List<int> sizes = null;
-                int size = 0;
-                List<SpriteFont> fonts = new List<SpriteFont>();
-                foreach (string path in paths)
+                if (target != manager.GetResource(name))
                 {
-                    string[] split = path.Split(delimiters);
-                    // path looks like this .\\Content\\Assets\\Fonts\\name_*.xnb
-                    // delimited it becomes split[0] = "" | split[1] = "" | split[2] = "Content" | split[3] = "Assets" | split[4] = "Fonts" | split[5] = "name" | split[6] = "*" | split[7] = "xnb"
-
-                    if (split[6] != null && int.TryParse(split[6], out size))
-                    {
-                        if (sizes == null)
-                        {
-                            sizes = new List<int>();
-                            sizes.Add(size);
-                            fonts.Add(ContentHelper.Content.Load<SpriteFont>("Assets/Fonts/" + name + "_" + split[6]));
-                        }
-                        else
-                        {
-                            for (int i = 0; i < sizes.Count; i++)
-                            {
-                                if (size < sizes[i])
-                                {
-                                    sizes.Insert(i, size);
-                                    fonts.Insert(i, ContentHelper.Content.Load<SpriteFont>("Assets/Fonts/" + name + "_" + split[6]));
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (parent != null)
-                {
-                    parent.assets.assets[typeof(Font)].Add(name);
-                }
-                else
-                {
-                    // TODO: Log a warning that unbound assets will not unload when a scene switch occurs
-                }
-
-                Font font = new Font(sizes.ToArray(), fonts.ToArray(), name);
-                instance.handler_Font.AddResource(name, font);
-                return font;
-                
-            }
-
-            return instance.handler_Font.GetResource(name);
-        }
-
-        public static Sprite LoadTexture2D(string name, Scene parent)
-        {
-            // Load a texture from a texture at the Assets/Textures/ + name.xnb pathway
-
-            // If the model isn't already loaded (it's key isn't found in the dictionary)
-            if (!instance.handler_Sprite.ContainsResource(name))
-            {
-                // Needs to try to get the model at that name in the models path & load it
-                Texture2D texture = ContentHelper.Content.Load<Texture2D>("Assets/Textures/" + name);
-                // add the model into the dictionary
-                Sprite sprite = new Sprite(texture, texture.Bounds, texture.Bounds, Color.White, 0.0f, 1.0f, SpriteEffects.None);
-                instance.handler_Sprite.AddResource(name, sprite);
-                return sprite;
-            }
-
-            if (parent != null)
-            {
-                parent.assets.assets[typeof(Texture2D)].Add(name);
-            }
-            else
-            {
-                // TODO: Log a warning that unbound assets will not unload when a scene switch occurs
-            }
-
-            // Pass the texture at that key in the dictionary
-            return instance.handler_Sprite.GetResource(name);
-        }
-
-        public static RenderTarget2D LoadRenderTarget2D(string name, Scene parent, int width, int height, bool mipMap, SurfaceFormat surfaceFormat, DepthFormat depthFormat, int multiSampleCount, RenderTargetUsage usage)
-        {
-            RenderTarget2D target = new RenderTarget2D(GraphicsHelper.graphicsDevice, width, height, mipMap, surfaceFormat, depthFormat, multiSampleCount, usage);
-
-            if (instance.handler_RenderTarget2D.ContainsResource(name))
-            {
-                if (target != instance.handler_RenderTarget2D.GetResource(name))
-                {
-                    throw new AssetExceptions.AssetAlreadyExists("Cannot resolve difference between existing RenderTarget2D and new RenderTarget2D\nExisting RenderTarget2D: " + instance.handler_RenderTarget2D.GetResource(name) + "\nNew RenderTarget2D" + target);
+                    throw new AssetExceptions.AssetAlreadyExists("Cannot resolve difference between existing RenderTarget2D and new RenderTarget2D\nExisting RenderTarget2D: " + instance.resourceManager_renderTarget2D.GetResource(name) + "\nNew RenderTarget2D" + target);
                 }
             }
             else
             {
-                instance.handler_RenderTarget2D.AddResource(name, target);
+                manager.AddResource(name, target);
                 RenderTargetBatch batch = new RenderTargetBatch(name, target);
                 RenderManager.AddRenderTargetBatch(batch);
                 return target;
@@ -302,30 +181,14 @@ namespace MonoEngine.Assets
 
             if (parent != null)
             {
-                parent.assets.assets[typeof(RenderTarget2D)].Add(name);
+                parent.assets.assets[new RenderTarget2DWrapper().GetType()].Add(name);
             }
             else
             {
                 // TODO: Log a warning that unbound assets will not unload when a scene switch occurs
             }
 
-            return instance.handler_RenderTarget2D.GetResource(name);
-        }
-
-        public static UIObject LoadUIObject(string name, Scene parent)
-        {
-            // TODO: UIWidget load logic
-
-            if (parent != null)
-            {
-                parent.assets.assets[typeof(UIObject)].Add(name);
-            }
-            else
-            {
-                // TODO: Log a warning that unbound assets will not unload when a scene switch occurs
-            }
-
-            return null;
+            return manager.GetResource(name) as RenderTarget2DWrapper;
         }
 
         public static void UnloadScene(Scene newScene)
@@ -344,15 +207,15 @@ namespace MonoEngine.Assets
             }
         }
         
-        public static void AddResourceManager<T>(string path)
+        public static void AddResourceManager(string path, Type type, ResourceManagerLoader loader)
         {
-            if (!instance.resourceManagers.ContainsKey(typeof(T)))
+            if (!instance.resourceManagers.ContainsKey(type))
             {
-                instance.resourceManagers.Add(typeof(T), new ResourceManager<T>(path));
+                instance.resourceManagers.Add(type, new ResourceManager(path, type, loader));
             }
             else
             {
-                throw new AssetExceptions.ResourceManagerOfTypeAlreadyExists("Cannot create ResourceManager of type " + typeof(T) + " with path " + path + " as a ResourceManager of that type already exists");
+                throw new AssetExceptions.ResourceManagerOfTypeAlreadyExists("Cannot create ResourceManager of type " + type + " with path " + path + " as a ResourceManager of that type already exists");
             }
         }
 

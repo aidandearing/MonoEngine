@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MonoEngine.Render
+namespace MonoEngine.Assets
 {
     public class Font
     {
@@ -13,6 +13,11 @@ namespace MonoEngine.Render
         public int[] fontSizes;
         public SpriteFont[] fontStyles;
         public string fontName;
+
+        /// <summary>
+        /// NEVER USE THIS, IT IS USED SPECIFICALLY TO GET THE RUNTIME TYPE OF AN INSTANCE OF FONT, AND NOTHING ELSE
+        /// </summary>
+        internal Font() { }
 
         public Font(int[] fontSizes, SpriteFont[] fontStyles, string fontName)
         {

@@ -11,7 +11,7 @@ using MonoEngine.Assets;
 
 namespace MonoEngine.Render
 {
-    public abstract class RenderManager : DrawableGameComponent
+    public class RenderManager : DrawableGameComponent
     {
         public delegate void RenderTargetDrawCallback();
 

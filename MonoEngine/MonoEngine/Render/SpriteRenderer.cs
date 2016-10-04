@@ -39,7 +39,7 @@ namespace MonoEngine.Render
         }
         public static SpriteRenderer MakeSpriteRenderer(string name)
         {
-            return new SpriteRenderer(name, Resources.LoadTexture2D(name, SceneManager.activeScene));
+            return new SpriteRenderer(name, Resources.LoadAsset(new Sprite().GetType(), name, SceneManager.activeScene) as Sprite);
         }
 
         

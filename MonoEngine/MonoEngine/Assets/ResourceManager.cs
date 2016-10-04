@@ -7,11 +7,7 @@ namespace MonoEngine.Assets
     public class ResourceManager
     {
         protected string path;
-        public string Path
-        {
-            get { return path; }
-            private set { path = value; }
-        }
+        public string Path { get; private set; }
 
         public ResourceManagerLoader Loader;
 
