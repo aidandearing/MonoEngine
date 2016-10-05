@@ -12,6 +12,8 @@ namespace MonoEngine.Render
 {
     public class RenderTargetRenderer : GameObject
     {
+        private static Dictionary<string, RenderTargetRenderer> renderTargetInstances;
+
         private RenderTarget2D renderable;
         private RenderTarget2D target;
 
@@ -22,7 +24,6 @@ namespace MonoEngine.Render
             private set { priority = value; }
         }
 
-        private static Dictionary<string, RenderTargetRenderer> renderTargetInstances;
         internal RenderTargetRenderer(int priority, string name, RenderTarget2D renderable, RenderTarget2D target = null) : base(name)
         {
             if (target == null)
@@ -39,6 +40,7 @@ namespace MonoEngine.Render
                 renderTargetInstances = new Dictionary<string, RenderTargetRenderer>();
             }
         }
+
         public void Draw()
         {
             GraphicsHelper.graphicsDevice.SetRenderTarget(target);
