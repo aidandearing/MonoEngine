@@ -9,7 +9,6 @@ namespace MonoEngine.UI
 {
     public class UIAlignment
     {
-        
         public enum Alignment { None, TopLeft, TopCenter, TopRight, CenterLeft, Center, CenterRight, BottomLeft, BottomCenter, BottomRight, Top, Left, Right, Bottom, FloatTop, FloatLeft, FloatRight, FloatBottom };
         public Alignment alignment;
 
