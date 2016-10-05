@@ -15,6 +15,7 @@ namespace MonoEngine.UI
     {
         public List<UIBehaviour> uiBehaviours;
         public List<UIBehaviour> deadBehaviours;
+
         private static UIManager instance;
         public static UIManager Instance(Microsoft.Xna.Framework.Game game)
         {
@@ -35,6 +36,7 @@ namespace MonoEngine.UI
         {
             uiBehaviours.Add(behaviour);
         }
+
         public void RemoveUIBehaviour(UIBehaviour behaviour)
         {
             deadBehaviours.Add(behaviour);

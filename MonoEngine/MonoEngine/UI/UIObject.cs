@@ -17,13 +17,10 @@ namespace MonoEngine.UI
         public UIObject parent;
         public List<UIObject> childObjects;
         public Rectangle bounds;
-        //this must be a unique name for each uiObject
-        public string name;
+        public string Name { get; set; }
         public Vector2 origin;
         public UIObject previousObj;
         public UIObject nextObj;
-
-        
 
         public UIObject(string name, Rectangle bounds, UIAlignment boundsAlign, UIAlignment alignment, flags flag)
         {

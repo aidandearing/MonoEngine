@@ -33,7 +33,5 @@ namespace MonoEngine.UI
             this.text = text;
             font = Resources.LoadAsset(new Font().GetType(), fontName, SceneManager.activeScene) as Font;
         }
-
-        
     }
 }

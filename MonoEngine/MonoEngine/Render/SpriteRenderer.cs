@@ -12,8 +12,6 @@ namespace MonoEngine.Render
 {
     public class SpriteRenderer : GameObject
     {
-        //private static Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
-
         public Sprite sprite;
 
         private RenderTargetBatch batch;
@@ -32,16 +30,16 @@ namespace MonoEngine.Render
             }
 
         }
+
         public void Draw()
         {
             //batch.spriteBatch.Draw(sprite.Image, sprite.ImageRect, sprite.SourceRect, sprite.Color, sprite.Rotation, sprite.SourceRect.Center, sprite.SpriteEffects, 0.0f);
             //RenderManager.spriteBatch.Draw(Sprite, Bounds, null, Colour[0] * Opacity[0], Rotation, Origin, SpriteEffects.None, Depth);
         }
+
         public static SpriteRenderer MakeSpriteRenderer(string name)
         {
             return new SpriteRenderer(name, Resources.LoadAsset(new Sprite().GetType(), name, SceneManager.activeScene) as Sprite);
         }
-
-        
     }
 }

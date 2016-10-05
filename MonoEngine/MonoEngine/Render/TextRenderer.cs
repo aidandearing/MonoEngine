@@ -29,6 +29,7 @@ namespace MonoEngine.Render
                 batch = RenderManager.RegisterDrawCallback(targetName, new RenderTargetBatch.DrawCallback(Draw));
             }
         }
+
         public void Draw()
         {
             //batch.spriteBatch.DrawString()

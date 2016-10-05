@@ -13,7 +13,6 @@ namespace MonoEngine.UI
     {
         public List<UIObject> rootObjects;
 
-
         public UIScreen()
         {
             rootObjects = new List<UIObject>();
@@ -39,6 +38,7 @@ namespace MonoEngine.UI
             }
             return obj;
         }
+
         public void AddUIObjectToUIObjectByName(string name, UIObject obj)
         {
             UIObject namedObj = GetUIObjectByName(name);
@@ -48,6 +48,7 @@ namespace MonoEngine.UI
                 namedObj.AddUIObject(obj);
             }
         }
+
         public void RemoveUIObjectFromUIObjectByName(string name, UIObject obj)
         {
             UIObject namedObj = GetUIObjectByName(name);
