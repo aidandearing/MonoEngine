@@ -37,10 +37,7 @@ namespace MonoEngine.Game
         /// <summary>
         /// This constructor does nothing, and is only used to create instances of GameObjects in order to get their type
         /// </summary>
-        internal GameObject()
-        {
-
-        }
+        internal GameObject() { }
 
         public GameObject(string name)
         {
@@ -177,9 +174,37 @@ namespace MonoEngine.Game
             }
         }
 
+        //public override string ToString()
+        //{
+        //    return Name;
+        //}
+
         internal static GameObject LoadFromXML(string path)
         {
             GameObject obj = null;
+
+            using (XmlReader reader = XmlReader.Create(@path))
+            {
+                while (reader.Read())
+                {
+                    if (reader.IsStartElement())
+                    {
+                        switch (reader.Name)
+                        {
+                            case "template":
+                                // What is this GameObject a template from? Can we go get that instead and just replace this with a clone of it?
+                                break;
+                            case "transform":
+                                // What is the transform of this object
+                                break;
+                            case "parent":
+                                // What is this GameObject's parent object
+                                break;
+                        }
+                    }
+                }
+            }
+
             return obj;
         }
 
@@ -198,8 +223,10 @@ namespace MonoEngine.Game
             // Start by creating an XMLWriter
             using (XmlWriter writer = XmlWriter.Create(@"Content/Assets/Objects/" + name + ".prefab", settings))
             {
+                // Write the start node with name of this class
                 writer.WriteStartElement(name);
 
+                // Then for every parameter write its name as the node, type of the variable, then its value is the value of the parameter
                 foreach (FieldInfo info in infos)
                 {
                     writer.WriteStartElement(info.Name);
@@ -211,14 +238,9 @@ namespace MonoEngine.Game
                     }
                     writer.WriteEndElement();
                 }
+                // End (easy, lol)
                 writer.WriteEndElement();
             }
-
-            // Write the start node with name of this class
-            // Then for every parameter write its name as the node, type of the variable, then its value is the value of the parameter
-            // End (easy, lol)
-
-            //base.LoadToXML();
         }
     }
 }

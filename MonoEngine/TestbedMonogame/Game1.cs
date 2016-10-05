@@ -110,7 +110,8 @@ namespace TestbedMonogame
 
             obj = new GameObject("floor2");
             obj.transform.Translate(new Vector3(2f, 0, 0));
-            obj.AddComponent(ModelRenderer.MakeModelRenderer("FloorTile"));
+            ModelRenderer renderer = ModelRenderer.MakeModelRenderer("FloorTile");
+            obj.AddComponent(renderer);
             body = new PhysicsBody2D(obj, "floorB", new Circle(obj.transform, 0.5f), new PhysicsMaterial(1,0,1f), PhysicsEngine.BodyType.SIMPLE);
             body.Velocity = new Vector3(-0.01f, 0, 0);
             //body.RegisterCollisionCallback(new Collision2D.OnCollision(OnCollision2DBody));
@@ -118,8 +119,7 @@ namespace TestbedMonogame
 
             GameObjectManager.AddGameObject(obj);
 
-            GameObject ob = new GameObject("furfur");
-            ob.LoadToXML();
+            obj.LoadToXML();
 
             // Testing whether xml to transform works.
             using (XmlReader reader = XmlReader.Create(@"./Content/Assets/Scenes/XMLFile1.xml"))

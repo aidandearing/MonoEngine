@@ -25,7 +25,7 @@ namespace MonoEngine.UI
         public UIObject(string name, Rectangle bounds, UIAlignment boundsAlign, UIAlignment alignment, flags flag)
         {
             childObjects = new List<UIObject>();
-            this.name = name;
+            this.Name = name;
             this.bounds = bounds;
             this.flag = flag;
 
@@ -54,7 +54,7 @@ namespace MonoEngine.UI
         public UIObject GetUIObjectByName(string name)
         {
             
-            if (name == this.name)
+            if (name == this.Name)
             {
                 return this;
             }
