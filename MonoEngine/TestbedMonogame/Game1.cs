@@ -176,10 +176,5 @@ namespace TestbedMonogame
 
             base.Draw(gameTime);
         }
-
-        private void OnCollision2DBody(Collision2D collision)
-        {
-            System.Console.WriteLine(collision.BodyA.Name + " with: " + collision.BodyA.collisions.Count + " collisions is colliding with " + collision.BodyB.Name + " with: " + collision.BodyB.collisions.Count + " collisions");
-        }
     }
 }

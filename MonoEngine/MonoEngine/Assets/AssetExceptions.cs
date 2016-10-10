@@ -5,6 +5,7 @@ namespace MonoEngine.Assets
 {
     public class AssetExceptions
     {
+        [Serializable]
         public class AssetAlreadyExists : Exception
         {
             public AssetAlreadyExists()
@@ -24,6 +25,7 @@ namespace MonoEngine.Assets
             }
         }
 
+        [Serializable]
         public class TransformFromXMLFormat : Exception
         {
             public TransformFromXMLFormat()
@@ -43,6 +45,7 @@ namespace MonoEngine.Assets
             }
         }
 
+        [Serializable]
         public class ResourceManagerOfTypeAlreadyExists : Exception
         {
             public ResourceManagerOfTypeAlreadyExists()

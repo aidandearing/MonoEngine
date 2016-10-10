@@ -5,6 +5,7 @@ namespace MonoEngine.Physics
 {
     public class PhysicsExceptions
     {
+        [Serializable]
         public class InvalidPhysicsBody : Exception
         {
             public InvalidPhysicsBody()
@@ -24,6 +25,7 @@ namespace MonoEngine.Physics
             }
         }
 
+        [Serializable]
         public class InvalidCollisionCallback : Exception
         {
             public InvalidCollisionCallback()
@@ -43,6 +45,7 @@ namespace MonoEngine.Physics
             }
         }
 
+        [Serializable]
         public class NotImplementedYet : Exception
         {
             public NotImplementedYet()
@@ -62,6 +65,7 @@ namespace MonoEngine.Physics
             }
         }
 
+        [Serializable]
         public class UnsupportedEngine : Exception
         {
             public UnsupportedEngine()

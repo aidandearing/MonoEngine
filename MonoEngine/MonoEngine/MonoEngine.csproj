@@ -21,6 +21,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -54,6 +55,7 @@
     <Compile Include="Assets\SceneAssetsPackage.cs" />
     <Compile Include="Game\Scene.cs" />
     <Compile Include="Game\SceneManager.cs" />
+    <Compile Include="Physics\Physics2D\IPhysicsListener2D.cs" />
     <Compile Include="Physics\Physics2D\Ray2D.cs" />
     <Compile Include="Physics\PhysicsEngine.cs" />
     <Compile Include="Physics\PhysicsExceptions.cs" />
@@ -70,7 +72,7 @@
     <Compile Include="Shapes\Circle.cs" />
     <Compile Include="Physics\Physics2D\Collision2D.cs" />
     <Compile Include="ContentHelper.cs" />
-    <Compile Include="Audio\GameAudioListener.cs" />
+    <Compile Include="Audio\AudioListener.cs" />
     <Compile Include="Render\ModelRenderer.cs" />
     <Compile Include="Game\GameObject.cs" />
     <Compile Include="Game\GameObjectManager.cs" />

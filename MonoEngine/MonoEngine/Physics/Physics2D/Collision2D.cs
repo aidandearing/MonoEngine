@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.Reflection;
 
 namespace MonoEngine.Physics.Physics2D
 {
@@ -110,15 +111,19 @@ namespace MonoEngine.Physics.Physics2D
             if (type == PhysicsEngine.CollisionType.START && test)
             {
                 type = PhysicsEngine.CollisionType.STAY;
-                BodyA.Broadcast(this, "OnCollision2DStay");
-                BodyB.Broadcast(this, "OnCollision2DStay");
+                //BodyA.Broadcast(this, "OnCollision2DStay");
+                //BodyB.Broadcast(this, "OnCollision2DStay");
+                BodyA.PhysicsBody2DCallStay(this);
+                BodyB.PhysicsBody2DCallStay(this);
             }
             // If this type is none and test is true, collision is starting
             if (type == PhysicsEngine.CollisionType.NONE && test)
             {
                 type = PhysicsEngine.CollisionType.START;
-                BodyA.Broadcast(this, "OnCollision2DStart");
-                BodyB.Broadcast(this, "OnCollision2DStart");
+                //BodyA.Broadcast(this, "OnCollision2DStart");
+                //BodyB.Broadcast(this, "OnCollision2DStart");
+                BodyA.PhysicsBody2DCallStart(this);
+                BodyB.PhysicsBody2DCallStart(this);
             }
             // If this type is stop and test is false, collision is none
             if (type == PhysicsEngine.CollisionType.STOP && !test)
@@ -129,15 +134,19 @@ namespace MonoEngine.Physics.Physics2D
             if ((type == PhysicsEngine.CollisionType.START || type == PhysicsEngine.CollisionType.STAY) && !test)
             {
                 type = PhysicsEngine.CollisionType.STOP;
-                BodyA.Broadcast(this, "OnCollision2DStop");
-                BodyB.Broadcast(this, "OnCollision2DStop");
+                //BodyA.Broadcast(this, "OnCollision2DStop");
+                //BodyB.Broadcast(this, "OnCollision2DStop");
+                BodyA.PhysicsBody2DCallStop(this);
+                BodyB.PhysicsBody2DCallStop(this);
             }
             // If this type is stop and test is true, collision is starting, again
             if (type == PhysicsEngine.CollisionType.STOP && test)
             {
                 type = PhysicsEngine.CollisionType.START;
-                BodyA.Broadcast(this, "OnCollision2DStart");
-                BodyB.Broadcast(this, "OnCollision2DStart");
+                //BodyA.Broadcast(this, "OnCollision2DStart");
+                //BodyB.Broadcast(this, "OnCollision2DStart");
+                BodyA.PhysicsBody2DCallStart(this);
+                BodyB.PhysicsBody2DCallStart(this);
             }
 
             if (test)

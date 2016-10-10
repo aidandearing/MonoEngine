@@ -57,28 +57,76 @@ namespace MonoEngine.Game
             }
         }
 
-        public GameObject GetComponent<T>()
+        public GameObject GetComponent(Type type)
         {
             foreach (GameObject component in components)
             {
-                if (component is T)
+                if (component.GetType() == type)
                     return component;
             }
 
             return null;
         }
 
-        public List<GameObject> GetComponents<T>()
+        public List<GameObject> GetComponents(Type type)
         {
             List<GameObject> returnComponents = new List<GameObject>();
 
             foreach (GameObject component in components)
             {
-                if (component is T)
+                if (component.GetType() == type)
                     returnComponents.Add(component);
             }
 
             return returnComponents;
+        }
+
+        internal void PhysicsBody2DCallStart(Physics.Physics2D.Collision2D collision)
+        {
+            if (this is Physics.Physics2D.IPhysicsListener2D)
+            {
+                (this as Physics.Physics2D.IPhysicsListener2D).OnCollision2DStart(collision);
+            }
+
+            foreach (GameObject component in components)
+            {
+                if (component is Physics.Physics2D.IPhysicsListener2D)
+                {
+                    (component as Physics.Physics2D.IPhysicsListener2D).OnCollision2DStart(collision);
+                }
+            }
+        }
+
+        internal void PhysicsBody2DCallStay(Physics.Physics2D.Collision2D collision)
+        {
+            if (this is Physics.Physics2D.IPhysicsListener2D)
+            {
+                (this as Physics.Physics2D.IPhysicsListener2D).OnCollision2DStay(collision);
+            }
+
+            foreach (GameObject component in components)
+            {
+                if (component is Physics.Physics2D.IPhysicsListener2D)
+                {
+                    (component as Physics.Physics2D.IPhysicsListener2D).OnCollision2DStay(collision);
+                }
+            }
+        }
+
+        internal void PhysicsBody2DCallStop(Physics.Physics2D.Collision2D collision)
+        {
+            if (this is Physics.Physics2D.IPhysicsListener2D)
+            {
+                (this as Physics.Physics2D.IPhysicsListener2D).OnCollision2DStop(collision);
+            }
+
+            foreach (GameObject component in components)
+            {
+                if (component is Physics.Physics2D.IPhysicsListener2D)
+                {
+                    (component as Physics.Physics2D.IPhysicsListener2D).OnCollision2DStop(collision);
+                }
+            }
         }
 
         // Reflection based method calling by name on scene tree
@@ -174,10 +222,10 @@ namespace MonoEngine.Game
             }
         }
 
-        //public override string ToString()
-        //{
-        //    return Name;
-        //}
+        public override string ToString()
+        {
+            return Name;
+        }
 
         internal static GameObject LoadFromXML(string path)
         {
@@ -225,6 +273,7 @@ namespace MonoEngine.Game
             {
                 // Write the start node with name of this class
                 writer.WriteStartElement(name);
+                writer.WriteAttributeString("name", this.Name);
 
                 // Then for every parameter write its name as the node, type of the variable, then its value is the value of the parameter
                 foreach (FieldInfo info in infos)
@@ -238,6 +287,17 @@ namespace MonoEngine.Game
                     }
                     writer.WriteEndElement();
                 }
+
+                // Then for every parameter write its name as the node, type of the variable, then its value is the value of the parameter
+                foreach (GameObject obj in components)
+                {
+                    writer.WriteStartElement("ref");
+                    writer.WriteRaw(obj.Name);
+                    writer.WriteEndElement();
+
+                    obj.LoadToXML();
+                }
+
                 // End (easy, lol)
                 writer.WriteEndElement();
             }

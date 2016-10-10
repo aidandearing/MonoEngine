@@ -14,9 +14,9 @@ namespace MonoEngine.Physics.Physics2D
         private PhysicsMaterial material;
 
         // This list is referenced in Physic's callback registery
-        public List<Collision2D.OnCollision> collisionCallbacks;
+        internal List<Collision2D.OnCollision> collisionCallbacks;
         // This list is referenced in Physic's collision registery
-        public List<Collision2D> collisions;
+        internal List<Collision2D> collisions;
         private List<Collision2D> collisions_dead;
         // This list contains a reference to any chunks the body is in, if it is static, and any chunks this body overlaps if it is dynamic
         public List<PhysicsBoundingChunk2D> chunks;

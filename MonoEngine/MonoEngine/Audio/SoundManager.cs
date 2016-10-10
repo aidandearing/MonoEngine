@@ -8,7 +8,7 @@ namespace MonoEngine.Audio
     {
         private Dictionary<string, SoundEffect> sounds = new Dictionary<string, SoundEffect>();
 
-        private static List<GameAudioListener> audioListeners;
+        private static List<AudioListener> audioListeners;
 
         private static SoundManager instance;
 
@@ -59,13 +59,13 @@ namespace MonoEngine.Audio
 
             audioEmitter.Position = position;
 
-            foreach (GameAudioListener gameAudioListener in audioListeners)
+            foreach (AudioListener gameAudioListener in audioListeners)
             {
                 instance.sounds[soundName].CreateInstance().Apply3D(gameAudioListener.audioListener, audioEmitter);
             }
         }
 
-        public static void AddAudioListener(GameAudioListener audioListener)
+        public static void AddAudioListener(AudioListener audioListener)
         {
             audioListeners.Add(audioListener);
         }
