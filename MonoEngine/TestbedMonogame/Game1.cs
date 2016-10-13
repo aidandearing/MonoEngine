@@ -1,5 +1,4 @@
-﻿using System.Xml;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoEngine;
@@ -90,54 +89,56 @@ namespace TestbedMonogame
             GraphicsHelper.graphicsDevice = GraphicsDevice;
             this.Components.Add(RenderManager.Instance(this));
 
-            GameObject obj = new GameObject("wall");
-            obj.AddComponent(ModelRenderer.MakeModelRenderer("BasicWall"));
-            PhysicsBody2D body = new PhysicsBody2D(obj, "wall", new AABB(obj.transform, 1, 1), new PhysicsMaterial(1,0,1), PhysicsEngine.BodyType.SIMPLE);
-            obj.AddComponent(body);
-            obj.AddComponent(new Camera("camera"));
+            //GameObject obj = new GameObject("wallTest");
+            //obj.AddComponent(ModelRenderer.MakeModelRenderer("BasicWall"));
+            //PhysicsBody2D body = new PhysicsBody2D(obj, "wall", new AABB(obj.transform, 1, 1), new PhysicsMaterial(1,0,1), PhysicsEngine.BodyType.SIMPLE);
+            //obj.AddComponent(body);
+            //obj.AddComponent(new Camera("camera"));
 
-            GameObjectManager.AddGameObject(obj);
+            //GameObjectManager.AddGameObject(obj);
 
-            //obj = new GameObject("floor");
-            //obj.transform.Translate(new Vector3(0f, 0, 0));
-            //obj.AddComponent(ModelRenderer.MakeModelRenderer(obj, "FloorTile"));
-            //body = new PhysicsBody2D(obj, "floorA", new Circle(obj.transform, 0.5f), new PhysicsMaterial(1,0,1f), PhysicsEngine.BodyType.STATIC);
-            //body.Velocity = new Vector3(0.01f, 0, 0);
-            //body.RegisterCollisionCallback(new Collision2D.OnCollision(OnCollision2DBody));
+            ////obj = new GameObject("floor");
+            ////obj.transform.Translate(new Vector3(0f, 0, 0));
+            ////obj.AddComponent(ModelRenderer.MakeModelRenderer(obj, "FloorTile"));
+            ////body = new PhysicsBody2D(obj, "floorA", new Circle(obj.transform, 0.5f), new PhysicsMaterial(1,0,1f), PhysicsEngine.BodyType.STATIC);
+            ////body.Velocity = new Vector3(0.01f, 0, 0);
+            ////body.RegisterCollisionCallback(new Collision2D.OnCollision(OnCollision2DBody));
+            ////obj.AddComponent(body);
+
+            ////GameObjectManager.AddGameObject(obj);
+
+            //obj = new GameObject("floor2");
+            //obj.transform.Translate(new Vector3(2f, 0, 0));
+            //ModelRenderer renderer = ModelRenderer.MakeModelRenderer("FloorTile");
+            //obj.AddComponent(renderer);
+            //body = new PhysicsBody2D(obj, "floorB", new Circle(obj.transform, 0.5f), new PhysicsMaterial(1,0,1f), PhysicsEngine.BodyType.SIMPLE);
+            //body.Velocity = new Vector3(-0.01f, 0, 0);
+            ////body.RegisterCollisionCallback(new Collision2D.OnCollision(OnCollision2DBody));
             //obj.AddComponent(body);
 
             //GameObjectManager.AddGameObject(obj);
 
-            obj = new GameObject("floor2");
-            obj.transform.Translate(new Vector3(2f, 0, 0));
-            ModelRenderer renderer = ModelRenderer.MakeModelRenderer("FloorTile");
-            obj.AddComponent(renderer);
-            body = new PhysicsBody2D(obj, "floorB", new Circle(obj.transform, 0.5f), new PhysicsMaterial(1,0,1f), PhysicsEngine.BodyType.SIMPLE);
-            body.Velocity = new Vector3(-0.01f, 0, 0);
-            //body.RegisterCollisionCallback(new Collision2D.OnCollision(OnCollision2DBody));
-            obj.AddComponent(body);
+            //obj.LoadToXML();
 
-            GameObjectManager.AddGameObject(obj);
+            //// Testing whether xml to transform works.
+            //using (XmlReader reader = XmlReader.Create(@"./Content/Assets/Scenes/XMLFile1.xml"))
+            //{
+            //    while (reader.Read())
+            //    {
+            //        if (reader.IsStartElement())
+            //        {
+            //            switch(reader.Name)
+            //            {
+            //                case "transform":
+            //                    Transform transform = Transform.XmlToTransform(reader);
+            //                    break;
+            //            }
+            //        }
+            //    }
+            //}
+            //// It does.
 
-            obj.LoadToXML();
-
-            // Testing whether xml to transform works.
-            using (XmlReader reader = XmlReader.Create(@"./Content/Assets/Scenes/XMLFile1.xml"))
-            {
-                while (reader.Read())
-                {
-                    if (reader.IsStartElement())
-                    {
-                        switch(reader.Name)
-                        {
-                            case "transform":
-                                Transform transform = Transform.XmlToTransform(reader);
-                                break;
-                        }
-                    }
-                }
-            }
-            // It does.
+            SceneManager.LoadScene("default");
         }
 
         /// <summary>
