@@ -133,7 +133,7 @@ namespace MonoEngine.Physics.Physics2D
                 AddChunk(body);
             }
 
-            if (!body.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
+            if (!body.bodyFlag.HasFlag(PhysicsEngine.BodyType.STATIC))
             {
                 bodies_Active.Add(body);
             }
@@ -298,9 +298,6 @@ namespace MonoEngine.Physics.Physics2D
         {
             base.Update(gameTime);
 
-            Console.WriteLine(Time.DeltaTime);
-            Console.WriteLine(bounds.Count);
-
             foreach (PhysicsBody2D body in bodies_Active)
             {
                 body.Update();
@@ -318,7 +315,7 @@ namespace MonoEngine.Physics.Physics2D
                     registery_CollisionCallbacks.Remove(body);
                 }
 
-                if (body.flagBodyType.HasFlag(BodyType.STATIC))
+                if (body.bodyFlag.HasFlag(BodyType.STATIC))
                 {
                     foreach (PhysicsBoundingChunk2D chunk in body.chunks)
                     {

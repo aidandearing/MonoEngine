@@ -19,11 +19,14 @@ namespace MonoEngine.Render
         
         private Dictionary<string, RenderTargetBatch> renderTargetBatches;
 
-        private bool isInit;
+        private bool isInit = false;
+
         private static RenderManager instance;
         public static RenderManager Instance(Microsoft.Xna.Framework.Game game)
         {
             instance = (instance == null) ? new RenderManager(game) : instance;
+
+            instance.Initialize();
 
             return instance;
         }
@@ -33,6 +36,7 @@ namespace MonoEngine.Render
             callbacks = new SortedList<int,RenderTargetDrawCallback>();
             renderTargetBatches = new Dictionary<string, RenderTargetBatch>();
         }
+
         public override void Initialize()
         {
             if (isInit)

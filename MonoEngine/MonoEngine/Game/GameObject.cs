@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System;
 using System.Reflection;
 using System.Xml;
+using MonoEngine.Assets;
+using MonoEngine.Shapes;
 
 namespace MonoEngine.Game
 {
@@ -47,6 +49,8 @@ namespace MonoEngine.Game
             components = new List<GameObject>();
 
             template = "";
+
+            GameObjectManager.AddGameObject(this);
         }
 
         public virtual void Update()
@@ -229,26 +233,126 @@ namespace MonoEngine.Game
 
         internal static GameObject LoadFromXML(string path)
         {
-            GameObject obj = null;
-
+            GameObject obj = new GameObject();
+            
             using (XmlReader reader = XmlReader.Create(@path))
             {
                 while (reader.Read())
                 {
                     if (reader.IsStartElement())
                     {
-                        switch (reader.Name)
+                        switch (reader.Name.ToLower())
                         {
+                            case "name":
+                                // This thing got a name? Yeah, fab, give it the name then
+                                if (reader.Read())
+                                    obj.Name = reader.Value;
+                                break;
                             case "template":
                                 // What is this GameObject a template from? Can we go get that instead and just replace this with a clone of it?
+                                if (reader.Read())
+                                    obj.template = reader.Value;
                                 break;
                             case "transform":
                                 // What is the transform of this object
+                                obj.transform = Transform.XmlToTransform(reader);
                                 break;
                             case "parent":
                                 // What is this GameObject's parent object
+                                obj.parent = Resources.Ref(reader) as GameObject;
+                                break;
+                            case "ref":
+                                // Refs are used when you are referencing another game object to be used as a component in this one
+                                obj.AddComponent(Resources.Ref(reader) as GameObject);
+                                break;
+                            case "make":
+                                // We need to make a new GameObject right here
+                                obj.AddComponent(LoadFromXML(reader) as GameObject);
+                                break;
+                            case "find":
                                 break;
                         }
+                    }
+                }
+            }
+
+            return obj;
+        }
+
+        /// <summary>
+        /// This method is used whenever a ref game object uses a make tag to make another one
+        /// </summary>
+        /// <param name="reader">The reader that found the make tag</param>
+        /// <returns>The newly made game object</returns>
+        internal static GameObject LoadFromXML(XmlReader reader)
+        {
+            GameObject obj = null;
+
+            int depth = reader.Depth;
+
+            Type type = null;
+
+            type = Type.GetType(reader["type"], true, true);
+
+            Type[] types = new Type[1];
+            types[0] = "".GetType();
+
+            object[] parameters = new object[1];
+            parameters[0] = reader["name"];
+
+            //obj = type.GetConstructor(types).Invoke(parameters) as GameObject;
+            obj = Activator.CreateInstance(type, parameters) as GameObject;
+
+            FieldInfo[] infos = obj.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
+
+            while (reader.Read() && reader.Depth > depth)
+            {
+                if (reader.IsStartElement())
+                {
+                    switch (reader.Name.ToLower())
+                    {
+                        case "template":
+                            // What is this GameObject a template from? Can we go get that instead and just replace this with a clone of it?
+                            if (reader.Read())
+                                obj.template = reader.Value;
+                            break;
+                        case "transform":
+                            // What is the transform of this object
+                            obj.transform = Transform.XmlToTransform(reader);
+                            break;
+                        case "parent":
+                            // What is this GameObject's parent object
+                            obj.parent = Resources.Ref(reader) as GameObject;
+                            break;
+                        case "ref":
+                            // Refs are used when you are referencing another game object to be used as a component in this one
+                            obj.AddComponent(Resources.Ref(reader) as GameObject);
+                            break;
+                        case "make":
+                            // We need to make a new GameObject right here
+                            obj.AddComponent(LoadFromXML(reader) as GameObject);
+                            break;
+                        case "find":
+                            break;
+                        case "shape":
+                            if (obj is Physics.Physics2D.PhysicsBody2D)
+                            {
+                                (obj as Physics.Physics2D.PhysicsBody2D).shape = Shape.XMLToShape(reader);
+                            }
+                            break;
+                        default:
+                            foreach (FieldInfo info in infos)
+                            {
+                                //if (!info.GetType().IsEnum)
+                                //{
+                                    if (info.Name == reader.Name)
+                                    {
+                                        if (reader.Read())
+                                            info.SetValue(obj, Convert.ChangeType(reader.Value, info.FieldType));
+                                    }
+                                //}
+                            }
+                            break;
                     }
                 }
             }
@@ -259,7 +363,7 @@ namespace MonoEngine.Game
         public void LoadToXML()
         {
             // This is where all the other spooky reflection magic happens
-            string name = this.GetType().Name;
+            string name = this.GetType().FullName;
 
             // Get the field info from both this instance, and it's parent instance
             FieldInfo[] infos = this.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
@@ -269,10 +373,11 @@ namespace MonoEngine.Game
             settings.NewLineChars = "\n";
 
             // Start by creating an XMLWriter
-            using (XmlWriter writer = XmlWriter.Create(@"Content/Assets/Objects/" + name + ".prefab", settings))
+            using (XmlWriter writer = XmlWriter.Create(@"Content/Assets/Objects/" + this.Name + ".prefab", settings))
             {
                 // Write the start node with name of this class
-                writer.WriteStartElement(name);
+                writer.WriteStartElement("object");
+                writer.WriteAttributeString("type", name);
                 writer.WriteAttributeString("name", this.Name);
 
                 // Then for every parameter write its name as the node, type of the variable, then its value is the value of the parameter

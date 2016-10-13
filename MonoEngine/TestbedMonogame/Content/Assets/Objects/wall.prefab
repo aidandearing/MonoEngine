@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<object type="MonoEngine.Game.GameObject" name="wall">
+  <make type="MonoEngine.Render.ModelRenderer" name="BasicWall"/>
+  <make type="MonoEngine.Physics.Physics2D.PhysicsBody2D" name="wall.Body">
+  </make>
+</object>

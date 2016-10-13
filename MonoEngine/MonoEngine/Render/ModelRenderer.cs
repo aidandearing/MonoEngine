@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
+using System;
+using System.Runtime.Serialization;
 using MonoEngine.Assets;
 using MonoEngine.Game;
 using MonoEngine.Physics;
@@ -9,6 +10,11 @@ namespace MonoEngine.Render
     public class ModelRenderer : GameObject
     {
         private ModelWrapper model;
+
+        public ModelRenderer(string name) : base(name)
+        {
+            model = Resources.LoadAsset(Type.GetType("MonoEngine.Assets.ModelWrapper"), name, SceneManager.activeScene) as ModelWrapper;
+        }
 
         internal ModelRenderer(string name, ModelWrapper model, string targetName = null) : base(name)
         {

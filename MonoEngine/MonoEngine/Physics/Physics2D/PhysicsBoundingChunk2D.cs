@@ -139,7 +139,7 @@ namespace MonoEngine.Physics.Physics2D
                 {
                     if (bounds.OverlapTest(body.shape))
                     {
-                        if (body.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
+                        if (body.bodyFlag.HasFlag(PhysicsEngine.BodyType.STATIC))
                         {
                             statics[bounds].Add(body);
                         }
@@ -161,7 +161,7 @@ namespace MonoEngine.Physics.Physics2D
         {
             foreach (AABB bounds in bounds)
             {
-                if (body.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
+                if (body.bodyFlag.HasFlag(PhysicsEngine.BodyType.STATIC))
                 {
                     if (statics[bounds].Contains(body))
                         statics[bounds].Remove(body);

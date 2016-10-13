@@ -15,9 +15,13 @@ namespace MonoEngine.Physics.Physics2D
         private Collision2D(PhysicsBody2D A, PhysicsBody2D B)
         {
             // For ease of computing around static dynamic collisions I have decided the static body should always be BodyA
-            if (A.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC) || A.flagBodyType.HasFlag(PhysicsEngine.BodyType.KINEMATIC) || B.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC) || B.flagBodyType.HasFlag(PhysicsEngine.BodyType.KINEMATIC))
+            if (A.bodyFlag.HasFlag(PhysicsEngine.BodyType.STATIC) || 
+                A.bodyFlag.HasFlag(PhysicsEngine.BodyType.KINEMATIC) || 
+                B.bodyFlag.HasFlag(PhysicsEngine.BodyType.STATIC) || 
+                B.bodyFlag.HasFlag(PhysicsEngine.BodyType.KINEMATIC))
             {
-                if (A.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC) || A.flagBodyType.HasFlag(PhysicsEngine.BodyType.KINEMATIC))
+                if (A.bodyFlag.HasFlag(PhysicsEngine.BodyType.STATIC) || 
+                    A.bodyFlag.HasFlag(PhysicsEngine.BodyType.KINEMATIC))
                 {
                     BodyA = A;
                     BodyB = B;
@@ -88,7 +92,8 @@ namespace MonoEngine.Physics.Physics2D
         {
             foreach (Collision2D collision in bodyA.collisions)
             {
-                if ((collision.BodyB == bodyB && collision.BodyA == bodyA) || (collision.BodyA == bodyB && collision.BodyB == bodyA))
+                if ((collision.BodyB == bodyB && collision.BodyA == bodyA) || 
+                    (collision.BodyA == bodyB && collision.BodyB == bodyA))
                 {
                     return collision;
                 }
@@ -171,12 +176,15 @@ namespace MonoEngine.Physics.Physics2D
             if (Evaluate())
             {
                 // If a body is static, and another is kinematic, or both are static, or both are kinematic, resolution of a collision is not
-                if (!((BodyA.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC) || BodyA.flagBodyType.HasFlag(PhysicsEngine.BodyType.KINEMATIC)) && (BodyB.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC) || BodyB.flagBodyType.HasFlag(PhysicsEngine.BodyType.KINEMATIC))))
+                if (!((BodyA.bodyFlag.HasFlag(PhysicsEngine.BodyType.STATIC) || 
+                    BodyA.bodyFlag.HasFlag(PhysicsEngine.BodyType.KINEMATIC)) && 
+                    (BodyB.bodyFlag.HasFlag(PhysicsEngine.BodyType.STATIC) || 
+                    BodyB.bodyFlag.HasFlag(PhysicsEngine.BodyType.KINEMATIC))))
                 {
                     // The bodies are not all kinematic or static (1 could be either static or kinematic, but not both)
-                    if (!(BodyB.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC) || BodyB.flagBodyType.HasFlag(PhysicsEngine.BodyType.KINEMATIC)))
+                    if (!(BodyB.bodyFlag.HasFlag(PhysicsEngine.BodyType.STATIC) || BodyB.bodyFlag.HasFlag(PhysicsEngine.BodyType.KINEMATIC)))
                     {
-                        if (BodyB.flagBodyType.HasFlag(PhysicsEngine.BodyType.RIGID))
+                        if (BodyB.bodyFlag.HasFlag(PhysicsEngine.BodyType.RIGID))
                         {
                             throw new PhysicsExceptions.NotImplementedYet("Rigidbody 2D collision resolution is not yet implemented");
                         }
@@ -218,7 +226,7 @@ namespace MonoEngine.Physics.Physics2D
                             }
                         }
                     }
-                    else if (BodyB.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC) || BodyB.flagBodyType.HasFlag(PhysicsEngine.BodyType.KINEMATIC))
+                    else if (BodyB.bodyFlag.HasFlag(PhysicsEngine.BodyType.STATIC) || BodyB.bodyFlag.HasFlag(PhysicsEngine.BodyType.KINEMATIC))
                     {
                         // Both are static
 
@@ -226,7 +234,7 @@ namespace MonoEngine.Physics.Physics2D
                     else
                     {
                         // Neither body is static or kinematic, and therefore should both move
-                        if (BodyA.flagBodyType.HasFlag(PhysicsEngine.BodyType.RIGID) || BodyB.flagBodyType.HasFlag(PhysicsEngine.BodyType.RIGID))
+                        if (BodyA.bodyFlag.HasFlag(PhysicsEngine.BodyType.RIGID) || BodyB.bodyFlag.HasFlag(PhysicsEngine.BodyType.RIGID))
                         {
                             throw new PhysicsExceptions.NotImplementedYet("Rigidbody 2D collision resolution is not yet implemented");
                         }

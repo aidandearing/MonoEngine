@@ -1,4 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
+using System.Xml;
+using System.Collections.Generic;
 
 namespace MonoEngine.Shapes
 {
@@ -65,6 +68,79 @@ namespace MonoEngine.Shapes
         {
             // Calculate surface area by converting every vertex into a triangle with the next one and the center, then calculate the surface area of each of those and sum them
             return 0;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////
+        // CASTS
+        //////////////////////////////////////////////////////////////////////////////
+
+        public static Shape XMLToShape(XmlReader reader)
+        {
+            Shape shape = null;
+
+            int depth = reader.Depth;
+            int depth_inner_1;
+
+            int currentVector = -1;
+
+            List<Vector3> vs = new List<Vector3>();
+
+            while (reader.Read() && depth < reader.Depth)
+            {
+                if (reader.IsStartElement())
+                {
+                    switch (reader.Name)
+                    {
+                        case "vector3":
+                            currentVector++;
+                            depth_inner_1 = reader.Depth;
+
+                            Vector3 v = new Vector3();
+
+                            while (reader.Read() && depth_inner_1 < reader.Depth)
+                            {
+                                if (reader.IsStartElement())
+                                {
+                                    switch (reader.Name)
+                                    {
+                                        case "x":
+                                            reader.Read();
+                                            v.X = float.Parse(reader.Value);
+                                            break;
+                                        case "y":
+                                            reader.Read();
+                                            v.Y = float.Parse(reader.Value);
+                                            break;
+                                        case "z":
+                                            reader.Read();
+                                            v.Z = float.Parse(reader.Value);
+                                            break;
+                                    }
+                                }
+                            }
+                            vs.Add(v);
+                            break;
+                    }
+                }
+            }
+
+            return shape;
+        }
+
+        public override string ToString()
+        {
+            string self = "";
+
+            foreach (Vector3 point in points)
+            {
+                self += "\n\t<Vector3>\n" +
+                "\t\t<x>" + point.X + "</x>\n" +
+                "\t\t<y>" + point.Y + "</y>\n" +
+                "\t\t<z>" + point.Z + "</z>\n" +
+                "\t</Vector3>\n";
+            }
+
+            return self;
         }
     }
 }
