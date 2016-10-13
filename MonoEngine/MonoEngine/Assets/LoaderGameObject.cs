@@ -14,12 +14,30 @@ namespace MonoEngine.Assets
             GameObject asset = null;
             // If the model isn't already loaded (it's key isn't found in the dictionary)
             // Needs to try to get the model at that name in the models path & load it
-            using (XmlReader reader = XmlReader.Create(@"./Content/" + path + "/" + name + ".prefab"))
+            using (XmlReader reader = XmlReader.Create(@"./Content/" + path + name + ".xml"))
             {
-                while (reader.Read())
+                int depth = reader.Depth;
+
+                while (reader.Read() && depth < reader.Depth)
                 {
                     if (reader.IsStartElement())
-                        GameObject.LoadFromXML(reader);
+                    {
+                        switch (reader.Name)
+                        {
+                            case "name":
+                                if (reader.Read())
+                                    asset.Name = reader.Value;
+                                break;
+                            case "transform":
+                                // This is an optional xml node
+                                asset.transform = Transform.XmlToTransform(reader);
+                                break;
+                            case "ref":
+                                GameObject obj = Resources.Ref(reader) as GameObject;
+                                asset.AddComponent(obj as GameObject);
+                                break;
+                        }
+                    }
                 }
             }
 

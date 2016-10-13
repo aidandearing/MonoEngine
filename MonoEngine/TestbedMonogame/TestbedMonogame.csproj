@@ -60,12 +60,9 @@
   <ItemGroup>
     <Content Include="Content\Assets\Music\test.mp3" />
     <Content Include="Content\Assets\Music\test2.mp3" />
-    <None Include="Content\Assets\Objects\wall.prefab">
+    <Content Include="Content\Assets\Scenes\XMLFile1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Content\Assets\Scenes\default.scene">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -88,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Assets\Fonts\" />
+    <Folder Include="Content\Assets\Objects\" />
     <Folder Include="Content\Assets\Sounds\" />
     <Folder Include="Content\Assets\Textures\" />
     <Folder Include="Content\Assets\UI\Screens\" />

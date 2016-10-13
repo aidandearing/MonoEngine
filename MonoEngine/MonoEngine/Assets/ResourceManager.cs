@@ -6,6 +6,7 @@ namespace MonoEngine.Assets
 {
     public class ResourceManager
     {
+        protected string path;
         public string Path { get; private set; }
 
         public ResourceManagerLoader Loader;
@@ -21,7 +22,7 @@ namespace MonoEngine.Assets
 
         internal ResourceManager(string path, Type type, ResourceManagerLoader loader)
         {
-            this.Path = path;
+            this.path = path;
             this.Loader = loader;
             this.type = type;
 

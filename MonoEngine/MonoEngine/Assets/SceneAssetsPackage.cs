@@ -21,8 +21,6 @@ namespace MonoEngine.Assets
         public SceneAssetsPackage(Scene parent)
         {
             this.parent = parent;
-
-            assets = new Dictionary<Type, List<string>>();
         }
 
         public void AddAsset(string name, Type type)

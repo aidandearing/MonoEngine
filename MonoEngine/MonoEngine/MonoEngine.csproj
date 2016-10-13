@@ -55,7 +55,6 @@
     <Compile Include="Assets\SceneAssetsPackage.cs" />
     <Compile Include="Game\Scene.cs" />
     <Compile Include="Game\SceneManager.cs" />
-    <Compile Include="Physics\BodyFlag.cs" />
     <Compile Include="Physics\Physics2D\IPhysicsListener2D.cs" />
     <Compile Include="Physics\Physics2D\Ray2D.cs" />
     <Compile Include="Physics\PhysicsEngine.cs" />

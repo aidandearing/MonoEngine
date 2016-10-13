@@ -23,10 +23,10 @@ namespace MonoEngine.Assets
 
             type = Type.GetType(reader["type"], true, true);
 
-            if (reader["name"] != null)
-                return LoadAsset(type, reader["name"], SceneManager.activeScene);
-            else
-                return null;
+            if (reader.Read())
+                return LoadAsset(type, reader.Value, SceneManager.activeScene);
+
+            return null;
         }
 
         public static object Find(XmlReader reader)
@@ -35,11 +35,6 @@ namespace MonoEngine.Assets
 
             type = Type.GetType(reader["type"], true, true);
 
-            if (reader.Read())
-            {
-                return instance.resourceManagers[type].GetResource(reader.Value);
-            }
-
             return null;
         }
 
@@ -47,6 +42,42 @@ namespace MonoEngine.Assets
         {
             
 
+            return null;
+        }
+
+        private Camera LoadCamera(XmlReader reader)
+        {
+            return null;
+        }
+
+        private ModelWrapper LoadModel(XmlReader reader)
+        {
+            return null;
+        }
+
+        private ModelRenderer LoadModelRenderer(XmlReader reader)
+        {
+            return null;
+        }
+
+        private PhysicsBody2D LoadPhysicsBody2D(XmlReader reader)
+        {
+            return null;
+        }
+
+        private PhysicsMaterial LoadPhysicsMaterial(XmlReader reader)
+        {
+            return null;
+        }
+
+        private SpriteRenderer LoadSpriteRenderer(XmlReader reader)
+        {
+            return null;
+        }
+
+        private UIObject LoadUIObject(XmlReader reader)
+        {
+            // Take the reader, and make a UIObject from it
             return null;
         }
 
@@ -59,6 +90,7 @@ namespace MonoEngine.Assets
             LoaderGameObject loaderGO = new LoaderGameObject(type);
             resourceManagers.Add(type, new ResourceManager("Assets/Objects", type, loaderGO));
 
+            // TODO: THIS MAY EXPLODE HORRIBLY
             type = new ModelWrapper().GetType();
             LoaderModel loaderM = new LoaderModel(type);
             resourceManagers.Add(type, new ResourceManager("Assets/Models", type, loaderM));
@@ -159,21 +191,18 @@ namespace MonoEngine.Assets
             return manager.GetResource(name) as RenderTarget2DWrapper;
         }
 
-        public static void UnloadScene(Scene oldScene)
+        public static void UnloadScene(Scene newScene)
         {
-            if (oldScene != null)
+            SceneAssetsPackage difference = SceneManager.activeScene.assets.Difference(newScene.assets);
+
+            // By finding the difference between the current scene and the newScene I am given a list of all the assets only found in the current scene,
+            // which must all be unloaded, as they will no longer be used
+
+            foreach (KeyValuePair<Type, List<string>> assets in difference.assets)
             {
-                SceneAssetsPackage difference = oldScene.assets.Difference(SceneManager.activeScene.assets);
-
-                // By finding the difference between the current scene and the newScene I am given a list of all the assets only found in the current scene,
-                // which must all be unloaded, as they will no longer be used
-
-                foreach (KeyValuePair<Type, List<string>> assets in difference.assets)
+                foreach (string asset in assets.Value)
                 {
-                    foreach (string asset in assets.Value)
-                    {
-                        instance.resourceManagers[assets.Key].RemoveResource(asset);
-                    }
+                    instance.resourceManagers[assets.Key].RemoveResource(asset);
                 }
             }
         }

@@ -7,7 +7,7 @@ namespace MonoEngine.Physics.Physics2D
 {
     public class PhysicsBody2D : GameObject
     {
-        public BodyFlag bodyFlag;
+        public PhysicsEngine.BodyType flagBodyType = 0;
         public short flagLayer = 0;
 
         public Shape shape;
@@ -19,7 +19,7 @@ namespace MonoEngine.Physics.Physics2D
         internal List<Collision2D> collisions;
         private List<Collision2D> collisions_dead;
         // This list contains a reference to any chunks the body is in, if it is static, and any chunks this body overlaps if it is dynamic
-        internal List<PhysicsBoundingChunk2D> chunks;
+        public List<PhysicsBoundingChunk2D> chunks;
 
         // Physics stuff
         private Vector3 position_last;
@@ -46,7 +46,7 @@ namespace MonoEngine.Physics.Physics2D
             {
                 height = value;
 
-                if (bodyFlag.HasFlag(PhysicsEngine.BodyType.KINEMATIC) || bodyFlag.HasFlag(PhysicsEngine.BodyType.STATIC))
+                if (flagBodyType.HasFlag(PhysicsEngine.BodyType.KINEMATIC) || flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
                 {
                     // Static / Kinematic bodies are essentially infinite mass bodies, and as such, 
                     // a max float is a good way of ensuring that no other body has sufficient mass 
@@ -85,12 +85,12 @@ namespace MonoEngine.Physics.Physics2D
             {
                 material.Density = value;
 
-                if (bodyFlag.HasFlag(PhysicsEngine.BodyType.KINEMATIC) || bodyFlag.HasFlag(PhysicsEngine.BodyType.STATIC))
+                if (flagBodyType.HasFlag(PhysicsEngine.BodyType.KINEMATIC) || flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
                 {
                     // Static / Kinematic bodies are essentially infinite mass bodies, and as such, 
                     // a max float is a good way of ensuring that no other body has sufficient mass 
                     // in any physics to exert force on this one, while not immediately devolving any 
-                    // physics into a giant pile of float.infinity
+                    // physics into a giant pile of float.infinitys
                     Mass = float.MaxValue;
                 }
                 else
@@ -177,18 +177,13 @@ namespace MonoEngine.Physics.Physics2D
             }
         }
 
-        public PhysicsBody2D(string name) : base(name)
-        {
-            bodyFlag = new BodyFlag(0);
-        }
-
         public PhysicsBody2D(GameObject parent, string name, Shape shape, PhysicsMaterial material, PhysicsEngine.BodyType bodyType) : base(name)
         {
             this.transform.parent = parent.transform;
             this.material = material;
             this.shape = shape;
             //this.shape.transform.parent = this.transform;
-            this.bodyFlag = new BodyFlag(bodyType);
+            this.flagBodyType = bodyType;
 
             collisionCallbacks = new List<Collision2D.OnCollision>();
             collisions = new List<Collision2D>();
@@ -200,19 +195,19 @@ namespace MonoEngine.Physics.Physics2D
             Height = PhysicsEngine.PhysicsSettings.DEFAULT_BODY2D_HEIGHT;
 
             // A body flagged as static cannot be anything but static
-            if (bodyFlag.HasFlag(PhysicsEngine.BodyType.STATIC))
+            if (flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
             {
-                if (bodyFlag.HasFlag(PhysicsEngine.BodyType.RIGID))
+                if (flagBodyType.HasFlag(PhysicsEngine.BodyType.RIGID))
                 {
-                    bodyFlag.flagBodyType &= ~PhysicsEngine.BodyType.RIGID;
+                    flagBodyType &= ~PhysicsEngine.BodyType.RIGID;
                 }
-                if (bodyFlag.HasFlag(PhysicsEngine.BodyType.SIMPLE))
+                if (flagBodyType.HasFlag(PhysicsEngine.BodyType.SIMPLE))
                 {
-                    bodyFlag.flagBodyType &= ~PhysicsEngine.BodyType.SIMPLE;
+                    flagBodyType &= ~PhysicsEngine.BodyType.SIMPLE;
                 }
-                if (bodyFlag.HasFlag(PhysicsEngine.BodyType.KINEMATIC))
+                if (flagBodyType.HasFlag(PhysicsEngine.BodyType.KINEMATIC))
                 {
-                    bodyFlag.flagBodyType &= ~PhysicsEngine.BodyType.KINEMATIC;
+                    flagBodyType &= ~PhysicsEngine.BodyType.KINEMATIC;
                 }
             }
 
@@ -224,19 +219,19 @@ namespace MonoEngine.Physics.Physics2D
             base.Update();
 
             // Static bodies need not update any of their physics, as they are immune to all forces
-            if (!bodyFlag.HasFlag(PhysicsEngine.BodyType.STATIC))
+            if (!flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
             {
                 velocity_last = velocity;
                 position_last = transform.parent.Position;
 
                 // If a body has been established to operate according to world forces
-                if (bodyFlag.HasFlag(PhysicsEngine.BodyType.WORLDFORCE))
+                if (flagBodyType.HasFlag(PhysicsEngine.BodyType.WORLDFORCE))
                 {
                     force += PhysicsEngine.PhysicsSettings.WORLD_FORCE;
                 }
 
                 // Simple bodies do not have no rotational motion
-                if (!bodyFlag.HasFlag(PhysicsEngine.BodyType.SIMPLE))
+                if (!flagBodyType.HasFlag(PhysicsEngine.BodyType.SIMPLE))
                 {
                     // TODO Implement Rotational Motion
                 }

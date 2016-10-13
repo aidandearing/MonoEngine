@@ -28,16 +28,16 @@ namespace MonoEngine.Game
             // Scenes can be found at Assets/Scenes/ directory as .scene files (xml)
             // Scenes need to be loaded to the game (1 scene is loaded at any one time)
             // Scenes handle the actual loading, this just starts the process
-            Scene oldScene = activeScene;
+            Scene newScene = null;
 
             // I should probably start the whole xml process here, pass the reader to the Scene and let it start cascading off to get everything set up
-            using (XmlReader reader = XmlReader.Create(@"./Content/Assets/Scenes/" + name + ".scene"))
+            using (XmlReader reader = XmlReader.Create(@"./Content/Scenes/" + name + ".scene"))
             {
-                activeScene = new Scene(reader);
+                newScene = new Scene(reader);
             }
 
             // The last step of scene loading is to ensure that old assets are removed via the UnloadScene method in Resources
-            Resources.UnloadScene(oldScene);
+            Resources.UnloadScene(newScene);
         }
         
         // Scenes need to be unloaded when the game ends

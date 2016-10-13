@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<scene>
-  <name>default</name>
-  <ref type="MonoEngine.Game.GameObject" name="wall">
-  </ref>
-</scene>
