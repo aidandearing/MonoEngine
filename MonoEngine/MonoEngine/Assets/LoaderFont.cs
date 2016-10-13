@@ -12,7 +12,7 @@ namespace MonoEngine.Assets
 
         public override object LoadAsset(string path, string name, Scene parent)
         {
-            string[] paths = Directory.GetFiles(@"./Content/" + path, name + "_*.xnb");
+            string[] paths = Directory.GetFiles(@"./Content/" + path, name + "_*.spritefont");
 
             char[] delimiters = { '.', '\\', '_' };
 
@@ -25,24 +25,18 @@ namespace MonoEngine.Assets
                 // path looks like this .\\Content\\Assets\\Fonts\\name_*.xnb
                 // delimited it becomes split[0] = "" | split[1] = "" | split[2] = "Content" | split[3] = "Assets" | split[4] = "Fonts" | split[5] = "name" | split[6] = "*" | split[7] = "xnb"
 
-                if (split[6] != null && int.TryParse(split[6], out size))
+                if (split[3] != null && int.TryParse(split[3], out size))
                 {
                     if (sizes == null)
                     {
                         sizes = new List<int>();
                         sizes.Add(size);
-                        fonts.Add(ContentHelper.Content.Load<SpriteFont>(path + name + "_" + split[6]));
+                        fonts.Add(ContentHelper.Content.Load<SpriteFont>(path + "/" + name + "_" + split[3]));
                     }
                     else
                     {
-                        for (int i = 0; i < sizes.Count; i++)
-                        {
-                            if (size < sizes[i])
-                            {
-                                sizes.Insert(i, size);
-                                fonts.Insert(i, ContentHelper.Content.Load<SpriteFont>(path + name + "_" + split[6]));
-                            }
-                        }
+                        sizes.Add(size);
+                        fonts.Add(ContentHelper.Content.Load<SpriteFont>(path + "/" + name + "_" + split[3]));
                     }
                 }
             }

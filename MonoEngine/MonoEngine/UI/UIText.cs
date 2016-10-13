@@ -11,27 +11,27 @@ using MonoEngine.Game;
 
 namespace MonoEngine.UI
 {
-    class UIText : UIObject
+    public class UIText : UIObject
     {
-        //uint because font sizes can not be negative
-        public uint fontSize { get; set; }
-
-        public string text { get; set; }
-
-        private Font font;
-
+        public TextRenderer textRenderer;
         public string Font
         {
-            get { return font.fontName; }
-
-            set { font = Resources.LoadAsset(new Font().GetType(), value, SceneManager.activeScene) as Font; }
+            get
+            {
+                return textRenderer.Font.fontName;
+            }
+            set
+            {
+                textRenderer.Font = Resources.LoadAsset(new Font().GetType(), value, SceneManager.activeScene) as Font;
+            }
         }
         
-        public UIText(string name, Rectangle bounds, UIAlignment boundsAlign, UIAlignment alignment, flags flag, string fontName, string text, uint fontSize) : base(name, bounds, boundsAlign, alignment, flag)
+        public UIText(string name, Rectangle bounds, UIAlignment boundsAlign, UIAlignment alignment, flags flag, string fontName, string text, int fontSize) : base(name, bounds, boundsAlign, alignment, flag)
         {
-            this.fontSize = fontSize;
-            this.text = text;
-            font = Resources.LoadAsset(new Font().GetType(), fontName, SceneManager.activeScene) as Font;
+            textRenderer = TextRenderer.MakeTextRenderer(name, fontName);
+            textRenderer.Size = fontSize;
+            textRenderer.Text = text;
+            textRenderer.Font = Resources.LoadAsset(new Font().GetType(), fontName, SceneManager.activeScene) as Font;
         }
     }
 }

@@ -10,6 +10,7 @@ using MonoEngine.Physics;
 using MonoEngine.Physics.Physics2D;
 using MonoEngine.Render;
 using MonoEngine.Shapes;
+using MonoEngine.UI;
 
 namespace TestbedMonogame
 {
@@ -20,7 +21,7 @@ namespace TestbedMonogame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
+        UIText uiObj;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -95,7 +96,7 @@ namespace TestbedMonogame
             PhysicsBody2D body = new PhysicsBody2D(obj, "wall", new AABB(obj.transform, 1, 1), new PhysicsMaterial(1,0,1), PhysicsEngine.BodyType.SIMPLE);
             obj.AddComponent(body);
             obj.AddComponent(new Camera("camera"));
-
+            
             GameObjectManager.AddGameObject(obj);
 
             //obj = new GameObject("floor");
@@ -119,6 +120,7 @@ namespace TestbedMonogame
 
             GameObjectManager.AddGameObject(obj);
 
+            uiObj = new UIText("test", GraphicsHelper.screen, new UIAlignment(), new UIAlignment(), UIObject.flags.None, "blood", "Hello Beautiful", 24);
             obj.LoadToXML();
 
             // Testing whether xml to transform works.
@@ -173,8 +175,8 @@ namespace TestbedMonogame
             GraphicsDevice.Clear(Color.Aquamarine);
 
             // TODO: Add your drawing code here
-
-            base.Draw(gameTime);
+            RenderManager.Instance(this).Draw(gameTime);
+;           base.Draw(gameTime);
         }
     }
 }

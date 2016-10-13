@@ -45,7 +45,7 @@ namespace MonoEngine.UI
 
             if (namedObj != null)
             {
-                namedObj.AddUIObject(obj);
+                namedObj.Add(obj);
             }
         }
 
@@ -55,7 +55,7 @@ namespace MonoEngine.UI
 
             if (namedObj != null)
             {
-                namedObj.RemoveUIObject(obj);
+                namedObj.Remove(obj);
             }
         }
     }

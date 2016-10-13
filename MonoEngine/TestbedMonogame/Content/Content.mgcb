@@ -253,3 +253,555 @@
 /processorParam:Quality=Best
 /build:Assets/Music/test2.mp3
 
+#begin Assets/Fonts/blood_12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/blood_12.spritefont
+
+#begin Assets/Fonts/blood_24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/blood_24.spritefont
+
+#begin Assets/Fonts/blood_48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/blood_48.spritefont
+
+#begin Assets/Fonts/blood_96.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/blood_96.spritefont
+
+#begin Assets/Fonts/chiptype_12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/chiptype_12.spritefont
+
+#begin Assets/Fonts/chiptype_24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/chiptype_24.spritefont
+
+#begin Assets/Fonts/chiptype_48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/chiptype_48.spritefont
+
+#begin Assets/Fonts/chiptype_96.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/chiptype_96.spritefont
+
+#begin Assets/Fonts/crumbled_12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/crumbled_12.spritefont
+
+#begin Assets/Fonts/crumbled_24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/crumbled_24.spritefont
+
+#begin Assets/Fonts/crumbled_48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/crumbled_48.spritefont
+
+#begin Assets/Fonts/crumbled_96.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/crumbled_96.spritefont
+
+#begin Assets/Fonts/dak_12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/dak_12.spritefont
+
+#begin Assets/Fonts/dak_24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/dak_24.spritefont
+
+#begin Assets/Fonts/dak_48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/dak_48.spritefont
+
+#begin Assets/Fonts/dak_96.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/dak_96.spritefont
+
+#begin Assets/Fonts/diel_12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/diel_12.spritefont
+
+#begin Assets/Fonts/diel_24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/diel_24.spritefont
+
+#begin Assets/Fonts/diel_48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/diel_48.spritefont
+
+#begin Assets/Fonts/diel_96.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/diel_96.spritefont
+
+#begin Assets/Fonts/digit_12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/digit_12.spritefont
+
+#begin Assets/Fonts/digit_24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/digit_24.spritefont
+
+#begin Assets/Fonts/digit_48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/digit_48.spritefont
+
+#begin Assets/Fonts/digit_96.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/digit_96.spritefont
+
+#begin Assets/Fonts/dionisia_12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/dionisia_12.spritefont
+
+#begin Assets/Fonts/dionisia_24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/dionisia_24.spritefont
+
+#begin Assets/Fonts/dionisia_48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/dionisia_48.spritefont
+
+#begin Assets/Fonts/dionisia_96.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/dionisia_96.spritefont
+
+#begin Assets/Fonts/display_12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/display_12.spritefont
+
+#begin Assets/Fonts/display_24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/display_24.spritefont
+
+#begin Assets/Fonts/display_48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/display_48.spritefont
+
+#begin Assets/Fonts/display_96.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/display_96.spritefont
+
+#begin Assets/Fonts/experimento_12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/experimento_12.spritefont
+
+#begin Assets/Fonts/experimento_24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/experimento_24.spritefont
+
+#begin Assets/Fonts/experimento_48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/experimento_48.spritefont
+
+#begin Assets/Fonts/experimento_96.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/experimento_96.spritefont
+
+#begin Assets/Fonts/glyphs_12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/glyphs_12.spritefont
+
+#begin Assets/Fonts/glyphs_24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/glyphs_24.spritefont
+
+#begin Assets/Fonts/glyphs_48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/glyphs_48.spritefont
+
+#begin Assets/Fonts/glyphs_96.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/glyphs_96.spritefont
+
+#begin Assets/Fonts/lines_12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/lines_12.spritefont
+
+#begin Assets/Fonts/lines_24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/lines_24.spritefont
+
+#begin Assets/Fonts/lines_48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/lines_48.spritefont
+
+#begin Assets/Fonts/lines_96.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/lines_96.spritefont
+
+#begin Assets/Fonts/maravilloso_12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/maravilloso_12.spritefont
+
+#begin Assets/Fonts/maravilloso_24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/maravilloso_24.spritefont
+
+#begin Assets/Fonts/maravilloso_48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/maravilloso_48.spritefont
+
+#begin Assets/Fonts/maravilloso_96.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/maravilloso_96.spritefont
+
+#begin Assets/Fonts/microtype_12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/microtype_12.spritefont
+
+#begin Assets/Fonts/microtype_24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/microtype_24.spritefont
+
+#begin Assets/Fonts/microtype_48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/microtype_48.spritefont
+
+#begin Assets/Fonts/microtype_96.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/microtype_96.spritefont
+
+#begin Assets/Fonts/nemesia_12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/nemesia_12.spritefont
+
+#begin Assets/Fonts/nemesia_24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/nemesia_24.spritefont
+
+#begin Assets/Fonts/nemesia_48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/nemesia_48.spritefont
+
+#begin Assets/Fonts/nemesia_96.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/nemesia_96.spritefont
+
+#begin Assets/Fonts/newspace_12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/newspace_12.spritefont
+
+#begin Assets/Fonts/newspace_24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/newspace_24.spritefont
+
+#begin Assets/Fonts/newspace_48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/newspace_48.spritefont
+
+#begin Assets/Fonts/newspace_96.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/newspace_96.spritefont
+
+#begin Assets/Fonts/pixeltype_12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/pixeltype_12.spritefont
+
+#begin Assets/Fonts/pixeltype_24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/pixeltype_24.spritefont
+
+#begin Assets/Fonts/pixeltype_48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/pixeltype_48.spritefont
+
+#begin Assets/Fonts/pixeltype_96.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/pixeltype_96.spritefont
+
+#begin Assets/Fonts/row_12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/row_12.spritefont
+
+#begin Assets/Fonts/row_24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/row_24.spritefont
+
+#begin Assets/Fonts/row_48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/row_48.spritefont
+
+#begin Assets/Fonts/row_96.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/row_96.spritefont
+
+#begin Assets/Fonts/slurp_12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/slurp_12.spritefont
+
+#begin Assets/Fonts/slurp_24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/slurp_24.spritefont
+
+#begin Assets/Fonts/slurp_48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/slurp_48.spritefont
+
+#begin Assets/Fonts/slurp_96.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/slurp_96.spritefont
+
+#begin Assets/Fonts/smoothpet_12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/smoothpet_12.spritefont
+
+#begin Assets/Fonts/smoothpet_24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/smoothpet_24.spritefont
+
+#begin Assets/Fonts/smoothpet_48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/smoothpet_48.spritefont
+
+#begin Assets/Fonts/smoothpet_96.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/smoothpet_96.spritefont
+
+#begin Assets/Fonts/soft_12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/soft_12.spritefont
+
+#begin Assets/Fonts/soft_24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/soft_24.spritefont
+
+#begin Assets/Fonts/soft_48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/soft_48.spritefont
+
+#begin Assets/Fonts/soft_96.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/soft_96.spritefont
+
+#begin Assets/Fonts/sotra_12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/sotra_12.spritefont
+
+#begin Assets/Fonts/sotra_24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/sotra_24.spritefont
+
+#begin Assets/Fonts/sotra_48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/sotra_48.spritefont
+
+#begin Assets/Fonts/sotra_96.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/sotra_96.spritefont
+
+#begin Assets/Fonts/square_12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/square_12.spritefont
+
+#begin Assets/Fonts/square_24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/square_24.spritefont
+
+#begin Assets/Fonts/square_48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/square_48.spritefont
+
+#begin Assets/Fonts/square_96.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/square_96.spritefont
+
+#begin Assets/Fonts/stargazer_12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/stargazer_12.spritefont
+
+#begin Assets/Fonts/stargazer_24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/stargazer_24.spritefont
+
+#begin Assets/Fonts/stargazer_48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/stargazer_48.spritefont
+
+#begin Assets/Fonts/stargazer_96.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/stargazer_96.spritefont
+

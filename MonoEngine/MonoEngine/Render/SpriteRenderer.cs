@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MonoEngine.Game;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 using MonoEngine.UI;
 using MonoEngine.Assets;
 
@@ -33,8 +34,7 @@ namespace MonoEngine.Render
 
         public void Draw()
         {
-            //batch.spriteBatch.Draw(sprite.Image, sprite.ImageRect, sprite.SourceRect, sprite.Color, sprite.Rotation, sprite.SourceRect.Center, sprite.SpriteEffects, 0.0f);
-            //RenderManager.spriteBatch.Draw(Sprite, Bounds, null, Colour[0] * Opacity[0], Rotation, Origin, SpriteEffects.None, Depth);
+            GraphicsHelper.spriteBatch.Draw(sprite.Image, sprite.ImageRect, sprite.SourceRect, sprite.Color, sprite.Rotation, new Vector2(sprite.SourceRect.Center.X,sprite.SourceRect.Center.Y), sprite.SpriteEffects, 0.0f);
         }
 
         public static SpriteRenderer MakeSpriteRenderer(string name)

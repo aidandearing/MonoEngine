@@ -107,6 +107,7 @@ namespace MonoEngine.Render
             }
             //this is the final draw that guarantees that the "screen" draws to the screen
             GraphicsHelper.graphicsDevice.SetRenderTarget(null);
+
             GraphicsHelper.spriteBatch.Begin();
             GraphicsHelper.spriteBatch.Draw(Resources.GetRenderTarget2D("screen"), GraphicsHelper.screen, Color.White);
             GraphicsHelper.spriteBatch.End();

@@ -14,12 +14,20 @@ namespace MonoEngine.Render
     {
         //TODO: implement drawing to rendertargets that are used as textures for models
         //public Model model { get; set; }
-        public Font font { get; set; }
-
+        public Font Font { get; set; }
+        public string Text { get; set; }
+        public int Size { get; set; }
+        public Vector2 Position { get; set; }
+        public Color Colour { get; set; }
         private RenderTargetBatch batch;
 
-        private TextRenderer(string name, string text, string targetName = null) : base(name)
+        private TextRenderer(string name, Font font, string text, int size, string targetName = null) : base(name)
         {
+            Text = text;
+            Size = size;
+            Colour = Color.White;
+            Position = Vector2.Zero;
+
             if (targetName == null)
             {
                 batch = RenderManager.RegisterDrawCallback("UI", new RenderTargetBatch.DrawCallback(Draw));
@@ -32,7 +40,12 @@ namespace MonoEngine.Render
 
         public void Draw()
         {
-            //batch.spriteBatch.DrawString()
+            GraphicsHelper.spriteBatch.DrawString(Font.GetFont(Size), Text, Position, Colour);
+        }
+        public static TextRenderer MakeTextRenderer(string name, string asset)
+        {
+
+            return new TextRenderer(name, Resources.LoadAsset(new Font().GetType(), asset, SceneManager.activeScene) as Font, "text", 12);
         }
     }
 }
