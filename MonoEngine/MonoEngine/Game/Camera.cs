@@ -4,6 +4,7 @@ using MonoEngine.Render;
 
 namespace MonoEngine.Game
 {
+    [Serializable]
     public class Camera : GameObject
     {
         // TODO A variety of safer static methods to handle main camera and other camera based stuff

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MonoEngine.Physics
 {
+    [Serializable]
     public class PhysicsMaterial
     {
         private float d;

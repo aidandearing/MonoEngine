@@ -7,6 +7,7 @@ using MonoEngine.Physics;
 
 namespace MonoEngine.Render
 {
+    [Serializable]
     public class ModelRenderer : GameObject
     {
         private ModelWrapper model;

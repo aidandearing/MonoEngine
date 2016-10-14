@@ -5,13 +5,14 @@ using MonoEngine.Game;
 
 namespace MonoEngine.Physics.Physics2D
 {
+    [System.Serializable]
     public class PhysicsBody2D : GameObject
     {
-        public BodyFlag bodyFlag;
+        public PhysicsEngine.BodyType bodyFlag;
         public short flagLayer = 0;
 
         public Shape shape;
-        private PhysicsMaterial material;
+        public PhysicsMaterial material;
 
         // This list is referenced in Physic's callback registery
         internal List<Collision2D.OnCollision> collisionCallbacks;
@@ -179,7 +180,7 @@ namespace MonoEngine.Physics.Physics2D
 
         public PhysicsBody2D(string name) : base(name)
         {
-            bodyFlag = new BodyFlag(0);
+            bodyFlag = PhysicsEngine.BodyType.STATIC;
         }
 
         public PhysicsBody2D(GameObject parent, string name, Shape shape, PhysicsMaterial material, PhysicsEngine.BodyType bodyType) : base(name)
@@ -188,7 +189,7 @@ namespace MonoEngine.Physics.Physics2D
             this.material = material;
             this.shape = shape;
             //this.shape.transform.parent = this.transform;
-            this.bodyFlag = new BodyFlag(bodyType);
+            this.bodyFlag = bodyType;
 
             collisionCallbacks = new List<Collision2D.OnCollision>();
             collisions = new List<Collision2D>();
@@ -204,15 +205,15 @@ namespace MonoEngine.Physics.Physics2D
             {
                 if (bodyFlag.HasFlag(PhysicsEngine.BodyType.RIGID))
                 {
-                    bodyFlag.flagBodyType &= ~PhysicsEngine.BodyType.RIGID;
+                    bodyFlag &= ~PhysicsEngine.BodyType.RIGID;
                 }
                 if (bodyFlag.HasFlag(PhysicsEngine.BodyType.SIMPLE))
                 {
-                    bodyFlag.flagBodyType &= ~PhysicsEngine.BodyType.SIMPLE;
+                    bodyFlag &= ~PhysicsEngine.BodyType.SIMPLE;
                 }
                 if (bodyFlag.HasFlag(PhysicsEngine.BodyType.KINEMATIC))
                 {
-                    bodyFlag.flagBodyType &= ~PhysicsEngine.BodyType.KINEMATIC;
+                    bodyFlag &= ~PhysicsEngine.BodyType.KINEMATIC;
                 }
             }
 

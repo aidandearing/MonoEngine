@@ -19,6 +19,7 @@ namespace MonoEngine.Physics
         /// WORLDFORCE: Is affected by the world force vector (gravity)
         /// INTERPOLATE: If the body has moved more than its shape dimensions on any axis, it will check across the distance traveled, instead of just where it currently is
         /// </summary>
+        [Flags]
         public enum BodyType { SIMPLE = 1, RIGID = 2, STATIC = 4, KINEMATIC = 8, TRIGGER = 16, WORLDFORCE = 32, INTERPOLATE = 64 };
         public enum CollisionType { START, STAY, STOP, NONE };
 

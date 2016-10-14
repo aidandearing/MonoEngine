@@ -89,11 +89,21 @@ namespace TestbedMonogame
             GraphicsHelper.graphicsDevice = GraphicsDevice;
             this.Components.Add(RenderManager.Instance(this));
 
-            //GameObject obj = new GameObject("wallTest");
-            //obj.AddComponent(ModelRenderer.MakeModelRenderer("BasicWall"));
-            //PhysicsBody2D body = new PhysicsBody2D(obj, "wall", new AABB(obj.transform, 1, 1), new PhysicsMaterial(1,0,1), PhysicsEngine.BodyType.SIMPLE);
-            //obj.AddComponent(body);
-            //obj.AddComponent(new Camera("camera"));
+            GameObject obj = new GameObject("wallTest");
+            obj.AddComponent(ModelRenderer.MakeModelRenderer("BasicWall"));
+            PhysicsBody2D body = new PhysicsBody2D(obj, "wall", new AABB(obj.transform, 1, 1), new PhysicsMaterial(1,0,1), PhysicsEngine.BodyType.SIMPLE);
+            obj.AddComponent(body);
+            obj.AddComponent(new Camera("camera"));
+
+            System.Xml.Serialization.XmlSerializer cereal = new System.Xml.Serialization.XmlSerializer(obj.GetType());
+            System.Xml.XmlWriterSettings settings = new System.Xml.XmlWriterSettings()
+            {
+                Indent = true,
+                IndentChars = "\t",
+                NewLineOnAttributes = true
+            };
+            System.Xml.XmlWriter righter = System.Xml.XmlWriter.Create(@"./Content/Assets/Objects/" + obj.Name + ".prefab", settings);
+            cereal.Serialize(righter, obj);
 
             //GameObjectManager.AddGameObject(obj);
 
@@ -138,7 +148,7 @@ namespace TestbedMonogame
             //}
             //// It does.
 
-            SceneManager.LoadScene("default");
+            //SceneManager.LoadScene("default");
         }
 
         /// <summary>

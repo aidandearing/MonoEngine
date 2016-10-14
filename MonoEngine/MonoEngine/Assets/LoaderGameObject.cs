@@ -11,17 +11,21 @@ namespace MonoEngine.Assets
         public override object LoadAsset(string path, string name, Scene parent)
         {
             // Load a resource from a file at the path + name.xnb pathway
-            GameObject asset = null;
+            GameObject asset = new GameObject();
             // If the model isn't already loaded (it's key isn't found in the dictionary)
             // Needs to try to get the model at that name in the models path & load it
-            using (XmlReader reader = XmlReader.Create(@"./Content/" + path + "/" + name + ".prefab"))
-            {
-                while (reader.Read())
-                {
-                    if (reader.IsStartElement())
-                        GameObject.LoadFromXML(reader);
-                }
-            }
+            //using (XmlReader reader = XmlReader.Create(@"./Content/" + path + "/" + name + ".prefab"))
+            //{
+            //    while (reader.Read())
+            //    {
+            //        if (reader.IsStartElement())
+            //            GameObject.LoadFromXML(reader);
+            //    }
+            //}
+
+            XmlReader reader = XmlReader.Create(@"./Content/" + path + "/" + name + ".prefab");
+            System.Xml.Serialization.XmlSerializer cereal = new System.Xml.Serialization.XmlSerializer(asset.GetType());
+            asset = cereal.Deserialize(reader) as GameObject;
 
             if (parent != null)
             {
