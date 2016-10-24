@@ -23,10 +23,12 @@ namespace MonoEngine.UI
         }
         public Vector2 GetAlignment(UIObject obj, UIObject parent)
         {
+            //if the object you are aligning doesnt have a parent we will assume the drawing bounds are the screen
             Rectangle other = GraphicsHelper.screen;
 
             Vector2 pos = Vector2.Zero;
 
+            //if the object has a parent use the parents bounds instead
             if (parent != null)
             {
                 other = parent.bounds;
@@ -49,7 +51,7 @@ namespace MonoEngine.UI
                     pos.Y = other.Top;
                     break;
                 case Alignment.TopRight:
-                    pos.X = other.Right;
+                    pos.X = other.Right - (obj.bounds.Width);
                     pos.Y = other.Top;
                     break;
                 case Alignment.Left:
@@ -75,7 +77,7 @@ namespace MonoEngine.UI
                     }
                     break;
                 case Alignment.CenterRight:
-                    pos.X = other.Right;
+                    pos.X = other.Right - (obj.bounds.Width);
                     if (obj != parent)
                         pos.Y = other.Center.Y - (obj.bounds.Height / 2);
                     else
@@ -89,18 +91,18 @@ namespace MonoEngine.UI
                     break;
                 case Alignment.BottomLeft:
                     pos.X = other.Left;
-                    pos.Y = other.Bottom;
+                    pos.Y = other.Bottom - (obj.bounds.Height);
                     break;
                 case Alignment.BottomCenter:
                     if (obj != parent)
                         pos.X = other.Center.X - (obj.bounds.Width / 2);
                     else
                         pos.X = other.Center.X;
-                    pos.Y = other.Bottom;
+                    pos.Y = other.Bottom - (obj.bounds.Height);
                     break;
                 case Alignment.BottomRight:
-                    pos.X = other.Right;
-                    pos.Y = other.Bottom;
+                    pos.X = other.Right - (obj.bounds.Width);
+                    pos.Y = other.Bottom - (obj.bounds.Height);
                     break;
                 case Alignment.FloatLeft:
                     if (obj.previousObj != null)
