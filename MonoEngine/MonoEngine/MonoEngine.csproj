@@ -44,6 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\AssetExceptions.cs" />
+    <Compile Include="Assets\EffectWrapper.cs" />
+    <Compile Include="Assets\LoaderEffect.cs" />
     <Compile Include="Assets\LoaderFont.cs" />
     <Compile Include="Assets\LoaderModel.cs" />
     <Compile Include="Assets\LoaderSprite.cs" />
