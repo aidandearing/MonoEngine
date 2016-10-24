@@ -11,6 +11,12 @@ namespace MonoEngine.Assets
 {
     public class Sprite
     {
+        private Vector2 origin;
+        public Vector2 Origin
+        {
+            get { return origin; }
+            set { origin = value; }
+        }
         private Texture2D image;
         public Texture2D Image
         {
@@ -18,11 +24,11 @@ namespace MonoEngine.Assets
             set { image = value; }
         }
 
-        private Rectangle imageRect;
-        public Rectangle ImageRect
+        private Rectangle destinationRect;
+        public Rectangle DestinationRect
         {
-            get { return imageRect; }
-            set { ImageRect = value; }
+            get { return destinationRect; }
+            set { destinationRect = value; }
         }
 
         private Rectangle sourceRect;
@@ -53,8 +59,8 @@ namespace MonoEngine.Assets
             set { rotation = value; }
         }
 
-        private float scale;
-        public float Scale
+        private Vector2 scale;
+        public Vector2 Scale
         {
             get { return scale; }
             set { scale = value; }
@@ -65,15 +71,16 @@ namespace MonoEngine.Assets
         /// </summary>
         internal Sprite() { }
 
-        public Sprite(Texture2D image, Rectangle imageRect, Rectangle sourceRect, Color color, float rotation, float scale, SpriteEffects spriteEffects)
+        public Sprite(Texture2D image, Rectangle destinationRect, Rectangle sourceRect, Color color, float rotation, Vector2 scale, SpriteEffects spriteEffects)
         {
             this.image = image;
-            this.imageRect = imageRect;
+            this.destinationRect = destinationRect;
             this.sourceRect = sourceRect;
             this.color = color;
             this.rotation = rotation;
             this.scale = scale;
             this.spriteEffects = spriteEffects;
+            origin = new Vector2(destinationRect.Center.X, destinationRect.Center.Y);
         }
 
         public Sprite(XmlReader reader)
