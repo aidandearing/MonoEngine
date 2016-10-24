@@ -121,6 +121,7 @@ namespace TestbedMonogame
             GameObjectManager.AddGameObject(obj);
 
             uiObj = new UIText("test", GraphicsHelper.screen, new UIAlignment(), new UIAlignment(), UIObject.flags.None, "blood", "Hello Beautiful", 24);
+            UIImage img = new UIImage("test", new Rectangle(0, 0, 100, 100), new UIAlignment(UIAlignment.Alignment.Center), new UIAlignment(UIAlignment.Alignment.Center), UIObject.flags.None, "monogameLogo");
         }
 
         /// <summary>
