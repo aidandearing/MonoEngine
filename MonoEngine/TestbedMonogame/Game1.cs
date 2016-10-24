@@ -121,25 +121,6 @@ namespace TestbedMonogame
             GameObjectManager.AddGameObject(obj);
 
             uiObj = new UIText("test", GraphicsHelper.screen, new UIAlignment(), new UIAlignment(), UIObject.flags.None, "blood", "Hello Beautiful", 24);
-            obj.LoadToXML();
-
-            // Testing whether xml to transform works.
-            using (XmlReader reader = XmlReader.Create(@"./Content/Assets/Scenes/XMLFile1.xml"))
-            {
-                while (reader.Read())
-                {
-                    if (reader.IsStartElement())
-                    {
-                        switch(reader.Name)
-                        {
-                            case "transform":
-                                Transform transform = Transform.XmlToTransform(reader);
-                                break;
-                        }
-                    }
-                }
-            }
-            // It does.
         }
 
         /// <summary>
