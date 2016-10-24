@@ -90,6 +90,7 @@
     <Compile Include="Time.cs" />
     <Compile Include="Transform.cs" />
     <Compile Include="UI\UIAlignment.cs" />
+    <Compile Include="UI\UIImage.cs" />
     <Compile Include="UI\UIText.cs" />
     <Compile Include="Value.cs" />
     <Compile Include="UI\UIBehaviour.cs" />

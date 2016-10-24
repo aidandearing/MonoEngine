@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using MonoEngine.Render;
 
 namespace MonoEngine.UI
 {
@@ -12,85 +13,122 @@ namespace MonoEngine.UI
         public enum Alignment { None, TopLeft, TopCenter, TopRight, CenterLeft, Center, CenterRight, BottomLeft, BottomCenter, BottomRight, Top, Left, Right, Bottom, FloatTop, FloatLeft, FloatRight, FloatBottom };
         public Alignment alignment;
 
+        public UIAlignment(Alignment alignment)
+        {
+            this.alignment = alignment;
+        }
+        public UIAlignment()
+        {
+
+        }
         public Vector2 GetAlignment(UIObject obj, UIObject parent)
         {
+            Rectangle other = GraphicsHelper.screen;
+
             Vector2 pos = Vector2.Zero;
+
+            if (parent != null)
+            {
+                other = parent.bounds;
+            }
+
             switch (alignment)
             {
                 case Alignment.Top:
-                    pos.Y = parent.bounds.Top;
+                    pos.Y = other.Top;
                     break;
                 case Alignment.TopLeft:
-                    pos.X = parent.bounds.Left;
-                    pos.Y = parent.bounds.Top;
+                    pos.X = other.Left;
+                    pos.Y = other.Top;
                     break;
                 case Alignment.TopCenter:
-                    pos.X = parent.bounds.Center.X;
-                    pos.Y = parent.bounds.Top;
+                    if (obj != parent)
+                        pos.X = other.Center.X - (obj.bounds.Width / 2);
+                    else
+                        pos.X = other.Center.X;
+                    pos.Y = other.Top;
                     break;
                 case Alignment.TopRight:
-                    pos.X = parent.bounds.Right;
-                    pos.Y = parent.bounds.Top;
+                    pos.X = other.Right;
+                    pos.Y = other.Top;
                     break;
                 case Alignment.Left:
-                    pos.X = parent.bounds.Left;
+                    pos.X = other.Left;
                     break;
                 case Alignment.CenterLeft:
-                    pos.X = parent.bounds.Left;
-                    pos.Y = parent.bounds.Center.Y;
+                    pos.X = other.Left;
+                    if (obj != parent)
+                        pos.Y = other.Center.Y - (obj.bounds.Height / 2);
+                    else
+                        pos.Y = other.Center.Y;
                     break;
                 case Alignment.Center:
-                    pos.X = parent.bounds.Center.X;
-                    pos.Y = parent.bounds.Center.Y;
+                    if (obj != parent)
+                    {
+                        pos.X = other.Center.X - (obj.bounds.Width / 2);
+                        pos.Y = other.Center.Y - (obj.bounds.Height / 2);
+                    }
+                    else
+                    {
+                        pos.X = other.Center.X;
+                        pos.Y = other.Center.Y;
+                    }
                     break;
                 case Alignment.CenterRight:
-                    pos.X = parent.bounds.Right;
-                    pos.Y = parent.bounds.Center.Y;
+                    pos.X = other.Right;
+                    if (obj != parent)
+                        pos.Y = other.Center.Y - (obj.bounds.Height / 2);
+                    else
+                        pos.Y = other.Center.Y;
                     break;
                 case Alignment.Right:
-                    pos.X = parent.bounds.Right;
+                    pos.X = other.Right;
                     break;
                 case Alignment.Bottom:
-                    pos.Y = parent.bounds.Height;
+                    pos.Y = other.Height;
                     break;
                 case Alignment.BottomLeft:
-                    pos.X = parent.bounds.Left;
-                    pos.Y = parent.bounds.Bottom;
+                    pos.X = other.Left;
+                    pos.Y = other.Bottom;
                     break;
                 case Alignment.BottomCenter:
-                    pos.X = parent.bounds.Center.X;
-                    pos.Y = parent.bounds.Bottom;
+                    if (obj != parent)
+                        pos.X = other.Center.X - (obj.bounds.Width / 2);
+                    else
+                        pos.X = other.Center.X;
+                    pos.Y = other.Bottom;
                     break;
                 case Alignment.BottomRight:
-                    pos.X = parent.bounds.Right;
-                    pos.Y = parent.bounds.Bottom;
+                    pos.X = other.Right;
+                    pos.Y = other.Bottom;
                     break;
                 case Alignment.FloatLeft:
                     if (obj.previousObj != null)
                         pos.X = obj.previousObj.bounds.Right;
                     else
-                        pos.X = parent.bounds.Left;
+                        pos.X = other.Left;
                     break;
                 case Alignment.FloatRight:
                     if (obj.previousObj != null)
                         pos.X = obj.previousObj.bounds.Left;
                     else
-                        pos.X = parent.bounds.Right;
+                        pos.X = other.Right;
                     break;
                 case Alignment.FloatTop:
                     if (obj.previousObj != null)
                         pos.Y = obj.previousObj.bounds.Bottom;
                     else
-                        pos.Y = parent.bounds.Top;
+                        pos.Y = other.Top;
                     break;
                 case Alignment.FloatBottom:
                     if (obj.previousObj != null)
                         pos.Y = obj.previousObj.bounds.Top;
                     else
-                        pos.Y = parent.bounds.Bottom;
+                        pos.Y = other.Bottom;
                     break;
             }
             return pos;
         }
+        
     }
 }

@@ -32,6 +32,19 @@ namespace MonoEngine.UI
             this.flag = flag;
 
             Vector2 boundsAlignment = boundsAlign.GetAlignment(this, parent);
+            this.bounds.X = (int)boundsAlignment.X;
+            this.bounds.Y = (int)boundsAlignment.Y;
+
+            origin = alignment.GetAlignment(this, this);
+        }
+        public UIObject(string name, UIAlignment boundsAlign, UIAlignment alignment, flags flag)
+        {
+            bounds = new Rectangle(0, 0, 0, 0);
+            childObjects = new List<UIObject>();
+            this.Name = name;
+            this.flag = flag;
+
+            Vector2 boundsAlignment = boundsAlign.GetAlignment(this, parent);
             bounds.X = (int)boundsAlignment.X;
             bounds.Y = (int)boundsAlignment.Y;
 

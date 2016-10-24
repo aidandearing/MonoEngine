@@ -32,6 +32,7 @@ namespace MonoEngine.UI
             textRenderer.Size = fontSize;
             textRenderer.Text = text;
             textRenderer.Font = Resources.LoadAsset(new Font().GetType(), fontName, SceneManager.activeScene) as Font;
+            textRenderer.Position = origin;
         }
     }
 }
