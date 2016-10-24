@@ -11,9 +11,20 @@ namespace MonoEngine.Assets
         /// </summary>
         internal ModelWrapper() { }
 
-        public ModelWrapper(Microsoft.Xna.Framework.Graphics.Model model)
+        public ModelWrapper(Model model)
         {
             this.model = model;
+        }
+
+        public void SetEffect(Effect effect)
+        {
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                foreach (ModelMeshPart part in mesh.MeshParts)
+                {
+                    part.Effect = effect;
+                }
+            }
         }
 
         public static implicit operator Model(ModelWrapper _model)

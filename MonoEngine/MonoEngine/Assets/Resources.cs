@@ -100,12 +100,16 @@ namespace MonoEngine.Assets
             resourceManagers.Add(type, new ResourceManager("Assets/Fonts", type, loaderF));
 
             type = new Sprite().GetType();
-            LoaderSprite loaderS = new LoaderSprite(typeof(Sprite));
+            LoaderSprite loaderS = new LoaderSprite(type);
             resourceManagers.Add(type, new ResourceManager("Assets/Textures", type, loaderS));
 
             type = new RenderTarget2DWrapper().GetType();
             resourceManager_renderTarget2D = new ResourceManager("Assets/Shaders", type, loaderS);
             resourceManagers.Add(type, resourceManager_renderTarget2D);
+
+            type = new EffectWrapper().GetType();
+            LoaderEffect loaderE = new LoaderEffect(type);
+            resourceManagers.Add(type, new ResourceManager("Assets/Shaders", type, loaderE));
         }
 
         public static Resources Initialise()

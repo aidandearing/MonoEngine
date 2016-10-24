@@ -43,7 +43,7 @@ namespace MonoEngine.Assets
 
             if (parent != null)
             {
-                parent.assets.assets[typeof(Font)].Add(name);
+                parent.assets.assets[type].Add(name);
             }
             else
             {
