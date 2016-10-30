@@ -63,6 +63,7 @@
     <Compile Include="Physics\PhysicsExceptions.cs" />
     <Compile Include="Physics\PhysicsMaterial.cs" />
     <Compile Include="Assets\Font.cs" />
+    <Compile Include="Render\Material.cs" />
     <Compile Include="Render\RenderManager.cs" />
     <Compile Include="Render\RenderTargetBatch.cs" />
     <Compile Include="Render\RenderTargetRenderer.cs" />
