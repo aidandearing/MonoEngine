@@ -21,7 +21,6 @@ namespace TestbedMonogame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        UIText uiObj;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -120,8 +119,8 @@ namespace TestbedMonogame
 
             GameObjectManager.AddGameObject(obj);
 
-            uiObj = new UIText("test", GraphicsHelper.screen, new UIAlignment(), new UIAlignment(), UIObject.flags.None, "blood", "Hello Beautiful", 24);
-            UIImage img = new UIImage("test", new Rectangle(0, 0, 100, 100), new UIAlignment(UIAlignment.Alignment.Center), new UIAlignment(UIAlignment.Alignment.Center), UIObject.flags.None, "monogameLogo");
+            UIText textObj = new UIText("test", new UIAlignment(UIAlignment.Alignment.BottomCenter), new UIAlignment(UIAlignment.Alignment.Center), UIObject.flags.None, "blood", "Hello Beautiful", 24);
+            UIImage imgObj = new UIImage("logo", new Rectangle(0, 0, 100, 100), new UIAlignment(UIAlignment.Alignment.BottomRight), new UIAlignment(UIAlignment.Alignment.Center), UIObject.flags.None, "monogameLogo");
         }
 
         /// <summary>
