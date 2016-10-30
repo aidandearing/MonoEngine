@@ -90,7 +90,6 @@ namespace MonoEngine.Assets
             LoaderGameObject loaderGO = new LoaderGameObject(type);
             resourceManagers.Add(type, new ResourceManager("Assets/Objects", type, loaderGO));
 
-            // TODO: THIS MAY EXPLODE HORRIBLY
             type = new ModelWrapper().GetType();
             LoaderModel loaderM = new LoaderModel(type);
             resourceManagers.Add(type, new ResourceManager("Assets/Models", type, loaderM));

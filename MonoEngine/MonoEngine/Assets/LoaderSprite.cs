@@ -19,6 +19,6 @@ namespace MonoEngine.Assets
             Texture2D texture = ContentHelper.Content.Load<Texture2D>(path + "/" + name);
             // add the model into the dictionary
             return new Sprite(texture, texture.Bounds, texture.Bounds, Color.White, 0.0f, Vector2.One, SpriteEffects.None);
-            }
+        }
     }
 }
