@@ -25,6 +25,7 @@ namespace TestbedMonogame
         float h = 0;
         float s = 1;
         float v = 1;
+        // TODO: GROSSNESS TO HERE
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -216,6 +217,7 @@ namespace TestbedMonogame
             }
 
             effect.AmbientLightColor = new Vector3(r, g, b);
+            // TODO: GROSSNESS GOES TO HERE
 
             base.Update(gameTime);
         }
