@@ -20,7 +20,7 @@ namespace MonoEngine.Game
         /// This is the list of all components this GameObject has
         /// Components are where GameObjects get their behaviours
         /// </summary>
-        private List<GameObject> components;
+        public List<GameObject> components;
 
         /// <summary>
         /// Adds a component to the GameObject
@@ -38,7 +38,7 @@ namespace MonoEngine.Game
         public string Name { get; set; }
 
         /// <summary>
-        /// This constructor does nothing, and is only used to create instances of GameObjects in order to get their type
+        /// This constructor does nothing, and is only used to create instances of GameObjects in order to get their runtime type
         /// </summary>
         internal GameObject() { }
 

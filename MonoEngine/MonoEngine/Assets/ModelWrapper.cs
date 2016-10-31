@@ -2,6 +2,7 @@
 
 namespace MonoEngine.Assets
 {
+    [System.Serializable]
     public class ModelWrapper
     {
         private Model model;
