@@ -100,11 +100,24 @@ namespace TestbedMonogame
 
             GameObject obj = new GameObject("wall");
             ModelRenderer renderer = ModelRenderer.MakeModelRenderer("BasicWall");
+            
+            // This is a hideous pipeline. How do I make it prettier?
+            // Obviously I can default to supplying models with a BasicEffect
+            // Do I want to hide Effect behind Materials?
+            // There isn't much point to it, besides giving Effect a different name, as far as I can see it.
+            // But then how do I best solve this?
+            // Okay, back to the beginning
+            // First, default to giving them a basic effect -> Monogame already does this
+            // Second, give them an easier pipeline for getting textures to load. -> Monogame seems to know how to import their textures via fbx
+            // Third, how do I give them an easy to use piece of xml that allows them to simply define a material for a model?
             effect = new BasicEffect(GraphicsHelper.graphicsDevice);
-            renderer.Model.SetEffect(effect);
+            effect.Texture = Resources.LoadAsset(new Sprite().GetType(), "metal_relief_fancy", SceneManager.activeScene) as Sprite;
+            effect.TextureEnabled = true;
             effect.LightingEnabled = true;
-            //effect.VertexColorEnabled = true;
+            renderer.Model.SetEffect(effect);
+
             obj.AddComponent(renderer);
+
             PhysicsBody2D body = new PhysicsBody2D(obj, "wall", new AABB(obj.transform, 1, 1), new PhysicsMaterial(1, 0, 1), PhysicsEngine.BodyType.SIMPLE);
             obj.AddComponent(body);
             obj.AddComponent(new Camera("camera"));
@@ -215,11 +228,12 @@ namespace TestbedMonogame
                     b = q;
                     break;
             }
+            base.Update(gameTime);
 
+            r = g = b = 1;
             effect.AmbientLightColor = new Vector3(r, g, b);
             // TODO: GROSSNESS GOES TO HERE
 
-            base.Update(gameTime);
         }
 
         /// <summary>
