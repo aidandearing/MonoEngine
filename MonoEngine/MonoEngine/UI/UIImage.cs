@@ -21,8 +21,7 @@ namespace MonoEngine.UI
             spriteRenderer = SpriteRenderer.MakeSpriteRenderer(name, imageName);
             spriteRenderer.Name = name;
             spriteRenderer.sprite = Resources.LoadAsset(new Sprite().GetType(), imageName, SceneManager.activeScene) as Sprite;
-
-            spriteRenderer.sprite.DestinationRect = new Rectangle((int)origin.X, (int)origin.Y, this.bounds.Width, this.bounds.Height);
+            spriteRenderer.sprite.destinationRect = new Rectangle((int)origin.X, (int)origin.Y, this.bounds.Width, this.bounds.Height);
         }
     }
 }
