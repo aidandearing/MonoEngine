@@ -92,18 +92,18 @@ namespace TestbedMonogame
             GameObject obj = new GameObject("wallTest");
             obj.AddComponent(ModelRenderer.MakeModelRenderer("BasicWall"));
             PhysicsBody2D body = new PhysicsBody2D(obj, "wall", new AABB(obj.transform, 1, 1), new PhysicsMaterial(1,0,1), PhysicsEngine.BodyType.SIMPLE);
-            obj.AddComponent(body);
+            //obj.AddComponent(body);
             obj.AddComponent(new Camera("camera"));
 
-            System.Xml.Serialization.XmlSerializer cereal = new System.Xml.Serialization.XmlSerializer(obj.GetType());
+            System.Xml.Serialization.XmlSerializer cereal = new System.Xml.Serialization.XmlSerializer(body.GetType());
             System.Xml.XmlWriterSettings settings = new System.Xml.XmlWriterSettings()
             {
                 Indent = true,
                 IndentChars = "\t",
                 NewLineOnAttributes = true
             };
-            System.Xml.XmlWriter righter = System.Xml.XmlWriter.Create(@"./Content/Assets/Objects/" + obj.Name + ".prefab", settings);
-            cereal.Serialize(righter, obj);
+            System.Xml.XmlWriter righter = System.Xml.XmlWriter.Create(@"./Content/Assets/Objects/" + body.Name + ".prefab", settings);
+            cereal.Serialize(righter, body);
 
             //GameObjectManager.AddGameObject(obj);
 

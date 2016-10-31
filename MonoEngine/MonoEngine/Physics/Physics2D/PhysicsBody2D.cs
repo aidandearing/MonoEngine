@@ -178,6 +178,8 @@ namespace MonoEngine.Physics.Physics2D
             }
         }
 
+        public PhysicsBody2D() { }
+
         public PhysicsBody2D(string name) : base(name)
         {
             bodyFlag = PhysicsEngine.BodyType.STATIC;

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace MonoEngine.Shapes
 {
+    [Serializable]
     public abstract class Shape
     {
         public const int VERTICELIMIT = 16;

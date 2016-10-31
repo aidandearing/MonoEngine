@@ -20,7 +20,7 @@ namespace MonoEngine.Game
         /// This is the list of all components this GameObject has
         /// Components are where GameObjects get their behaviours
         /// </summary>
-        public List<GameObject> components;
+        private List<GameObject> components;
 
         /// <summary>
         /// Adds a component to the GameObject

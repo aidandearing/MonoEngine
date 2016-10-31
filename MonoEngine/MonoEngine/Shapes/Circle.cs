@@ -3,6 +3,7 @@ using System;
 
 namespace MonoEngine.Shapes
 {
+    [Serializable]
     public class Circle : Shape
     {
         public Vector3 lastOverlap_delta;

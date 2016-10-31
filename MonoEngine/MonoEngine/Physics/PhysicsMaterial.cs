@@ -9,7 +9,7 @@ namespace MonoEngine.Physics
     [Serializable]
     public class PhysicsMaterial
     {
-        private float d;
+        public float d;
         public float Density
         {
             get
@@ -23,7 +23,7 @@ namespace MonoEngine.Physics
             }
         }
 
-        private float f;
+        public float f;
         public float Friction
         {
             get
@@ -37,7 +37,7 @@ namespace MonoEngine.Physics
             }
         }
 
-        private float r;
+        public float r;
         public float Restitution
         {
             get

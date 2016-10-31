@@ -3,6 +3,7 @@ using System;
 
 namespace MonoEngine.Shapes
 {
+    [Serializable]
     public class AABB : Shape
     {
         private float diagonal;
