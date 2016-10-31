@@ -1,4 +1,5 @@
 ﻿using System.Xml;
+using System.Drawing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -19,6 +20,13 @@ namespace TestbedMonogame
     /// </summary>
     public class Game1 : Game
     {
+        // TODO: REMOVE THIS GROSSNESS
+        BasicEffect effect;
+        float h = 0;
+        float s = 1;
+        float v = 1;
+        // TODO: GROSSNESS TO HERE
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         public Game1()
@@ -91,11 +99,16 @@ namespace TestbedMonogame
             this.Components.Add(RenderManager.Instance(this));
 
             GameObject obj = new GameObject("wall");
-            obj.AddComponent(ModelRenderer.MakeModelRenderer("BasicWall"));
-            PhysicsBody2D body = new PhysicsBody2D(obj, "wall", new AABB(obj.transform, 1, 1), new PhysicsMaterial(1,0,1), PhysicsEngine.BodyType.SIMPLE);
+            ModelRenderer renderer = ModelRenderer.MakeModelRenderer("BasicWall");
+            effect = new BasicEffect(GraphicsHelper.graphicsDevice);
+            renderer.Model.SetEffect(effect);
+            effect.LightingEnabled = true;
+            //effect.VertexColorEnabled = true;
+            obj.AddComponent(renderer);
+            PhysicsBody2D body = new PhysicsBody2D(obj, "wall", new AABB(obj.transform, 1, 1), new PhysicsMaterial(1, 0, 1), PhysicsEngine.BodyType.SIMPLE);
             obj.AddComponent(body);
             obj.AddComponent(new Camera("camera"));
-            
+
             GameObjectManager.AddGameObject(obj);
 
             //obj = new GameObject("floor");
@@ -110,10 +123,10 @@ namespace TestbedMonogame
 
             obj = new GameObject("floor2");
             obj.transform.Translate(new Vector3(2f, 0, 0));
-            ModelRenderer renderer = ModelRenderer.MakeModelRenderer("FloorTile");
+            renderer = ModelRenderer.MakeModelRenderer("FloorTile");
             obj.AddComponent(renderer);
-            body = new PhysicsBody2D(obj, "floorB", new Circle(obj.transform, 0.5f), new PhysicsMaterial(1,0,1f), PhysicsEngine.BodyType.SIMPLE);
-            body.Velocity = new Vector3(-0.01f, 0, 0);
+            body = new PhysicsBody2D(obj, "floorB", new Circle(obj.transform, 0.5f), new PhysicsMaterial(1, 0, 1f), PhysicsEngine.BodyType.SIMPLE);
+            //body.Velocity = new Vector3(-0.01f, 0, 0);
             //body.RegisterCollisionCallback(new Collision2D.OnCollision(OnCollision2DBody));
             obj.AddComponent(body);
 
@@ -144,6 +157,68 @@ namespace TestbedMonogame
                 Exit();
 
             // TODO: Add your update logic here
+
+            // TODO: REMOVE THIS GROSSNESS
+            h = (h + 180.0f * Time.DeltaTime) % 360.0f;
+
+            float r = 0;
+            float g = 0;
+            float b = 0;
+
+            int i;
+            float f, p, q, t;
+            if (s == 0)
+            {
+                // achromatic (grey)
+                r = g = b = v;
+                return;
+            }
+            // sector 0 to 5
+            float h_t = h / 60;             
+            i = (int)System.Math.Floor(h_t);
+            // factorial part of h
+            f = h_t - i;                    
+            p = v * (1 - s);
+            q = v * (1 - s * f);
+            t = v * (1 - s * (1 - f));
+
+            switch (i)
+            {
+                case 0:
+                    r = v;
+                    g = t;
+                    b = p;
+                    break;
+                case 1:
+                    r = q;
+                    g = v;
+                    b = p;
+                    break;
+                case 2:
+                    r = p;
+                    g = v;
+                    b = t;
+                    break;
+                case 3:
+                    r = p;
+                    g = q;
+                    b = v;
+                    break;
+                case 4:
+                    r = t;
+                    g = p;
+                    b = v;
+                    break;
+                default:
+                    r = v;
+                    g = p;
+                    b = q;
+                    break;
+            }
+
+            effect.AmbientLightColor = new Vector3(r, g, b);
+            // TODO: GROSSNESS GOES TO HERE
+
             base.Update(gameTime);
         }
 
@@ -157,7 +232,7 @@ namespace TestbedMonogame
 
             // TODO: Add your drawing code here
             RenderManager.Instance(this).Draw(gameTime);
-;           base.Draw(gameTime);
+            ; base.Draw(gameTime);
         }
     }
 }

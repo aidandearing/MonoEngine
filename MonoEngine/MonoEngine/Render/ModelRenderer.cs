@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using MonoEngine.Assets;
 using MonoEngine.Game;
 using MonoEngine.Physics;
@@ -9,6 +8,13 @@ namespace MonoEngine.Render
     public class ModelRenderer : GameObject
     {
         private ModelWrapper model;
+        public ModelWrapper Model
+        {
+            get
+            {
+                return model;
+            }
+        }
 
         internal ModelRenderer(string name, ModelWrapper model, string targetName = null) : base(name)
         {
@@ -22,7 +28,6 @@ namespace MonoEngine.Render
             {
                 RenderManager.RegisterDrawCallback(targetName, new RenderTargetBatch.DrawCallback(Draw));
             }
-            
         }
 
         public void Draw()

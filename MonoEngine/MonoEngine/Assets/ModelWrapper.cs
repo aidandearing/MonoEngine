@@ -4,21 +4,18 @@ namespace MonoEngine.Assets
 {
     public class ModelWrapper
     {
-        private Model model;
+        public Model Model { get; private set; }
 
-        /// <summary>
-        /// NEVER USE THIS, IT IS USED SPECIFICALLY TO GET THE RUNTIME TYPE OF AN INSTANCE OF FONT, AND NOTHING ELSE
-        /// </summary>
-        internal ModelWrapper() { }
+        public ModelWrapper() { }
 
         public ModelWrapper(Model model)
         {
-            this.model = model;
+            Model = model;
         }
 
         public void SetEffect(Effect effect)
         {
-            foreach (ModelMesh mesh in model.Meshes)
+            foreach (ModelMesh mesh in Model.Meshes)
             {
                 foreach (ModelMeshPart part in mesh.MeshParts)
                 {
@@ -29,7 +26,7 @@ namespace MonoEngine.Assets
 
         public static implicit operator Model(ModelWrapper _model)
         {
-            return _model.model;
+            return _model.Model;
         }
     }
 }
