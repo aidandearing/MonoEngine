@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoEngine.Assets
 {
@@ -11,6 +12,21 @@ namespace MonoEngine.Assets
         public ModelWrapper(Model model)
         {
             Model = model;
+        }
+
+        public Effect[] GetEffect()
+        {
+            List<Effect> effects = new List<Effect>();
+
+            foreach(ModelMesh mesh in Model.Meshes)
+            {
+                foreach(Effect effect in mesh.Effects)
+                {
+                    effects.Add(effect);
+                }
+            }
+
+            return effects.ToArray();
         }
 
         public void SetEffect(Effect effect)

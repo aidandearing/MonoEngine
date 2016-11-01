@@ -100,21 +100,29 @@ namespace TestbedMonogame
 
             GameObject obj = new GameObject("wall");
             ModelRenderer renderer = ModelRenderer.MakeModelRenderer("BasicWall");
-            
+
             // This is a hideous pipeline. How do I make it prettier?
             // Obviously I can default to supplying models with a BasicEffect
             // Do I want to hide Effect behind Materials?
             // There isn't much point to it, besides giving Effect a different name, as far as I can see it.
             // But then how do I best solve this?
             // Okay, back to the beginning
+
             // First, default to giving them a basic effect -> Monogame already does this
             // Second, give them an easier pipeline for getting textures to load. -> Monogame seems to know how to import their textures via fbx
             // Third, how do I give them an easy to use piece of xml that allows them to simply define a material for a model?
-            effect = new BasicEffect(GraphicsHelper.graphicsDevice);
+            // Fourth, how do I connect that material to the model in a simple way?
+
+            // In xml I picture you define a modelrenderer, and give it a model, and material, and off it goes, easy, lol.
+            // In actuality it should be similarly easy.
+            // Effect has Parameter["STRING NAME"].SetValue(SOME VALUE), this shouldn't be hard to unwrap a bit, into some xml.
+
+            // Turns out I need to wrap Effect behind a layer because it doesn't know how to serialise, and I need it to. Time to make a Material class that safely exposes its Effect to the Serialiser
+            effect = renderer.Model.GetEffect()[0] as BasicEffect;
             effect.Texture = Resources.LoadAsset(new Sprite().GetType(), "metal_relief_fancy", SceneManager.activeScene) as Sprite;
             effect.TextureEnabled = true;
             effect.LightingEnabled = true;
-            renderer.Model.SetEffect(effect);
+            //renderer.Model.SetEffect(effect);
 
             obj.AddComponent(renderer);
 
