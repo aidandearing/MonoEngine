@@ -30,8 +30,6 @@ namespace MonoEngine.Assets
             Sprite sprite = new Sprite(texture, texture.Bounds, texture.Bounds, Color.White, 0.0f, Vector2.One, SpriteEffects.None);
             
             return sprite;
-            // add the model into the dictionary
-            return new Sprite(texture, texture.Bounds, texture.Bounds, Color.White, 0.0f, Vector2.One, SpriteEffects.None);
         }
     }
 }

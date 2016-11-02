@@ -55,6 +55,7 @@
     <Compile Include="Assets\LoaderGameObject.cs" />
     <Compile Include="Assets\ResourceManager.cs" />
     <Compile Include="Assets\SceneAssetsPackage.cs" />
+    <Compile Include="Game\EventManager.cs" />
     <Compile Include="Game\Scene.cs" />
     <Compile Include="Game\SceneManager.cs" />
     <Compile Include="Physics\Physics2D\IPhysicsListener2D.cs" />
