@@ -24,6 +24,12 @@ namespace MonoEngine.Assets
         // Here I need to recover Monogame's stupidity, and make sure that my custom serialisation can serialise their unserialisable structs and classes (like Vector3, Matrix, everything, essentially)
         // Which I will do by quietly doing a bunch of work that no one will see, and it will be great.
         // Time to begin
+        // It turned out to be completely okay, mostly simple, and quite delicious.
+
+        /// <summary>
+        /// Pass an object to this, and it will try to put it in the appropriate folder as a .prefab (This means it must be a Resources managed asset)
+        /// </summary>
+        /// <param name="obj">The Object to be serialised</param>
         public static void Serialise(object obj)
         {
             Type type = obj.GetType();
@@ -68,12 +74,14 @@ namespace MonoEngine.Assets
             using (writer = XmlWriter.Create("Content/" + instance.resourceManagers[t].Path + "/" + name + ".prefab", settings))
             {
                 writer.WriteStartDocument();
-                writer.WriteStartElement(type.Name, type.Namespace);
+                writer.WriteStartElement(type.FullName);
 
                 foreach (FieldInfo info in info_fs)
                 {
                     writer.WriteStartElement(info.Name);
                     writer.WriteAttributeString("type", info.FieldType.ToString());
+                    writer.WriteAttributeString("field", "true");
+
                     object val = info.GetValue(obj);
                     if (val == null)
                     {
@@ -81,7 +89,7 @@ namespace MonoEngine.Assets
                     }
                     else
                     {
-                        // Here I need to check if the value is any of the values I need to customly serialise
+                        // Here I need to check if the value is enumeratable, thereby, it needs to be iterated through, unless it is a string (cus, no)
                         if (val is IEnumerable && !(val is string))
                         {
                             foreach(object o in (info.GetValue(obj) as IEnumerable))
@@ -109,12 +117,166 @@ namespace MonoEngine.Assets
                 {
                     writer.WriteStartElement(info.Name);
                     writer.WriteAttributeString("type", info.PropertyType.ToString());
-                    writer.WriteString(info.GetValue(obj).ToString());
+                    writer.WriteAttributeString("field", "false");
+                    
+                    object val = info.GetValue(obj);
+                    if (val == null)
+                    {
+                        writer.WriteString("");
+                    }
+                    else
+                    {
+                        // Here I need to check if the value is enumeratable, thereby, it needs to be iterated through, unless it is a string (cus, no)
+                        if (val is IEnumerable && !(val is string))
+                        {
+                            foreach (object o in (info.GetValue(obj) as IEnumerable))
+                            {
+                                writer.WriteStartElement("ref");
+                                writer.WriteAttributeString("type", o.GetType().ToString());
+                                writer.WriteRaw(o.ToString());
+                                writer.WriteEndElement();
+
+                                if (!o.GetType().IsValueType && o.GetType().IsClass)
+                                {
+                                    Serialise(o);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            writer.WriteRaw(val.ToString());
+                        }
+                    }
                     writer.WriteEndElement();
                 }
 
                 writer.WriteEndElement();
                 writer.WriteEndDocument();
+            }
+        }
+
+        public static object Deserialise(string path)
+        {
+            Type obj_type;
+            object obj = null;
+            FieldInfo[] obj_info_fields = null;
+            PropertyInfo[] obj_info_properties = null;
+
+            using (XmlReader reader = XmlReader.Create(path))
+            {
+                while (reader.Read())
+                {
+                    if (reader.IsStartElement())
+                    {
+                        switch(reader.Name)
+                        {
+                            case "XmlDocument":
+                                // Sweetheart I really don't care.
+                                break;
+                            default:
+                                if (obj == null)
+                                {
+                                    // The object hasn't been made, which means I can assume this element is telling me what it is
+                                    obj_type = Type.GetType(reader.Name);
+                                    obj_info_fields = obj_type.GetFields(BindingFlags.Instance | BindingFlags.Public);
+                                    obj_info_properties = obj_type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+                                    //obj = obj_type.GetConstructor(Type.EmptyTypes).Invoke();
+                                    obj = Activator.CreateInstance(obj_type);
+                                }
+                                else
+                                {
+                                    // The object already exists, use reflection to give it it's values, coming from the element
+                                    // Check if the element is a field, if it isn't then it is a property
+                                    if (bool.Parse(reader["field"]))
+                                    {
+                                        // Go through all the fields to find the one that this element is changing
+                                        foreach (FieldInfo info in obj_info_fields)
+                                        {
+                                            if (info.Name == reader.Name)
+                                            {
+                                                // We found it boys
+                                                // Change its value
+                                                Type field_type = Type.GetType(reader["type"]);
+
+                                                int depth = reader.Depth;
+
+                                                //info.SetValue(obj, reader.Value);
+
+                                                switch (field_type.FullName)
+                                                {
+                                                    case "MonoEngine.Game.GameObject":
+                                                        if (reader.Value != "")
+                                                            info.SetValue(obj, Ref(field_type, reader.Value));
+                                                        else
+                                                            info.SetValue(obj, null);
+                                                        break;
+                                                    default:
+                                                        if (typeof(IEnumerable).IsAssignableFrom(field_type) && !(typeof(string).IsAssignableFrom(field_type)))
+                                                        {
+                                                            while(reader.Read() && reader.Depth > depth)
+                                                            {
+                                                                if (reader.IsStartElement())
+                                                                {
+                                                                    Type enum_type = Type.GetType(reader["type"]);
+                                                                    Type check = new object().GetType();
+                                                                    Type t = enum_type;
+                                                                    Type baseType = t.BaseType;
+                                                                    while (baseType != check)
+                                                                    {
+                                                                        t = enum_type.BaseType;
+                                                                        baseType = t.BaseType;
+                                                                    }
+
+                                                                    reader.Read();
+                                                                    field_type.GetMethod("Add").Invoke(obj, new object[] { Helper_GetValueSafe(t, reader.Value, reader) });
+                                                                }
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            info.SetValue(obj, Convert.ChangeType(reader.Value, field_type));
+                                                        }
+                                                        break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                }
+            }
+
+            return obj;
+        }
+
+        private static object Helper_GetValueSafe(Type info, string value, XmlReader reader)
+        {
+            int depth = reader.Depth;
+
+            switch (info.FullName)
+            {
+                case "MonoEngine.Game.GameObject":
+                    if (value != "")
+                        return Ref(info, value);
+                    else
+                        return null;
+                default:
+                    //if (info is IEnumerable)
+                    //{
+                    //    while (reader.Read() && reader.Depth > depth)
+                    //    {
+                    //        if (reader.IsStartElement())
+                    //        {
+                    //            type.GetMethod("Add").Invoke(obj, );
+                    //        }
+                    //    }
+                    //}
+                    //else
+                    //{
+                        return Convert.ChangeType(value, info);
+                    //}
             }
         }
 
@@ -125,10 +287,16 @@ namespace MonoEngine.Assets
 
             type = Type.GetType(reader["type"], true, true);
 
-            if (reader["name"] != null)
-                return LoadAsset(type, reader["name"], SceneManager.activeScene);
+            if (reader.Value != null)
+                return LoadAsset(type, reader.Value, SceneManager.activeScene);
             else
                 return null;
+        }
+
+        public static object Ref(Type type, string name)
+        {
+            // This will be called whenever a reader has found a <ref> element and should do whatever is appropriate to make that <ref> into an object
+            return LoadAsset(type, name, SceneManager.activeScene);
         }
 
         public static object Find(XmlReader reader)

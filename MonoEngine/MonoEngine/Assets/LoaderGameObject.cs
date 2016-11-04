@@ -23,9 +23,11 @@ namespace MonoEngine.Assets
             //    }
             //}
 
-            XmlReader reader = XmlReader.Create(@"./Content/" + path + "/" + name + ".prefab");
-            System.Xml.Serialization.XmlSerializer cereal = new System.Xml.Serialization.XmlSerializer(asset.GetType());
-            asset = cereal.Deserialize(reader) as GameObject;
+            //XmlReader reader = XmlReader.Create(@"./Content/" + path + "/" + name + ".prefab");
+            //System.Xml.Serialization.XmlSerializer cereal = new System.Xml.Serialization.XmlSerializer(asset.GetType());
+            //asset = cereal.Deserialize(reader) as GameObject;
+
+            asset = Resources.Deserialise(@"./Content/" + path + "/" + name + ".prefab") as GameObject;
 
             if (parent != null)
             {

@@ -12,6 +12,8 @@ namespace MonoEngine.Render
     {
         private ModelWrapper model;
 
+        public ModelRenderer() { }
+
         public ModelRenderer(string name) : base(name)
         {
             model = Resources.LoadAsset(Type.GetType("MonoEngine.Assets.ModelWrapper"), name, SceneManager.activeScene) as ModelWrapper;

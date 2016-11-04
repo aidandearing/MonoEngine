@@ -10,7 +10,7 @@ namespace MonoEngine.Assets
         /// <summary>
         /// NEVER USE THIS, IT IS USED SPECIFICALLY TO GET THE RUNTIME TYPE OF AN INSTANCE OF FONT, AND NOTHING ELSE
         /// </summary>
-        internal ModelWrapper() { }
+        public ModelWrapper() { }
 
         public ModelWrapper(Microsoft.Xna.Framework.Graphics.Model model)
         {

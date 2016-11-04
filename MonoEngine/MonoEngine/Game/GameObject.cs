@@ -40,7 +40,7 @@ namespace MonoEngine.Game
         /// <summary>
         /// This constructor does nothing, and is only used to create instances of GameObjects in order to get their runtime type
         /// </summary>
-        internal GameObject() { }
+        public GameObject() { }
 
         public GameObject(string name)
         {
@@ -232,5 +232,10 @@ namespace MonoEngine.Game
         {
             return Name;
         }
+
+        //public static explicit operator GameObject(string value)
+        //{
+        //    return Resources.Ref(new GameObject().GetType(), value) as GameObject;
+        //}
     }
 }

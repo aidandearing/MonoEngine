@@ -99,6 +99,7 @@ namespace TestbedMonogame
             obj.AddComponent(new Camera("camera"));
 
             Resources.Serialise(obj);
+            object o = Resources.Deserialise("Content/Assets/Objects/wallTest.prefab");
 
             // Binary Serialisation ------------------------------------------------------------------------------------------------------------------------------------------------------------------
             // Tries to serialise the Monogame Matrix, which crashes, this must be occuring in Transform, as it happens with any GameObject, even one with no other objects on it.
