@@ -11,11 +11,113 @@ using MonoEngine.Physics.Physics2D;
 using MonoEngine.Physics.Physics3D;
 using MonoEngine.UI;
 using MonoEngine.Assets;
+using System.Reflection;
+using System.Text;
+using System.Collections;
 
 namespace MonoEngine.Assets
 {
     public class Resources
     {
+        // SERIALISATION -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        // & deserialisation (but don't tell .Net)
+        // Here I need to recover Monogame's stupidity, and make sure that my custom serialisation can serialise their unserialisable structs and classes (like Vector3, Matrix, everything, essentially)
+        // Which I will do by quietly doing a bunch of work that no one will see, and it will be great.
+        // Time to begin
+        public static void Serialise(object obj)
+        {
+            Type type = obj.GetType();
+
+            FieldInfo[] info_fs = type.GetFields(BindingFlags.Instance | BindingFlags.Public);
+            PropertyInfo[] info_ps = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+
+            string name = "";
+
+            foreach (FieldInfo info in info_fs)
+            {
+                if (info.Name.ToLower() == "name")
+                {
+                    name = info.GetValue(obj) as string;
+                }
+            }
+
+            foreach (PropertyInfo info in info_ps)
+            {
+                if (info.Name.ToLower() == "name")
+                {
+                    name = info.GetValue(obj) as string;
+                }
+            }
+
+            Type check = new object().GetType();
+            Type t = type;
+            Type baseType = t.BaseType;
+            while (baseType != check)
+            {
+                t = type.BaseType;
+                baseType = t.BaseType;
+            }
+
+            XmlWriter writer;
+            XmlWriterSettings settings = new XmlWriterSettings()
+            {
+                Indent = true,
+                IndentChars = "\t",
+            };
+
+            using (writer = XmlWriter.Create("Content/" + instance.resourceManagers[t].Path + "/" + name + ".prefab", settings))
+            {
+                writer.WriteStartDocument();
+                writer.WriteStartElement(type.Name, type.Namespace);
+
+                foreach (FieldInfo info in info_fs)
+                {
+                    writer.WriteStartElement(info.Name);
+                    writer.WriteAttributeString("type", info.FieldType.ToString());
+                    object val = info.GetValue(obj);
+                    if (val == null)
+                    {
+                        writer.WriteString("");
+                    }
+                    else
+                    {
+                        // Here I need to check if the value is any of the values I need to customly serialise
+                        if (val is IEnumerable && !(val is string))
+                        {
+                            foreach(object o in (info.GetValue(obj) as IEnumerable))
+                            {
+                                writer.WriteStartElement("ref");
+                                writer.WriteAttributeString("type", o.GetType().ToString());
+                                writer.WriteRaw(o.ToString());
+                                writer.WriteEndElement();
+
+                                if (!o.GetType().IsValueType && o.GetType().IsClass)
+                                {
+                                    Serialise(o);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            writer.WriteRaw(val.ToString());
+                        }
+                    }
+                    writer.WriteEndElement();
+                }
+
+                foreach (PropertyInfo info in info_ps)
+                {
+                    writer.WriteStartElement(info.Name);
+                    writer.WriteAttributeString("type", info.PropertyType.ToString());
+                    writer.WriteString(info.GetValue(obj).ToString());
+                    writer.WriteEndElement();
+                }
+
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+            }
+        }
+
         public static object Ref(XmlReader reader)
         {
             // This will be called whenever a reader has found a <ref> element and should do whatever is appropriate to make that <ref> into an object

@@ -134,11 +134,10 @@ namespace MonoEngine.Shapes
 
             foreach (Vector3 point in points)
             {
-                self += "\n\t<Vector3>\n" +
-                "\t\t<x>" + point.X + "</x>\n" +
-                "\t\t<y>" + point.Y + "</y>\n" +
-                "\t\t<z>" + point.Z + "</z>\n" +
-                "\t</Vector3>\n";
+                self += 
+                    "<Vector3>" +
+                    point.ToString() +
+                    "</Vector3>";
             }
 
             return self;

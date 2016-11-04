@@ -4,10 +4,10 @@ using System.Reflection;
 using System.Xml;
 using MonoEngine.Assets;
 using MonoEngine.Shapes;
+using System.Runtime.Serialization;
 
 namespace MonoEngine.Game
 {
-    [Serializable]
     public class GameObject
     {
         /// <summary>
@@ -20,7 +20,7 @@ namespace MonoEngine.Game
         /// This is the list of all components this GameObject has
         /// Components are where GameObjects get their behaviours
         /// </summary>
-        private List<GameObject> components;
+        public List<GameObject> components;
 
         /// <summary>
         /// Adds a component to the GameObject
@@ -227,9 +227,10 @@ namespace MonoEngine.Game
             }
         }
 
-        //public override string ToString()
-        //{
-        //    return Name;
-        //}
+        // SERIALISATION -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

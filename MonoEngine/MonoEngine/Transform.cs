@@ -2,11 +2,13 @@
 using System.Xml;
 using Microsoft.Xna.Framework;
 using MonoEngine.Assets;
+using System.Runtime.Serialization;
+using System.Reflection;
 
 namespace MonoEngine
 {
     [Serializable]
-    public class Transform
+    public class Transform : ISerializable
     {
         public Transform parent;
 
@@ -182,6 +184,36 @@ namespace MonoEngine
         public void PureRotate(Vector3 axis, float angle)
         {
             transformation *= Matrix.CreateFromAxisAngle(axis, angle);
+        }
+
+        // SERIALISATION -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        // The special constructor is used to deserialize values.
+        public Transform(SerializationInfo info, StreamingContext context)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    transformation[i, j] = info.GetSingle("M" + (i + 1) + "" + (j + 1));
+                }
+            }
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    info.AddValue("M" + (i + 1) + "" + (j + 1), transformation[i, j]);
+                }
+            }
+        }
+
+        public override string ToString()
+        {
+            return transformation.ToString();
         }
     }
 }

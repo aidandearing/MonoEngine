@@ -9,6 +9,9 @@ using MonoEngine.Physics;
 using MonoEngine.Physics.Physics2D;
 using MonoEngine.Render;
 using MonoEngine.Shapes;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace TestbedMonogame
 {
@@ -92,19 +95,37 @@ namespace TestbedMonogame
             GameObject obj = new GameObject("wallTest");
             obj.AddComponent(ModelRenderer.MakeModelRenderer("BasicWall"));
             PhysicsBody2D body = new PhysicsBody2D(obj, "wall", new AABB(obj.transform, 1, 1), new PhysicsMaterial(1,0,1), PhysicsEngine.BodyType.SIMPLE);
-            //obj.AddComponent(body);
+            obj.AddComponent(body);
             obj.AddComponent(new Camera("camera"));
 
-            System.Xml.Serialization.XmlSerializer cereal = new System.Xml.Serialization.XmlSerializer(body.GetType());
-            System.Xml.XmlWriterSettings settings = new System.Xml.XmlWriterSettings()
-            {
-                Indent = true,
-                IndentChars = "\t",
-                NewLineOnAttributes = true
-            };
-            System.Xml.XmlWriter righter = System.Xml.XmlWriter.Create(@"./Content/Assets/Objects/" + body.Name + ".prefab", settings);
-            cereal.Serialize(righter, body);
+            Resources.Serialise(obj);
 
+            // Binary Serialisation ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            // Tries to serialise the Monogame Matrix, which crashes, this must be occuring in Transform, as it happens with any GameObject, even one with no other objects on it.
+            //IFormatter formatter = new BinaryFormatter();
+            //Stream stream = new FileStream("Content/Assets/Objects/" + obj.Name + ".bin", FileMode.Create, FileAccess.Write, FileShare.None);
+            //formatter.Serialize(stream, obj);
+            //stream.Close();
+
+            //stream = new FileStream("Content/Assets/Objects/" + obj.Name + ".bin", FileMode.Open);
+            //GameObject obj2 = formatter.Deserialize(stream) as GameObject;
+            //stream.Close();
+
+            // XML Serialisation ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            // Throws an arbitrary exception, that tells me serialisation failed, in the XML library, so I have nothing to go on.
+            // This serialiser is also not extensable, as it requires attributing every public field in order to communicate how they are going to be serialised 
+            // (which people writing new ones won't be doing by default, so kill it and kill it fast)
+            //System.Xml.Serialization.XmlSerializer cereal = new System.Xml.Serialization.XmlSerializer(body.GetType());
+            //System.Xml.XmlWriterSettings settings = new System.Xml.XmlWriterSettings()
+            //{
+            //    Indent = true,
+            //    IndentChars = "\t",
+            //    NewLineOnAttributes = true
+            //};
+            //System.Xml.XmlWriter righter = System.Xml.XmlWriter.Create(@"./Content/Assets/Objects/" + body.Name + ".prefab", settings);
+            //cereal.Serialize(righter, body);
+
+            // Standard Stuff ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
             //GameObjectManager.AddGameObject(obj);
 
             ////obj = new GameObject("floor");
@@ -128,6 +149,8 @@ namespace TestbedMonogame
 
             //GameObjectManager.AddGameObject(obj);
 
+            // My flavour of Serialisation -----------------------------------------------------------------------------------------------------------------------------------------------------------
+            // The old one, it is nasty
             //obj.LoadToXML();
 
             //// Testing whether xml to transform works.
