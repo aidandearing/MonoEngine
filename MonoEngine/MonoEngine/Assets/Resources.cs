@@ -75,6 +75,7 @@ namespace MonoEngine.Assets
             {
                 writer.WriteStartDocument();
                 writer.WriteStartElement(type.FullName);
+                writer.WriteAttributeString("name", name);
 
                 foreach (FieldInfo info in info_fs)
                 {
@@ -92,7 +93,7 @@ namespace MonoEngine.Assets
                         // Here I need to check if the value is enumeratable, thereby, it needs to be iterated through, unless it is a string (cus, no)
                         if (val is IEnumerable && !(val is string))
                         {
-                            foreach(object o in (info.GetValue(obj) as IEnumerable))
+                            foreach (object o in (info.GetValue(obj) as IEnumerable))
                             {
                                 writer.WriteStartElement("ref");
                                 writer.WriteAttributeString("type", o.GetType().ToString());
@@ -118,7 +119,7 @@ namespace MonoEngine.Assets
                     writer.WriteStartElement(info.Name);
                     writer.WriteAttributeString("type", info.PropertyType.ToString());
                     writer.WriteAttributeString("field", "false");
-                    
+
                     object val = info.GetValue(obj);
                     if (val == null)
                     {
@@ -157,7 +158,7 @@ namespace MonoEngine.Assets
 
         public static object Deserialise(string path)
         {
-            Type obj_type;
+            Type obj_type = null;
             object obj = null;
             FieldInfo[] obj_info_fields = null;
             PropertyInfo[] obj_info_properties = null;
@@ -168,7 +169,7 @@ namespace MonoEngine.Assets
                 {
                     if (reader.IsStartElement())
                     {
-                        switch(reader.Name)
+                        switch (reader.Name)
                         {
                             case "XmlDocument":
                                 // Sweetheart I really don't care.
@@ -182,6 +183,16 @@ namespace MonoEngine.Assets
                                     obj_info_properties = obj_type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
                                     //obj = obj_type.GetConstructor(Type.EmptyTypes).Invoke();
                                     obj = Activator.CreateInstance(obj_type);
+
+                                    Type check = new object().GetType();
+                                    Type t = obj_type;
+                                    Type baseType = t.BaseType;
+                                    while (baseType != check)
+                                    {
+                                        t = t.BaseType;
+                                        baseType = t.BaseType;
+                                    }
+                                    instance.resourceManagers[t].AddResource(reader["name"], obj);
                                 }
                                 else
                                 {
@@ -199,8 +210,9 @@ namespace MonoEngine.Assets
                                                 Type field_type = Type.GetType(reader["type"]);
 
                                                 int depth = reader.Depth;
+                                                int depth_two = reader.Depth;
 
-                                                //info.SetValue(obj, reader.Value);
+                                                reader.Read();
 
                                                 switch (field_type.FullName)
                                                 {
@@ -210,10 +222,90 @@ namespace MonoEngine.Assets
                                                         else
                                                             info.SetValue(obj, null);
                                                         break;
+                                                    case "MonoEngine.Physics.PhysicsMaterial":
+                                                        // I need to make a physics material here
+                                                        PhysicsMaterial mat = new PhysicsMaterial();
+                                                        depth_two = reader.Depth;
+                                                        while (reader.Depth >= depth_two)
+                                                        {
+                                                            if (reader.IsStartElement())
+                                                            {
+                                                                switch (reader.Name)
+                                                                {
+                                                                    case "Density":
+                                                                        //Density
+                                                                        reader.Read();
+                                                                        mat.Density = float.Parse(reader.Value);
+                                                                        break;
+                                                                    case "Friction":
+                                                                        //Friction
+                                                                        reader.Read();
+                                                                        mat.Friction = float.Parse(reader.Value);
+                                                                        break;
+                                                                    case "Restitution":
+                                                                        //Restitution
+                                                                        reader.Read();
+                                                                        mat.Restitution = float.Parse(reader.Value);
+                                                                        break;
+                                                                }
+                                                            }
+
+                                                            reader.Read();
+                                                        }
+
+                                                        break;
+                                                    case "MonoEngine.Transform":
+                                                        // {M11:1 M12:0 M13:0 M14:0} {M21:0 M22:1 M23:0 M24:0} {M31:0 M32:0 M33:1 M34:0} {M41:0 M42:0 M43:0 M44:1}
+                                                        string cleanString = reader.Value;
+                                                        cleanString = cleanString.Replace("{", "");
+                                                        cleanString = cleanString.Replace("}", "");
+                                                        // M11:1 M12:0 M13:0 M14:0} {M21:0 M22:1 M23:0 M24:0} {M31:0 M32:0 M33:1 M34:0} {M41:0 M42:0 M43:0 M44:1
+                                                        for (int i = 0; i < 4; i++)
+                                                        {
+                                                            for (int j = 0; j < 4; j++)
+                                                            {
+                                                                cleanString = cleanString.Replace("M" + (i + 1).ToString() + (j + 1).ToString() + ":", "");
+                                                            }
+                                                        }
+                                                        // 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+                                                        // 1   0   0   0   0   1   0   0   0   0   1   0   0   0   0   1
+                                                        // M11 M12 M13 M14 M21 M22 M23 M24 M31 M32 M33 M34 M41 M42 M43 M44
+                                                        // [0] [1] [2] [3] [4] [5] [6] [7] [8] [9] [10][11][12][13][14][15]
+                                                        string[] vals = cleanString.Split(' ');
+                                                        // Well this looks ridiculous
+                                                        info.SetValue(obj, new Transform(new Matrix(float.Parse(vals[0]), float.Parse(vals[1]), float.Parse(vals[2]), float.Parse(vals[3]),
+                                                                    float.Parse(vals[4]), float.Parse(vals[5]), float.Parse(vals[6]), float.Parse(vals[7]),
+                                                                    float.Parse(vals[8]), float.Parse(vals[9]), float.Parse(vals[10]), float.Parse(vals[11]),
+                                                                    float.Parse(vals[12]), float.Parse(vals[13]), float.Parse(vals[14]), float.Parse(vals[15]))));
+                                                        break;
+                                                    case "MonoEngine.Shapes.Shape":
+                                                        List<Vector3> vectors = new List<Vector3>();
+                                                        depth_two = reader.Depth;
+                                                        while (reader.Depth >= depth_two)
+                                                        {
+                                                            if (reader.IsStartElement())
+                                                            {
+                                                                switch (reader.Name)
+                                                                {
+                                                                    case "Vector3":
+                                                                        vectors.Add(Helper_Vector3FromXmlReader(reader));
+                                                                        break;
+                                                                }
+                                                            }
+
+                                                            reader.Read();
+                                                        }
+                                                        // Circle
+                                                        if (vectors.Count == 1)
+                                                            info.SetValue(obj, new Shapes.Circle(obj_type.GetField("transform", BindingFlags.Public | BindingFlags.Instance).GetValue(obj) as Transform, vectors[0]));
+                                                        // AABB
+                                                        else
+                                                            info.SetValue(obj, new Shapes.AABB(obj_type.GetField("transform", BindingFlags.Public | BindingFlags.Instance).GetValue(obj) as Transform, vectors[0], vectors[1]));
+                                                        break;
                                                     default:
                                                         if (typeof(IEnumerable).IsAssignableFrom(field_type) && !(typeof(string).IsAssignableFrom(field_type)))
                                                         {
-                                                            while(reader.Read() && reader.Depth > depth)
+                                                            while (reader.Read() && reader.Depth > depth)
                                                             {
                                                                 if (reader.IsStartElement())
                                                                 {
@@ -223,14 +315,20 @@ namespace MonoEngine.Assets
                                                                     Type baseType = t.BaseType;
                                                                     while (baseType != check)
                                                                     {
-                                                                        t = enum_type.BaseType;
+                                                                        t = t.BaseType;
                                                                         baseType = t.BaseType;
                                                                     }
 
                                                                     reader.Read();
-                                                                    field_type.GetMethod("Add").Invoke(obj, new object[] { Helper_GetValueSafe(t, reader.Value, reader) });
+                                                                    info.SetValue(obj, Activator.CreateInstance(field_type));
+                                                                    field_type.GetMethod("Add").Invoke(info.GetValue(obj), new object[] { Helper_GetValueSafe(t, reader.Value, reader) });
                                                                 }
                                                             }
+                                                        }
+                                                        else if (typeof(Enum).IsAssignableFrom(field_type))
+                                                        {
+                                                            Type enum_type = Type.GetType(field_type.FullName);
+                                                            info.SetValue(obj, Enum.Parse(enum_type, reader.Value));
                                                         }
                                                         else
                                                         {
@@ -275,9 +373,64 @@ namespace MonoEngine.Assets
                     //}
                     //else
                     //{
-                        return Convert.ChangeType(value, info);
+                    return Convert.ChangeType(value, info);
                     //}
             }
+        }
+
+        private static Vector3 Helper_Vector3FromXmlReader(XmlReader reader)
+        {
+            Vector3 v = Vector3.Zero;
+
+            reader.Read();
+
+            //{X:-0.5 Y:0 Z:-0.5}
+            string cleanString = reader.Value;
+            //X:-0.5 Y:0 Z:-0.5}
+            cleanString = cleanString.Replace("{", "");
+            //X:-0.5 Y:0 Z:-0.5
+            cleanString = cleanString.Replace("}", "");
+            //-0.5 Y:0 Z:-0.5
+            cleanString = cleanString.Replace("X:", "");
+            //-0.5 0 Z:-0.5
+            cleanString = cleanString.Replace("Y:", "");
+            //-0.5 0 -0.5
+            cleanString = cleanString.Replace("Z:", "");
+            //-0.5 0 -0.5
+            //-0.5  0 -0.5
+            //  X   Y   Z
+            // [0] [1] [2]
+            string[] vals = cleanString.Split(' ');
+
+            v = new Vector3(float.Parse(vals[0]), float.Parse(vals[1]), float.Parse(vals[2]));
+
+            return v;
+        }
+
+        private static Matrix Helper_MatrixFromXmlReader(XmlReader reader)
+        {
+            // {M11:1 M12:0 M13:0 M14:0} {M21:0 M22:1 M23:0 M24:0} {M31:0 M32:0 M33:1 M34:0} {M41:0 M42:0 M43:0 M44:1}
+            string cleanString = reader.Value;
+            cleanString = cleanString.Replace("{", "");
+            cleanString = cleanString.Replace("}", "");
+            // M11:1 M12:0 M13:0 M14:0} {M21:0 M22:1 M23:0 M24:0} {M31:0 M32:0 M33:1 M34:0} {M41:0 M42:0 M43:0 M44:1
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    cleanString = cleanString.Replace("M" + (i + 1).ToString() + (j + 1).ToString() + ":", "");
+                }
+            }
+            // 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+            // 1   0   0   0   0   1   0   0   0   0   1   0   0   0   0   1
+            // M11 M12 M13 M14 M21 M22 M23 M24 M31 M32 M33 M34 M41 M42 M43 M44
+            // [0] [1] [2] [3] [4] [5] [6] [7] [8] [9] [10][11][12][13][14][15]
+            string[] vals = cleanString.Split(' ');
+            // Well this looks ridiculous
+            return new Matrix(float.Parse(vals[0]), float.Parse(vals[1]), float.Parse(vals[2]), float.Parse(vals[3]),
+                float.Parse(vals[4]), float.Parse(vals[5]), float.Parse(vals[6]), float.Parse(vals[7]),
+                float.Parse(vals[8]), float.Parse(vals[9]), float.Parse(vals[10]), float.Parse(vals[11]),
+                float.Parse(vals[12]), float.Parse(vals[13]), float.Parse(vals[14]), float.Parse(vals[15]));
         }
 
         public static object Ref(XmlReader reader)
@@ -315,7 +468,7 @@ namespace MonoEngine.Assets
 
         public static object Make(XmlReader reader)
         {
-            
+
 
             return null;
         }
@@ -378,7 +531,10 @@ namespace MonoEngine.Assets
             {
                 object asset = manager.Loader.LoadAsset(manager.Path, name, parent);
 
-                instance.resourceManagers[type].AddResource(name, asset);
+                // Deserialisation needs to add objects itself, sometimes, to avoid StackOverflow, and so sometimes
+                // after LoadAsset (which can cause deserialisation) it needs to verify again if the object truly still isn't in the dictionary
+                if (!manager.ContainsResource(name))
+                    instance.resourceManagers[type].AddResource(name, asset);
 
                 return asset;
             }
@@ -386,7 +542,7 @@ namespace MonoEngine.Assets
 
         public static RenderTarget2DWrapper GetRenderTarget2D(string name)
         {
-            
+
             if (instance.resourceManager_renderTarget2D.ContainsResource(name))
             {
                 return instance.resourceManager_renderTarget2D.GetResource(name) as RenderTarget2DWrapper;
@@ -447,7 +603,7 @@ namespace MonoEngine.Assets
                 }
             }
         }
-        
+
         public static void AddResourceManager(string path, Type type, ResourceManagerLoader loader)
         {
             if (!instance.resourceManagers.ContainsKey(type))

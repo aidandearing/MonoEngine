@@ -15,6 +15,12 @@ namespace MonoEngine.Shapes
             points[0] = new Vector3(0, 0, radius);
         }
 
+        public Circle(Transform transform, Vector3 point) : base(transform)
+        {
+            points = new Vector3[1];
+            points[0] = new Vector3(point.X, point.Y, point.Z);
+        }
+
         public override ShapeIntersection[] Intersects(Shape shape)
         {
             // Circle Intersect logic

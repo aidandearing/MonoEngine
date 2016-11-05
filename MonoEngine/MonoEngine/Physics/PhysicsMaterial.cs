@@ -64,5 +64,16 @@ namespace MonoEngine.Physics
             f = friction;
             r = restitution;
         }
+
+        public override string ToString()
+        {
+            string self = "";
+
+            self += "<Density>" + d.ToString() + "</Density>";
+            self += "<Friction>" + d.ToString() + "</Friction>";
+            self += "<Restitution>" + d.ToString() + "</Restitution>";
+
+            return self;
+        }
     }
 }

@@ -22,6 +22,16 @@ namespace MonoEngine.Shapes
             diagonal = points[0].Length();
         }
 
+        public AABB(Transform transform, Vector3 min, Vector3 max) : base(transform)
+        {
+            points = new Vector3[2];
+            points[0] = new Vector3(min.X, min.Y, min.Z);
+            points[1] = new Vector3(max.X, max.Y, max.Z);
+
+            dimensions = new Vector3(max.X - min.X, max.Y - min.Y, max.Z - min.Z);
+            diagonal = points[0].Length();
+        }
+
         public override ShapeIntersection[] Intersects(Shape shape)
         {
             // AABB Intersect logic

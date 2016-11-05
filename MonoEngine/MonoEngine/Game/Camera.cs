@@ -10,6 +10,8 @@ namespace MonoEngine.Game
         // TODO A variety of safer static methods to handle main camera and other camera based stuff
         public static Camera MainCamera;
 
+        public Camera() { }
+
         public Camera(string name) : base(name)
         {
             // Isometric stuff
