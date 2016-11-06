@@ -178,11 +178,42 @@ namespace MonoEngine.Physics.Physics2D
             }
         }
 
-        public PhysicsBody2D() { }
+        public PhysicsBody2D()
+        {
+            material = PhysicsEngine.PhysicsSettings.DEFAULT_MATERIAL;
+            shape = PhysicsEngine.PhysicsSettings.DEFAULT_SHAPE;
+            bodyFlag = PhysicsEngine.BodyType.STATIC;
+
+            collisionCallbacks = new List<Collision2D.OnCollision>();
+            collisions = new List<Collision2D>();
+            collisions_dead = new List<Collision2D>();
+
+            chunks = new List<PhysicsBoundingChunk2D>();
+
+            // Set up some defaults, to ensure nothing goes horribly wrong
+            Height = PhysicsEngine.PhysicsSettings.DEFAULT_BODY2D_HEIGHT;
+
+            PhysicsEngine.AddPhysicsBody(this);
+        }
 
         public PhysicsBody2D(string name) : base(name)
         {
             bodyFlag = PhysicsEngine.BodyType.STATIC;
+
+            material = PhysicsEngine.PhysicsSettings.DEFAULT_MATERIAL;
+            shape = PhysicsEngine.PhysicsSettings.DEFAULT_SHAPE;
+            bodyFlag = PhysicsEngine.BodyType.STATIC;
+
+            collisionCallbacks = new List<Collision2D.OnCollision>();
+            collisions = new List<Collision2D>();
+            collisions_dead = new List<Collision2D>();
+
+            chunks = new List<PhysicsBoundingChunk2D>();
+
+            // Set up some defaults, to ensure nothing goes horribly wrong
+            Height = PhysicsEngine.PhysicsSettings.DEFAULT_BODY2D_HEIGHT;
+
+            PhysicsEngine.AddPhysicsBody(this);
         }
 
         public PhysicsBody2D(GameObject parent, string name, Shape shape, PhysicsMaterial material, PhysicsEngine.BodyType bodyType) : base(name)

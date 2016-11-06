@@ -40,6 +40,9 @@ namespace MonoEngine.Physics
             public static float DEFAULT_MATERIAL_FRICTION = 0.0f;
             public static float DEFAULT_MATERIAL_RESTITUTION = 0.0f;
             public static float DEFAULT_MATERIAL_DENSITY = 1.0f;
+
+            public static PhysicsMaterial DEFAULT_MATERIAL = new PhysicsMaterial();
+            public static Shapes.AABB DEFAULT_SHAPE = new Shapes.AABB(null, 1, 1);
         }
 
         public enum EngineTypes { Physics2D = 0x01, Physics3D = 0x02 };

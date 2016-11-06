@@ -32,6 +32,11 @@ namespace MonoEngine.Game
         public static void RemoveGameObject(GameObject obj)
         {
             instance.gameObjectsDead.Add(obj);
+
+            foreach(GameObject comp in obj.components)
+            {
+                instance.gameObjectsDead.Add(comp);
+            }
         }
 
         public override void Initialize()

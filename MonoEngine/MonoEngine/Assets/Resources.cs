@@ -192,6 +192,23 @@ namespace MonoEngine.Assets
                                         t = t.BaseType;
                                         baseType = t.BaseType;
                                     }
+
+                                    foreach (FieldInfo info in obj_info_fields)
+                                    {
+                                        if (info.Name.ToLower() == "name")
+                                        {
+                                            info.SetValue(obj, reader["name"]);
+                                        }
+                                    }
+
+                                    foreach (PropertyInfo info in obj_info_properties)
+                                    {
+                                        if (info.Name.ToLower() == "name")
+                                        {
+                                            info.SetValue(obj, reader["name"]);
+                                        }
+                                    }
+
                                     instance.resourceManagers[t].AddResource(reader["name"], obj);
                                 }
                                 else
@@ -320,8 +337,12 @@ namespace MonoEngine.Assets
                                                                     }
 
                                                                     reader.Read();
-                                                                    info.SetValue(obj, Activator.CreateInstance(field_type));
-                                                                    field_type.GetMethod("Add").Invoke(info.GetValue(obj), new object[] { Helper_GetValueSafe(t, reader.Value, reader) });
+
+                                                                    if (info.GetValue(obj) == null)
+                                                                        info.SetValue(obj, Activator.CreateInstance(field_type));
+
+                                                                    obj.GetType().GetMethod("AddComponent").Invoke(obj, new object[] { Helper_GetValueSafe(t, reader.Value, reader) });
+                                                                    //field_type.GetMethod("Add").Invoke(info.GetValue(obj), new object[] { Helper_GetValueSafe(t, reader.Value, reader) });
                                                                 }
                                                             }
                                                         }
