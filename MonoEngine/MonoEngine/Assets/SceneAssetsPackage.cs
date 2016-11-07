@@ -15,12 +15,16 @@ namespace MonoEngine.Assets
 
         public Scene parent;
 
-        internal SceneAssetsPackage()
-        { }
+        public SceneAssetsPackage()
+        {
+            assets = new Dictionary<Type, List<string>>();
+        }
 
         public SceneAssetsPackage(Scene parent)
         {
             this.parent = parent;
+
+            assets = new Dictionary<Type, List<string>>();
         }
 
         public void AddAsset(string name, Type type)

@@ -11,40 +11,32 @@ namespace MonoEngine.Assets
 {
     public class Sprite
     {
-        public Vector2 origin { get; set; }
-        public Texture2D texture { get; set; }
-        public Rectangle destinationRect { get; set; }
-        public Rectangle sourceRect { get; set; }
-        public Color color { get; set; }
-        public SpriteEffects spriteEffects { get; set; }
-        public float rotation { get; set; }
-        public Vector2 scale { get; set; }
+        public Vector2 Origin { get; set; }
+        public Texture2D Texture { get; set; }
+        public Rectangle DestinationRect { get; set; }
+        public Rectangle SourceRect { get; set; }
+        public Color Colour { get; set; }
+        public SpriteEffects SpriteEffect { get; set; }
+        public float Rotation { get; set; }
+        public Vector2 Scale { get; set; }
 
-        /// <summary>
-        /// NEVER USE THIS, IT IS USED SPECIFICALLY TO GET THE RUNTIME TYPE OF AN INSTANCE OF FONT, AND NOTHING ELSE
-        /// </summary>
         public Sprite() { }
 
-        public Sprite(Texture2D texture, Rectangle destinationRect, Rectangle sourceRect, Color color, float rotation, Vector2 scale, SpriteEffects spriteEffects)
+        public Sprite(Texture2D texture, Rectangle destinationRect, Rectangle sourceRect, Color colour, float rotation, Vector2 scale, SpriteEffects spriteEffects)
         {
-            this.texture = texture;
-            this.destinationRect = destinationRect;
-            this.sourceRect = sourceRect;
-            this.color = color;
-            this.rotation = rotation;
-            this.scale = scale;
-            this.spriteEffects = spriteEffects;
-            origin = new Vector2(destinationRect.Center.X, destinationRect.Center.Y);
+            Texture = texture;
+            DestinationRect = destinationRect;
+            SourceRect = sourceRect;
+            Colour = colour;
+            Rotation = rotation;
+            Scale = scale;
+            SpriteEffect = spriteEffects;
+            Origin = new Vector2(DestinationRect.Center.X, DestinationRect.Center.Y);
         }
+
         public static implicit operator Texture2D(Sprite _texture)
         {
-            return _texture.texture;
+            return _texture.Texture;
         }
-        public Sprite(XmlReader reader)
-        {
-
-        }
-
-
     }
 }

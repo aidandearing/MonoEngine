@@ -297,9 +297,7 @@ namespace MonoEngine.Physics.Physics2D
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            Console.WriteLine(Time.DeltaTime);
-            Console.WriteLine(bounds.Count);
+           
 
             foreach (PhysicsBody2D body in bodies_Active)
             {

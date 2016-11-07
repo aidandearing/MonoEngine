@@ -34,12 +34,12 @@ namespace MonoEngine.Render
 
         public void Draw()
         {
-            GraphicsHelper.spriteBatch.Draw(sprite.texture, null, sprite.destinationRect, sprite.sourceRect, sprite.origin, sprite.rotation, sprite.scale, sprite.color, sprite.spriteEffects, 0.0f);
+            GraphicsHelper.spriteBatch.Draw(sprite.Texture, null, sprite.DestinationRect, sprite.SourceRect, sprite.Origin, sprite.Rotation, sprite.Scale, sprite.Colour, sprite.SpriteEffect, 0.0f);
         }
 
-        public static SpriteRenderer MakeSpriteRenderer(string name, string asset)
+        public static SpriteRenderer MakeSpriteRenderer(string name, string asset, string targetName = null)
         {
-            return new SpriteRenderer(name, Resources.LoadAsset(new Sprite().GetType(), asset, SceneManager.activeScene) as Sprite);
+            return new SpriteRenderer(name, Resources.LoadAsset(new Sprite().GetType(), asset, SceneManager.activeScene) as Sprite, targetName);
         }
     }
 }

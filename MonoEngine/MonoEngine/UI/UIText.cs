@@ -26,16 +26,16 @@ namespace MonoEngine.UI
             }
         }
         
-        public UIText(string name, UIAlignment boundsAlign, UIAlignment alignment, flags flag, string fontName, string text, int fontSize) : base(name, boundsAlign, alignment, flag)
+        public UIText(string name, UIAlignment boundsAlign, UIAlignment alignment, flags flag, string fontName, string text, int fontSize, string targetName = null) : base(name, boundsAlign, alignment, flag)
         {
-            textRenderer = TextRenderer.MakeTextRenderer(name, fontName);
+            textRenderer = TextRenderer.MakeTextRenderer(name, fontName, targetName);
             textRenderer.Size = fontSize;
             textRenderer.Text = text;
-            textRenderer.Font = Resources.LoadAsset(new Font().GetType(), fontName, SceneManager.activeScene) as Font;
+            //textRenderer.Font = Resources.LoadAsset(new Font().GetType(), fontName, SceneManager.activeScene) as Font;
 
             //get the width and height of the string being drawn
-            bounds.Width = (int)textRenderer.Font.GetFont(fontSize).MeasureString(text).X;
-            bounds.Height = (int)textRenderer.Font.GetFont(fontSize).MeasureString(text).Y;
+            bounds.Width = (int)((float)textRenderer.Font.GetFont(fontSize).MeasureString(text).X * (float)fontSize / (float)textRenderer.Font.GetSize(fontSize));
+            bounds.Height = (int)((float)textRenderer.Font.GetFont(fontSize).MeasureString(text).Y * (float)fontSize / (float)textRenderer.Font.GetSize(fontSize));
 
             Vector2 boundsAlignment = boundsAlign.GetAlignment(this, parent);
             bounds.X = (int)boundsAlignment.X;
