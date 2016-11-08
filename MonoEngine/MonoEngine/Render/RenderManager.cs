@@ -42,15 +42,15 @@ namespace MonoEngine.Render
 
             isInit = true;
 
-            Resources.LoadRenderTarget2D("default", SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, true, SurfaceFormat.Color, DepthFormat.Depth16, 0, RenderTargetUsage.DiscardContents);
+            Resources.LoadRenderTarget2D("default", SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, true, SurfaceFormat.Color, DepthFormat.Depth16, 0, RenderTargetUsage.DiscardContents, new RenderTargetSettings());
 
-            Resources.LoadRenderTarget2D("UI", SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents);
+            Resources.LoadRenderTarget2D("UI", SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents, new RenderTargetSettings());
 
-            Resources.LoadRenderTarget2D("screen", SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, true, SurfaceFormat.Color, DepthFormat.Depth16, 0, RenderTargetUsage.DiscardContents);
+            Resources.LoadRenderTarget2D("screen", SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, true, SurfaceFormat.Color, DepthFormat.Depth16, 0, RenderTargetUsage.DiscardContents, new RenderTargetSettings());
 
-            RenderTargetRenderer.MakeRenderTargetRenderer("default", new RenderTargetRenderer.Settings(), 0);
+            RenderTargetRenderer.MakeRenderTargetRenderer("default", new RenderTargetSettings(), 0);
 
-            RenderTargetRenderer.MakeRenderTargetRenderer("UI", new RenderTargetRenderer.Settings(), 10);
+            RenderTargetRenderer.MakeRenderTargetRenderer("UI", new RenderTargetSettings(), 10);
         }
 
         public static RenderTargetBatch RegisterDrawCallback(string name, RenderTargetBatch.DrawCallback callback)

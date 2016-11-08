@@ -69,6 +69,7 @@
     <Compile Include="Render\RenderManager.cs" />
     <Compile Include="Render\RenderTargetBatch.cs" />
     <Compile Include="Render\RenderTargetRenderer.cs" />
+    <Compile Include="Render\RenderTargetSettings.cs" />
     <Compile Include="Render\SpriteRenderer.cs" />
     <Compile Include="Render\TextRenderer.cs" />
     <Compile Include="Assets\Resources.cs" />

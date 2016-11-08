@@ -34,7 +34,7 @@ namespace MonoEngine.Render
 
         public void Draw()
         {
-            GraphicsHelper.spriteBatch.Draw(sprite.Texture, null, sprite.DestinationRect, sprite.SourceRect, sprite.Origin, sprite.Rotation, sprite.Scale, sprite.Colour, sprite.SpriteEffect, 0.0f);
+            GraphicsHelper.spriteBatch.Draw(sprite.Texture, null, sprite.DestinationRect, sprite.SourceRect, sprite.Origin, sprite.Rotation, sprite.Scale, sprite.Colour * (sprite.Colour.A / 255.0f), sprite.SpriteEffect, 0.0f);
         }
 
         public static SpriteRenderer MakeSpriteRenderer(string name, string asset, string targetName = null)

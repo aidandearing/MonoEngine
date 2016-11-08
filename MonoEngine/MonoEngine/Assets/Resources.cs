@@ -125,7 +125,7 @@ namespace MonoEngine.Assets
             }
         }
 
-        public static RenderTarget2DWrapper LoadRenderTarget2D(string name, Scene parent, int width, int height, bool mipMap, SurfaceFormat surfaceFormat, DepthFormat depthFormat, int multiSampleCount, RenderTargetUsage usage)
+        public static RenderTarget2DWrapper LoadRenderTarget2D(string name, Scene parent, int width, int height, bool mipMap, SurfaceFormat surfaceFormat, DepthFormat depthFormat, int multiSampleCount, RenderTargetUsage usage, RenderTargetSettings settings)
         {
             RenderTarget2DWrapper target = new RenderTarget2DWrapper(new RenderTarget2D(GraphicsHelper.graphicsDevice, width, height, mipMap, surfaceFormat, depthFormat, multiSampleCount, usage));
             ResourceManager manager = instance.resourceManagers[target.GetType()];
@@ -140,7 +140,7 @@ namespace MonoEngine.Assets
             else
             {
                 manager.AddResource(name, target);
-                RenderTargetBatch batch = new RenderTargetBatch(name, target);
+                RenderTargetBatch batch = new RenderTargetBatch(name, target, settings);
                 RenderManager.AddRenderTargetBatch(batch);
                 return target;
             }

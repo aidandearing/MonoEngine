@@ -12,21 +12,9 @@ namespace MonoEngine.Render
 {
     public class RenderTargetRenderer : GameObject
     {
-        public class Settings
-        {
-            public SpriteSortMode mode = SpriteSortMode.Deferred;
-            public BlendState blend = BlendState.AlphaBlend;
-            public SamplerState sampler = SamplerState.LinearWrap;
-            public DepthStencilState depth = DepthStencilState.Default;
-            public RasterizerState rasteriser = RasterizerState.CullNone;
-            public Effect effect = null;// new BasicEffect(GraphicsHelper.graphicsDevice);
-
-            public Settings() { }
-        }
-
         private static Dictionary<string, RenderTargetRenderer> renderTargetInstances;
 
-        public Settings settings;
+        public RenderTargetSettings settings;
 
         private RenderTarget2D renderable;
         private RenderTarget2D target;
@@ -38,7 +26,7 @@ namespace MonoEngine.Render
             private set { priority = value; }
         }
 
-        internal RenderTargetRenderer(int priority, string name, Settings settings, RenderTarget2D renderable, RenderTarget2D target = null) : base(name)
+        internal RenderTargetRenderer(int priority, string name, RenderTargetSettings settings, RenderTarget2D renderable, RenderTarget2D target = null) : base(name)
         {
             if (target == null)
             {
@@ -71,7 +59,7 @@ namespace MonoEngine.Render
             GraphicsHelper.spriteBatch.End();
         }
 
-        public static RenderTargetRenderer MakeRenderTargetRenderer(string name, Settings settings, int priority)
+        public static RenderTargetRenderer MakeRenderTargetRenderer(string name, RenderTargetSettings settings, int priority)
         {
             if (renderTargetInstances == null)
             {
@@ -93,7 +81,7 @@ namespace MonoEngine.Render
                 else
                 {
                     //no rendertarget found so make a new rendertargetrenderer with a new rendertarget with the name specified
-                    return new RenderTargetRenderer(priority, name, settings, Resources.LoadRenderTarget2D(name, SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents));
+                    return new RenderTargetRenderer(priority, name, settings, Resources.LoadRenderTarget2D(name, SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents, new RenderTargetSettings()));
                 }
             }        
         }

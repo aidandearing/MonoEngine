@@ -541,30 +541,6 @@
 /processorParam:TextureFormat=Compressed
 /build:Assets/Fonts/maravilloso_96.spritefont
 
-#begin Assets/Fonts/microtype_12.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:TextureFormat=Compressed
-/build:Assets/Fonts/microtype_12.spritefont
-
-#begin Assets/Fonts/microtype_24.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:TextureFormat=Compressed
-/build:Assets/Fonts/microtype_24.spritefont
-
-#begin Assets/Fonts/microtype_48.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:TextureFormat=Compressed
-/build:Assets/Fonts/microtype_48.spritefont
-
-#begin Assets/Fonts/microtype_96.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:TextureFormat=Compressed
-/build:Assets/Fonts/microtype_96.spritefont
-
 #begin Assets/Fonts/nemesia_12.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -822,4 +798,40 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Assets/Shaders/shader_noise.fx
+
+#begin Assets/Fonts/microtype_8.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/microtype_8.spritefont
+
+#begin Assets/Fonts/microtype_16.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/microtype_16.spritefont
+
+#begin Assets/Fonts/microtype_32.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/microtype_32.spritefont
+
+#begin Assets/Fonts/microtype_64.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/microtype_64.spritefont
+
+#begin Assets/Fonts/microtype_128.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/microtype_128.spritefont
+
+#begin Assets/Fonts/microtype_256.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/microtype_256.spritefont
 

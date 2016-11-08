@@ -98,7 +98,7 @@ namespace TestbedMonogame
             renderManager.Initialize();
             this.Components.Add(renderManager);
             
-            GameObjectManager.AddGameObject(Camera.Isometric("mainCamera", new Vector3(0, 0, 0f), 100/*Vector3.Zero*/, 0.01f, 1000));
+            GameObjectManager.AddGameObject(Camera.Orthographic("mainCamera", new Vector3(0, 0, 1f), Vector3.Zero));
         }
 
         /// <summary>
