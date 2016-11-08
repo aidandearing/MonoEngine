@@ -276,7 +276,7 @@ namespace MonoEngine.Assets
                                                         string cleanString = reader.Value;
                                                         cleanString = cleanString.Replace("{", "");
                                                         cleanString = cleanString.Replace("}", "");
-                                                        // M11:1 M12:0 M13:0 M14:0} {M21:0 M22:1 M23:0 M24:0} {M31:0 M32:0 M33:1 M34:0} {M41:0 M42:0 M43:0 M44:1
+                                                        // M11:1 M12:0 M13:0 M14:0 M21:0 M22:1 M23:0 M24:0 M31:0 M32:0 M33:1 M34:0 M41:0 M42:0 M43:0 M44:1
                                                         for (int i = 0; i < 4; i++)
                                                         {
                                                             for (int j = 0; j < 4; j++)
