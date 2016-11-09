@@ -572,18 +572,48 @@
     <None Include="Content\Assets\Fonts\stargazer_96.spritefont">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Content\Assets\Models\BasicDoor.FBX" />
-    <None Include="Content\Assets\Models\BasicDoubleWindowLeft.FBX" />
-    <None Include="Content\Assets\Models\BasicDoubleWindowRight.FBX" />
-    <None Include="Content\Assets\Models\BasicSingleWindow.FBX" />
-    <None Include="Content\Assets\Models\BasicWall.FBX" />
-    <None Include="Content\Assets\Models\BasicWallCorner.FBX" />
-    <None Include="Content\Assets\Models\BasicWallCornerShort.FBX" />
-    <None Include="Content\Assets\Models\DoorFrame.FBX" />
-    <None Include="Content\Assets\Models\FloorTile.FBX" />
-    <None Include="Content\Assets\Models\FrontBasicWallCorner.FBX" />
-    <None Include="Content\Assets\Models\FrontBasicWallCornerShort.FBX" />
-    <None Include="Content\Assets\Models\ShortWall.FBX" />
+    <None Include="Content\Assets\Models\BasicDoor.FBX">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Assets\Models\BasicDoubleWindowLeft.FBX">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Assets\Models\BasicDoubleWindowRight.FBX">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Assets\Models\BasicSingleWindow.FBX">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Assets\Models\BasicWall.FBX">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Assets\Models\BasicWallCorner.FBX">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Assets\Models\BasicWallCornerShort.FBX">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Assets\Models\BasicWallLeftSideShort.FBX">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Assets\Models\BasicWallRightSideShort.FBX">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Assets\Models\DoorFrame.FBX">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Assets\Models\FloorTile.FBX">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Assets\Models\FrontBasicWallCorner.FBX">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Assets\Models\FrontBasicWallCornerShort.FBX">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Assets\Models\ShortWall.FBX">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestbedMonogame_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
