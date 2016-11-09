@@ -69,27 +69,27 @@ namespace MonoEngine.Game
 
         public static Camera Isometric(string name, Vector3 lookat, float distance)
         {
-            return new Camera(name, Matrix.CreateLookAt(lookat + new Vector3((float)Math.Cos(Math.PI / 4.0f), (float)Math.Atan(1.0f / Math.Sqrt(2.0f)), (float)Math.Sin(Math.PI / 4.0f)) * distance, lookat, Vector3.Up), Matrix.CreateOrthographic(GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, 0.01f, 1000f));
+            return new Camera(name, Matrix.CreateLookAt(lookat + new Vector3((float)Math.Cos(Math.PI / 4.0f), (float)Math.Atan(1.0f / Math.Sqrt(2.0f)), (float)Math.Sin(Math.PI / 4.0f)) * distance, lookat, Vector3.Up), Matrix.CreateOrthographic(GraphicsHelper.screen.Width * distance, GraphicsHelper.screen.Height * distance, 0.01f, 1000f));
         }
 
         public static Camera Isometric(string name, Vector3 lookat, float distance, int width, int height)
         {
-            return new Camera(name, Matrix.CreateLookAt(lookat + new Vector3((float)Math.Cos(Math.PI / 4.0f), (float)Math.Atan(1.0f / Math.Sqrt(2.0f)), (float)Math.Sin(Math.PI / 4.0f)) * distance, lookat, Vector3.Up), Matrix.CreateOrthographic(width, height, 0.01f, 1000f));
+            return new Camera(name, Matrix.CreateLookAt(lookat + new Vector3((float)Math.Cos(Math.PI / 4.0f), (float)Math.Atan(1.0f / Math.Sqrt(2.0f)), (float)Math.Sin(Math.PI / 4.0f)) * distance, lookat, Vector3.Up), Matrix.CreateOrthographic(width * distance, height * distance, 0.01f, 1000f));
         }
 
         public static Camera Isometric(string name, Vector3 lookat, float distance, float near, float far)
         {
-            return new Camera(name, Matrix.CreateLookAt(lookat + new Vector3((float)Math.Cos(Math.PI / 4.0f), (float)Math.Atan(1.0f / Math.Sqrt(2.0f)), (float)Math.Sin(Math.PI / 4.0f)) * distance, lookat, Vector3.Up), Matrix.CreateOrthographic(GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, near, far));
+            return new Camera(name, Matrix.CreateLookAt(lookat + new Vector3((float)Math.Cos(Math.PI / 4.0f), (float)Math.Atan(1.0f / Math.Sqrt(2.0f)), (float)Math.Sin(Math.PI / 4.0f)) * distance, lookat, Vector3.Up), Matrix.CreateOrthographic(GraphicsHelper.screen.Width * distance, GraphicsHelper.screen.Height * distance, near, far));
         }
 
         public static Camera Isometric(string name, Vector3 lookat, float distance, int width, int height, float near, float far)
         {
-            return new Camera(name, Matrix.CreateLookAt(lookat + new Vector3((float)Math.Cos(Math.PI / 4.0f), (float)Math.Atan(1.0f / Math.Sqrt(2.0f)), (float)Math.Sin(Math.PI / 4.0f)) * distance, lookat, Vector3.Up), Matrix.CreateOrthographic(width, height, near, far));
+            return new Camera(name, Matrix.CreateLookAt(lookat + new Vector3((float)Math.Cos(Math.PI / 4.0f), (float)Math.Atan(1.0f / Math.Sqrt(2.0f)), (float)Math.Sin(Math.PI / 4.0f)) * distance, lookat, Vector3.Up), Matrix.CreateOrthographic(width * distance, height * distance, near, far));
         }
 
         public static Camera Perspective(string name, Vector3 position, Vector3 lookat)
         {
-            return new Camera(name, Matrix.CreateLookAt(position, lookat, Vector3.Up), Matrix.CreatePerspectiveFieldOfView(60f, GraphicsHelper.screen.Width / GraphicsHelper.screen.Height, 0.01f, 1000f));
+            return new Camera(name, Matrix.CreateLookAt(position, lookat, Vector3.Up), Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(60f), GraphicsHelper.screen.Width / GraphicsHelper.screen.Height, 0.01f, 1000f));
         }
 
         public static Camera Perspective(string name, Vector3 position, Vector3 lookat, float fieldofview)
@@ -99,7 +99,7 @@ namespace MonoEngine.Game
 
         public static Camera Perspective(string name, Vector3 position, Vector3 lookat, float near, float far)
         {
-            return new Camera(name, Matrix.CreateLookAt(position, lookat, Vector3.Up), Matrix.CreatePerspectiveFieldOfView(60f, GraphicsHelper.screen.Width / GraphicsHelper.screen.Height, near, far));
+            return new Camera(name, Matrix.CreateLookAt(position, lookat, Vector3.Up), Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(60f), GraphicsHelper.screen.Width / GraphicsHelper.screen.Height, near, far));
         }
 
         public static Camera Perspective(string name, Vector3 position, Vector3 lookat, float fieldofview, float near, float far)

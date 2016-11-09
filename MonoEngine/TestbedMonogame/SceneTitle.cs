@@ -61,7 +61,10 @@ namespace TestbedMonogame
 
             isInit = true;
 
-            materials = new Material[2];
+            GameObjectManager.AddGameObject(Camera.Orthographic("mainCamera", new Vector3(0, 0, 1f), Vector3.Zero));
+
+            materials = new Material[1];
+
             RenderTargetSettings settings_target = new RenderTargetSettings()
             {
                 blend = BlendState.AlphaBlend,
@@ -74,7 +77,7 @@ namespace TestbedMonogame
             RenderTargetRenderer dithered = RenderTargetRenderer.MakeRenderTargetRenderer("UI_dithered", new RenderTargetSettings(), 1);
             materials[0] = Resources.LoadAsset(new Material().GetType(), "shader_noise", this) as Material;
             dithered.settings.effect = materials[0];
-            dithered.settings.effect.CurrentTechnique = dithered.settings.effect.Techniques["RCDCSSB"];
+            dithered.settings.effect.CurrentTechnique = dithered.settings.effect.Techniques["RCDCLSB"];
             dithered.settings.effect.Parameters["S"].SetValue(Random.Range());
             dithered.settings.effect.Parameters["N"].SetValue(0.001f);
 
@@ -353,7 +356,7 @@ namespace TestbedMonogame
             skyline_windows[4] = new UIImage("Skyline0_window", GraphicsHelper.screen, new UIAlignment(UIAlignment.Alignment.Center), new UIAlignment(UIAlignment.Alignment.Center), UIObject.flags.None, "skyline_4_window", "UI_nearest");
             skyline_glow[4] = new UIImage("Skyline4_glow", GraphicsHelper.screen, new UIAlignment(UIAlignment.Alignment.Center), new UIAlignment(UIAlignment.Alignment.Center), UIObject.flags.None, "skyline_4_glow", "UI_nearest");
 
-            title = new UIText("Title", new UIAlignment(UIAlignment.Alignment.TopLeft), new UIAlignment(UIAlignment.Alignment.Center), UIObject.flags.None, "microtype", "I am poor and hungry", 196);
+            title = new UIText("Title", new UIAlignment(UIAlignment.Alignment.TopLeft), new UIAlignment(UIAlignment.Alignment.Center), UIObject.flags.None, "microtype", "I am poor and hungry", 128);
 
             logo = new UIImage("Logo", new Rectangle(0, 0, 100, 100), new UIAlignment(UIAlignment.Alignment.BottomRight), new UIAlignment(UIAlignment.Alignment.Center), UIObject.flags.None, "monogameLogo");
         }
@@ -362,9 +365,9 @@ namespace TestbedMonogame
         {
             Initialise();
 
-            //((Effect)materials[1]).Parameters["S"].SetValue(Random.Range());
+            ((Effect)materials[0]).Parameters["S"].SetValue(Random.Range());
 
-            float elapsed = (Time.ElapsedTime % 300.0f) / 300.0f;
+            float elapsed = (Time.ElapsedTime % 300.0F) / 300.0F;
             sky_top.spriteRenderer.sprite.Colour = sky_top_gradient.Evaluate(elapsed);
             sky_stars.spriteRenderer.sprite.Colour = sky_stars_gradient.Evaluate(elapsed);
             sky_bottom.spriteRenderer.sprite.Colour = sky_bottom_gradient.Evaluate(elapsed);

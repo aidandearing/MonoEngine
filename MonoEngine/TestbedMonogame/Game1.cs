@@ -64,7 +64,8 @@ namespace TestbedMonogame
             this.Components.Add(SongManager.Instance(this));
             this.Components.Add(PhysicsEngine.Instance(this, PhysicsEngine.EngineTypes.Physics2D));
 
-            SceneManager.activeScene = new SceneTitle();
+            //SceneManager.activeScene = new SceneTitle();
+            SceneManager.activeScene = new SceneGame();
 
             //PhysicsEngine.PhysicsSettings.WORLD_FORCE = new Vector3(0, -9.8f, 0);
         }
@@ -98,7 +99,7 @@ namespace TestbedMonogame
             renderManager.Initialize();
             this.Components.Add(renderManager);
             
-            GameObjectManager.AddGameObject(Camera.Orthographic("mainCamera", new Vector3(0, 0, 1f), Vector3.Zero));
+            //GameObjectManager.AddGameObject(Camera.Orthographic("mainCamera", new Vector3(0, 0, 1f), Vector3.Zero));
         }
 
         /// <summary>

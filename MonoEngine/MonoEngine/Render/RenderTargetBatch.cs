@@ -30,6 +30,8 @@ namespace MonoEngine.Render
 
         public List<DrawCallback> callbacks;
 
+        public RenderTargetBatch() { }
+
         public RenderTargetBatch(string name, RenderTarget2DWrapper renderTarget, RenderTargetSettings settings)
         {
             callbacks = new List<DrawCallback>();
@@ -60,6 +62,9 @@ namespace MonoEngine.Render
             GraphicsHelper.graphicsDevice.Clear(Color.White * 0);
             //open the spritebatch
             GraphicsHelper.spriteBatch.Begin(settings.mode, settings.blend, settings.sampler, settings.depth, settings.rasteriser, settings.effect);
+
+            if (settings.sampler != null)
+                GraphicsHelper.graphicsDevice.SamplerStates[0] = settings.sampler;
 
             foreach (DrawCallback draw in callbacks)
             {
