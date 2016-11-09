@@ -12,7 +12,7 @@ namespace TestbedMonogame
     class SceneGame : Scene
     {
         enum Rooms { kitchen, dining, living, hall, bedroom, garage, walkway, road, bathroom, study };
-        enum Walls { corner_top_right, corner_top_left, corner_bottom_left, corner_bottom_right, wall_left, wall_bottom, wall_right, wall_top, window_single_left, window_single_bottom, window_single_right, window_single_top, window_far_top, window_far_left, window_far_bottom, window_far_right, window_near_top, window_near_left, window_near_bottom, window_near_right, window_middle_top, window_middle_left, window_middle_bottom, window_middle_right };
+        enum Walls { corner_top_right, corner_top_left, corner_bottom_left, corner_bottom_right, wall_left, wall_bottom, wall_right, wall_top, window_single_left, window_single_bottom, window_single_right, window_single_top, window_far_top, window_far_left, window_far_bottom, window_far_right, window_near_top, window_near_left, window_near_bottom, window_near_right, window_middle_top, window_middle_left, window_middle_bottom, window_middle_right, corner_out_top_right, corner_out_top_left, corner_out_bottom_left, corner_out_bottom_right, door_left, door_top, door_right, door_bottom };
 
         public Dictionary<string, Material> materials;
 
@@ -49,6 +49,7 @@ namespace TestbedMonogame
             // TODO Update this comment after completing the prefab system
 
             GameObjectManager.AddGameObject(Camera.Isometric("mainCamera", new Vector3(0, 0, 0f), 2, -10000.0f, 10000.0f));
+            //GameObjectManager.AddGameObject(Camera.Perspective("mainCamera", new Vector3(1000, 2000, 1000f), Vector3.Zero, 0.1f, 10000.0f));
 
             floors = new Dictionary<Vector2, Rooms>();
             walls = new Dictionary<Vector2, Walls>();
@@ -64,6 +65,7 @@ namespace TestbedMonogame
             effect.Texture = Resources.LoadAsset(new Sprite().GetType(), "floor_grass", this) as Sprite;
 
             // Kitchen -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            #region Kitchen
             // All the set up necessary for the world data to know how to look in the kitchen
             // floors 0 <- The int value returned by the floors dictionary when passed any of the values within this rooms boundaries
 
@@ -158,7 +160,13 @@ namespace TestbedMonogame
             // Now make the room data
             Helper_InitialiseRoomData(Rooms.kitchen, true);
 
+            // Special cases
+            walls[new Vector2(12, 6)] = Walls.wall_top;
+            walls[new Vector2(12, 8)] = Walls.wall_bottom;
+            #endregion
+
             // Dining Room ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            #region Dining
             // floors 1
 
             // Setup: Floor -----------------------------------------------------------------------------
@@ -194,13 +202,19 @@ namespace TestbedMonogame
             // Empty walls (for open spaces, or floating walls)
             empty = new List<Vector2>()
             {
-
+                new Vector2(13,6),
+                new Vector2(13,7),
+                new Vector2(13,8),
+                new Vector2(14,11),
+                new Vector2(15,11),
+                new Vector2(16,11),
             };
 
             // Windows single
             windows_single = new List<Vector2>()
             {
-
+                new Vector2(14,6),
+                new Vector2(16,6),
             };
 
             // Windows wide far side
@@ -224,7 +238,15 @@ namespace TestbedMonogame
             // Now make the room data
             Helper_InitialiseRoomData(Rooms.dining, true);
 
+            // Special cases
+            walls[new Vector2(13, 6)] = Walls.wall_top;
+            walls[new Vector2(13, 8)] = Walls.corner_out_bottom_left;
+            walls[new Vector2(14, 11)] = Walls.corner_out_bottom_left;
+            walls[new Vector2(16, 11)] = Walls.corner_out_bottom_right;
+            #endregion
+
             // Living Room ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            #region Living
             // floors 2
 
             // Setup: Floor -----------------------------------------------------------------------------
@@ -242,7 +264,7 @@ namespace TestbedMonogame
             effect = materials["wall_living"].effect as BasicEffect;
             effect.TextureEnabled = true;
             // Load the wall texture for it
-            effect.Texture = Resources.LoadAsset(new Sprite().GetType(), "wall_living", this) as Sprite;
+            effect.Texture = Resources.LoadAsset(new Sprite().GetType(), "wall_hall", this) as Sprite;
 
             // Setup: Rooms -----------------------------------------------------------------------------
             // The top left corner of the room
@@ -260,25 +282,29 @@ namespace TestbedMonogame
             // Empty walls (for open spaces, or floating walls)
             empty = new List<Vector2>()
             {
-
+                new Vector2(14,13),
+                new Vector2(15,13),
+                new Vector2(16,13),
             };
 
             // Windows single
             windows_single = new List<Vector2>()
             {
-
+                
             };
 
             // Windows wide far side 
             windows_side_far = new List<Vector2>()
             {
-
+                new Vector2(13,16),
+                new Vector2(15,16),
             };
 
             // Windows wide near side
             windows_side_near = new List<Vector2>()
             {
-
+                new Vector2(14,16),
+                new Vector2(17,16),
             };
 
             // Windows wide middle part 
@@ -290,7 +316,13 @@ namespace TestbedMonogame
             // Now make the room data
             Helper_InitialiseRoomData(Rooms.living, true);
 
+            // Special cases
+            walls[new Vector2(14, 13)] = Walls.corner_out_top_left;
+            walls[new Vector2(16, 13)] = Walls.corner_out_top_right;
+            #endregion
+
             // Hallways ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            #region Hallway
             // floors 3
 
             // Setup: Floor -----------------------------------------------------------------------------
@@ -354,7 +386,7 @@ namespace TestbedMonogame
             };
 
             // Now make the room data
-            Helper_InitialiseRoomData(Rooms.hall, true);
+            Helper_InitialiseRoomData(Rooms.hall, false);
 
             // Setup: Rooms -----------------------------------------------------------------------------
             // The top left corner of the room
@@ -400,9 +432,11 @@ namespace TestbedMonogame
             };
 
             // Now make the room data
-            Helper_InitialiseRoomData(Rooms.hall, true);
+            Helper_InitialiseRoomData(Rooms.hall, false);
+            #endregion
 
             // Bedroom -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            #region Bedroom
             // floors 4
 
             // Setup: Floor -----------------------------------------------------------------------------
@@ -420,7 +454,7 @@ namespace TestbedMonogame
             effect = materials["wall_bedroom"].effect as BasicEffect;
             effect.TextureEnabled = true;
             // Load the wall texture for it
-            effect.Texture = Resources.LoadAsset(new Sprite().GetType(), "wall_bedroom", this) as Sprite;
+            effect.Texture = Resources.LoadAsset(new Sprite().GetType(), "wall_hall", this) as Sprite;
 
             // Setup: Rooms -----------------------------------------------------------------------------
             // The top left corner of the room
@@ -432,7 +466,7 @@ namespace TestbedMonogame
             // Doors
             doors = new List<Vector2>()
             {
-
+                new Vector2(19,10),
             };
 
             // Empty walls (for open spaces, or floating walls)
@@ -444,7 +478,8 @@ namespace TestbedMonogame
             // Windows single
             windows_single = new List<Vector2>()
             {
-
+                new Vector2(21,8),
+                new Vector2(22,9),
             };
 
             // Windows wide far side
@@ -467,8 +502,10 @@ namespace TestbedMonogame
 
             // Now make the room data
             Helper_InitialiseRoomData(Rooms.bedroom, true);
+            #endregion
 
             // Garage --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            #region Garage
             // floors 5
 
             // Setup: Floor -----------------------------------------------------------------------------
@@ -486,7 +523,7 @@ namespace TestbedMonogame
             effect = materials["wall_garage"].effect as BasicEffect;
             effect.TextureEnabled = true;
             // Load the wall texture for it
-            effect.Texture = Resources.LoadAsset(new Sprite().GetType(), "wall_garage", this) as Sprite;
+            effect.Texture = Resources.LoadAsset(new Sprite().GetType(), "wall_hall", this) as Sprite;
 
             // Setup: Rooms -----------------------------------------------------------------------------
             // The top left corner of the room
@@ -498,13 +535,16 @@ namespace TestbedMonogame
             // Doors
             doors = new List<Vector2>()
             {
-
+                new Vector2(19,15),
             };
 
             // Empty walls (for open spaces, or floating walls)
             empty = new List<Vector2>()
             {
-
+                new Vector2(19,16),
+                new Vector2(20,16),
+                new Vector2(21,16),
+                new Vector2(22,16),
             };
 
             // Windows single
@@ -534,7 +574,13 @@ namespace TestbedMonogame
             // Now make the room data
             Helper_InitialiseRoomData(Rooms.garage, true);
 
+            // Special cases
+            walls[new Vector2(19, 16)] = Walls.wall_left;
+            walls[new Vector2(22, 16)] = Walls.wall_right;
+            #endregion
+
             // Walkway -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            #region Walkway
             // floors 6
 
             // Setup: Floor -----------------------------------------------------------------------------
@@ -573,7 +619,7 @@ namespace TestbedMonogame
 
             // Now make the room data
             Helper_InitialiseRoomData(Rooms.walkway, false);
-
+            
             // Setup: Rooms -----------------------------------------------------------------------------
             // The top left corner of the room
             room_position = new Vector2(16, 17);
@@ -657,8 +703,10 @@ namespace TestbedMonogame
 
             // Now make the room data
             Helper_InitialiseRoomData(Rooms.walkway, false);
+            #endregion
 
             // Road ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            #region Road
             // floors 7
 
             // Setup: Floor -----------------------------------------------------------------------------
@@ -725,8 +773,10 @@ namespace TestbedMonogame
 
             // Now make the room data
             Helper_InitialiseRoomData(Rooms.road, false);
+            #endregion
 
             // Bathroom ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            #region Bathroom
             // floors 8
 
             // Setup: Floor -----------------------------------------------------------------------------
@@ -740,11 +790,11 @@ namespace TestbedMonogame
 
             // Setup: Walls -----------------------------------------------------------------------------
             // Make a material for the wall
-            materials.Add("wall_hall", new Material(new BasicEffect(GraphicsHelper.graphicsDevice)));
-            effect = materials["wall_hall"].effect as BasicEffect;
+            materials.Add("wall_bath", new Material(new BasicEffect(GraphicsHelper.graphicsDevice)));
+            effect = materials["wall_bath"].effect as BasicEffect;
             effect.TextureEnabled = true;
             // Load the wall texture for it
-            effect.Texture = Resources.LoadAsset(new Sprite().GetType(), "wall_hall", this) as Sprite;
+            effect.Texture = Resources.LoadAsset(new Sprite().GetType(), "wall_bath", this) as Sprite;
 
             // Setup: Rooms -----------------------------------------------------------------------------
             // The top left corner of the room
@@ -756,7 +806,7 @@ namespace TestbedMonogame
             // Doors
             doors = new List<Vector2>()
             {
-
+                new Vector2(12,11),
             };
 
             // Empty walls (for open spaces, or floating walls)
@@ -768,7 +818,7 @@ namespace TestbedMonogame
             // Windows single
             windows_single = new List<Vector2>()
             {
-
+                new Vector2(9,10),
             };
 
             // Windows wide far side
@@ -791,8 +841,10 @@ namespace TestbedMonogame
 
             // Now make the room data
             Helper_InitialiseRoomData(Rooms.bathroom, true);
+            #endregion
 
             // Study ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            #region Study
             // floors 9
 
             // Setup: Floor -----------------------------------------------------------------------------
@@ -806,8 +858,8 @@ namespace TestbedMonogame
 
             // Setup: Walls -----------------------------------------------------------------------------
             // Make a material for the wall
-            materials.Add("wall_hall", new Material(new BasicEffect(GraphicsHelper.graphicsDevice)));
-            effect = materials["wall_hall"].effect as BasicEffect;
+            materials.Add("wall_study", new Material(new BasicEffect(GraphicsHelper.graphicsDevice)));
+            effect = materials["wall_study"].effect as BasicEffect;
             effect.TextureEnabled = true;
             // Load the wall texture for it
             effect.Texture = Resources.LoadAsset(new Sprite().GetType(), "wall_hall", this) as Sprite;
@@ -822,7 +874,7 @@ namespace TestbedMonogame
             // Doors
             doors = new List<Vector2>()
             {
-
+                new Vector2(10,13),
             };
 
             // Empty walls (for open spaces, or floating walls)
@@ -834,7 +886,7 @@ namespace TestbedMonogame
             // Windows single
             windows_single = new List<Vector2>()
             {
-
+                new Vector2(10,16),
             };
 
             // Windows wide far side
@@ -857,6 +909,186 @@ namespace TestbedMonogame
 
             // Now make the room data
             Helper_InitialiseRoomData(Rooms.study, true);
+            #endregion
+
+            // Exterior ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            #region Exterior
+            // Special case
+
+            Vector2 posi = new Vector2(8, 5);
+            int widi = 16;
+            int hidi = 13;
+            
+            for (int x = 0; x < widi; x++)
+            {
+                for (int y = 0; y < hidi; y++)
+                {
+                    Vector2 position = new Vector2(x, y) + posi;
+                    // Top Left Corner Wall
+                    if (position.X == posi.X && position.Y == posi.Y)
+                    {
+                        walls.Add(position, Walls.corner_out_bottom_right);
+                    }
+                    // Bottom Left Corner Wall
+                    else if (position.X == posi.X && position.Y == posi.Y + hidi - 1)
+                    {
+                        walls.Add(position, Walls.corner_out_top_right);
+                    }
+                    // Bottom Right Corner Wall
+                    else if (position.X == posi.X + widi - 1 && position.Y == posi.Y + hidi - 1)
+                    {
+                        walls.Add(position, Walls.corner_out_top_left);
+                    }
+                    // Top Right Corner Wall
+                    else if (position.X == posi.X + widi - 1 && position.Y == posi.Y)
+                    {
+                        walls.Add(position, Walls.corner_out_bottom_left);
+                    }
+                    // Now all of the below are special, they can have windows and the like
+                    else
+                    {
+                        // Walls can be windows so all of them need to be in that context
+                        // right Wall
+                        if (position.X == posi.X)
+                        {
+                            if (windows_single.Contains(position))
+                            {
+                                // Make this wall a single window
+                                walls.Add(position, Walls.window_single_right);
+                            }
+                            else if (windows_side_far.Contains(position))
+                            {
+                                // Make this wall a far window
+                                walls.Add(position, Walls.window_far_right);
+                            }
+                            else if (windows_side_near.Contains(position))
+                            {
+                                // Make this wall a near window
+                                walls.Add(position, Walls.window_near_right);
+                            }
+                            else if (windows_middle.Contains(position))
+                            {
+                                // Make this wall a middle window
+                                walls.Add(position, Walls.window_middle_right);
+                            }
+                            else if (doors.Contains(position))
+                            {
+                                // Make this wall a door
+                                walls.Add(position, Walls.door_right);
+                            }
+                            else
+                            {
+                                // Make this a right wall
+                                walls.Add(position, Walls.wall_right);
+                            }
+                        }
+                        // bottom Wall
+                        else if (position.Y == posi.Y)
+                        {
+                            if (windows_single.Contains(position))
+                            {
+                                // Make this wall a single window
+                                walls.Add(position, Walls.window_single_bottom);
+                            }
+                            else if (windows_side_far.Contains(position))
+                            {
+                                // Make this wall a far window
+                                walls.Add(position, Walls.window_far_bottom);
+                            }
+                            else if (windows_side_near.Contains(position))
+                            {
+                                // Make this wall a near window
+                                walls.Add(position, Walls.window_near_bottom);
+                            }
+                            else if (windows_middle.Contains(position))
+                            {
+                                // Make this wall a middle window
+                                walls.Add(position, Walls.window_middle_bottom);
+                            }
+                            else if (doors.Contains(position))
+                            {
+                                // Make this wall a door
+                                walls.Add(position, Walls.door_bottom);
+                            }
+                            else
+                            {
+                                // Make this a bottom wall
+                                walls.Add(position, Walls.wall_bottom);
+                            }
+                        }
+                        // left Wall
+                        else if (position.X == posi.X + widi - 1)
+                        {
+                            if (windows_single.Contains(position))
+                            {
+                                // Make this wall a single window
+                                walls.Add(position, Walls.window_single_left);
+                            }
+                            else if (windows_side_far.Contains(position))
+                            {
+                                // Make this wall a far window
+                                walls.Add(position, Walls.window_far_left);
+                            }
+                            else if (windows_side_near.Contains(position))
+                            {
+                                // Make this wall a near window
+                                walls.Add(position, Walls.window_near_left);
+                            }
+                            else if (windows_middle.Contains(position))
+                            {
+                                // Make this wall a middle window
+                                walls.Add(position, Walls.window_middle_left);
+                            }
+                            else if (doors.Contains(position))
+                            {
+                                // Make this wall a door
+                                walls.Add(position, Walls.door_left);
+                            }
+                            else
+                            {
+                                // Make this a left wall
+                                walls.Add(position, Walls.wall_left);
+                            }
+                        }
+                        // top Wall
+                        else if (position.Y == posi.Y + hidi - 1)
+                        {
+                            if (windows_single.Contains(position))
+                            {
+                                // Make this wall a single window
+                                walls.Add(position, Walls.window_single_top);
+                            }
+                            else if (windows_side_far.Contains(position))
+                            {
+                                // Make this wall a far window
+                                walls.Add(position, Walls.window_far_top);
+                            }
+                            else if (windows_side_near.Contains(position))
+                            {
+                                // Make this wall a near window
+                                walls.Add(position, Walls.window_near_top);
+                            }
+                            else if (windows_middle.Contains(position))
+                            {
+                                // Make this wall a middle window
+                                walls.Add(position, Walls.window_middle_top);
+                            }
+                            else if (doors.Contains(position))
+                            {
+                                // Make this wall a door
+                                walls.Add(position, Walls.door_top);
+                            }
+                            else
+                            {
+                                // Make this a top wall
+                                walls.Add(position, Walls.wall_top);
+                            }
+                        }
+                    }
+                }
+            }
+
+            #endregion
 
             // World generation ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
             // 
@@ -870,53 +1102,305 @@ namespace TestbedMonogame
             {
                 for (int y = 0; y < height; y++)
                 {
+                    Vector3 position = new Vector3((x - width_h) / 2.0f, 0, (y - height_h) / 2.0f);
+                    Vector2 pos = new Vector2(x, y);
+
+                    // Walls
+                    ModelRenderer wall = null;
+
+                    if (walls.ContainsKey(pos))
+                    {
+                        switch (walls[pos])
+                        {
+                            case Walls.corner_bottom_left:
+                                // |
+                                // |
+                                // |_____
+                                wall = ModelRenderer.MakeModelRenderer("BasicWallCorner");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.Pi);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.corner_bottom_right:
+                                //      |
+                                //      |
+                                // _____|
+                                wall = ModelRenderer.MakeModelRenderer("BasicWallCorner");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.Pi + MathHelper.PiOver2);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.corner_top_left:
+                                //  ______
+                                // |
+                                // |
+                                // |
+                                wall = ModelRenderer.MakeModelRenderer("BasicWallCorner");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.corner_top_right:
+                                //  ______
+                                //        |
+                                //        |
+                                //        |
+                                wall = ModelRenderer.MakeModelRenderer("BasicWallCorner");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.wall_bottom:
+                                wall = ModelRenderer.MakeModelRenderer("BasicWall");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.Pi);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.wall_left:
+                                wall = ModelRenderer.MakeModelRenderer("BasicWall");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.wall_right:
+                                wall = ModelRenderer.MakeModelRenderer("BasicWall");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.Pi + MathHelper.PiOver2);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.wall_top:
+                                wall = ModelRenderer.MakeModelRenderer("BasicWall");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.window_far_bottom:
+                                wall = ModelRenderer.MakeModelRenderer("BasicDoubleWindowRight");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.Pi);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.window_far_left:
+                                wall = ModelRenderer.MakeModelRenderer("BasicDoubleWindowRight");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.window_far_right:
+                                wall = ModelRenderer.MakeModelRenderer("BasicDoubleWindowRight");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.Pi + MathHelper.PiOver2);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.window_far_top:
+                                wall = ModelRenderer.MakeModelRenderer("BasicDoubleWindowRight");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.window_middle_bottom:
+                                wall = ModelRenderer.MakeModelRenderer("BasicWall");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.window_middle_left:
+                                wall = ModelRenderer.MakeModelRenderer("BasicWall");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.window_middle_right:
+                                wall = ModelRenderer.MakeModelRenderer("BasicWall");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.window_middle_top:
+                                wall = ModelRenderer.MakeModelRenderer("BasicWall");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.window_near_bottom:
+                                wall = ModelRenderer.MakeModelRenderer("BasicDoubleWindowLeft");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.Pi);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.window_near_left:
+                                wall = ModelRenderer.MakeModelRenderer("BasicDoubleWindowLeft");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.window_near_right:
+                                wall = ModelRenderer.MakeModelRenderer("BasicDoubleWindowLeft");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.Pi + MathHelper.PiOver2);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.window_near_top:
+                                wall = ModelRenderer.MakeModelRenderer("BasicDoubleWindowLeft");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.window_single_bottom:
+                                wall = ModelRenderer.MakeModelRenderer("BasicSingleWindow");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.Pi);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.window_single_left:
+                                wall = ModelRenderer.MakeModelRenderer("BasicSingleWindow");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.window_single_right:
+                                wall = ModelRenderer.MakeModelRenderer("BasicSingleWindow");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.Pi + MathHelper.PiOver2);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.window_single_top:
+                                wall = ModelRenderer.MakeModelRenderer("BasicSingleWindow");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.corner_out_bottom_left:
+                                wall = ModelRenderer.MakeModelRenderer("FrontBasicWallCorner");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.Pi + MathHelper.PiOver2);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.corner_out_bottom_right:
+                                wall = ModelRenderer.MakeModelRenderer("FrontBasicWallCorner");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                //wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.corner_out_top_left:
+                                wall = ModelRenderer.MakeModelRenderer("FrontBasicWallCorner");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.Pi);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.corner_out_top_right:
+                                wall = ModelRenderer.MakeModelRenderer("FrontBasicWallCorner");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.door_bottom:
+                                wall = ModelRenderer.MakeModelRenderer("DoorFrame");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.door_left:
+                                wall = ModelRenderer.MakeModelRenderer("DoorFrame");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.door_right:
+                                wall = ModelRenderer.MakeModelRenderer("DoorFrame");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
+                                wall.transform.Position = position;
+                                break;
+                            case Walls.door_top:
+                                wall = ModelRenderer.MakeModelRenderer("DoorFrame");
+                                wall.Name = "wall" + x.ToString() + "," + y.ToString();
+                                wall.transform.Position = position;
+                                break;
+                        }
+                    }
+
+                    //if (wall != null)
+                    //    wall.transform.Rotate(new Vector3(0, 1, 0), Random.Range(MathHelper.Pi * 2));
+
                     ModelRenderer floor = ModelRenderer.MakeModelRenderer("FloorTile");
                     floor.Name = "floor" + x.ToString() + "," + y.ToString();
-                    floor.transform.Position = new Vector3((x - width_h) / 2.0f, 0, (y - height_h) / 2.0f);
-
-                    Vector2 pos = new Vector2(x, y);
+                    floor.transform.Position = position;
+                    
                     if (floors.ContainsKey(pos))
                     {
                         switch (floors[pos])
                         {
                             case Rooms.kitchen:
                                 floor.material = materials["floor_kitchen"];
+
+                                if (wall != null)
+                                    wall.material = materials["wall_kitchen"];
                                 break;
                             case Rooms.dining:
                                 floor.material = materials["floor_dining"];
+
+                                if (wall != null)
+                                    wall.material = materials["wall_dining"];
                                 break;
                             case Rooms.living:
                                 floor.material = materials["floor_living"];
+
+                                if (wall != null)
+                                    wall.material = materials["wall_hall"];
                                 break;
                             case Rooms.hall:
                                 floor.material = materials["floor_hall"];
+
+                                if (wall != null)
+                                    wall.material = materials["wall_hall"];
                                 break;
                             case Rooms.bedroom:
                                 floor.material = materials["floor_bedroom"];
+
+                                if (wall != null)
+                                    wall.material = materials["wall_hall"];
                                 break;
                             case Rooms.garage:
                                 floor.material = materials["floor_garage"];
+
+                                if (wall != null)
+                                    wall.material = materials["wall_hall"];
                                 break;
                             case Rooms.walkway:
                                 floor.material = materials["floor_walk"];
+
+                                if (wall != null)
+                                    wall.material = materials["wall_hall"];
                                 break;
                             case Rooms.road:
                                 floor.material = materials["floor_road"];
+
+                                if (wall != null)
+                                    wall.material = materials["wall_hall"];
                                 break;
                             case Rooms.bathroom:
                                 floor.material = materials["floor_bath"];
+
+                                if (wall != null)
+                                    wall.material = materials["wall_bath"];
                                 break;
                             case Rooms.study:
                                 floor.material = materials["floor_study"];
+
+                                if (wall != null)
+                                    wall.material = materials["wall_hall"];
                                 break;
                         }
                     }
                     else
                     {
                         floor.material = materials["floor_grass"];
+
+                        if (wall != null)
+                            wall.material = materials["wall_hall"];
                     }
 
-                    GameObjectManager.AddGameObject(floor);
+                    GameObjectManager.AddGameObject(floor);  
+
+                    if (wall != null)
+                    {
+                        GameObjectManager.AddGameObject(wall);
+                    }
                 }
             }
         }
@@ -998,6 +1482,11 @@ namespace TestbedMonogame
                             // Make this wall a middle window
                             walls.Add(position, Walls.window_middle_left);
                         }
+                        else if (doors.Contains(position))
+                        {
+                            // Make this wall a door
+                            walls.Add(position, Walls.door_left);
+                        }
                         else
                         {
                             // Make this a left wall
@@ -1026,6 +1515,11 @@ namespace TestbedMonogame
                         {
                             // Make this wall a middle window
                             walls.Add(position, Walls.window_middle_top);
+                        }
+                        else if (doors.Contains(position))
+                        {
+                            // Make this wall a door
+                            walls.Add(position, Walls.door_top);
                         }
                         else
                         {
@@ -1056,6 +1550,11 @@ namespace TestbedMonogame
                             // Make this wall a middle window
                             walls.Add(position, Walls.window_middle_right);
                         }
+                        else if (doors.Contains(position))
+                        {
+                            // Make this wall a door
+                            walls.Add(position, Walls.door_right);
+                        }
                         else
                         {
                             // Make this a right wall
@@ -1084,6 +1583,11 @@ namespace TestbedMonogame
                         {
                             // Make this wall a middle window
                             walls.Add(position, Walls.window_middle_bottom);
+                        }
+                        else if (doors.Contains(position))
+                        {
+                            // Make this wall a door
+                            walls.Add(position, Walls.door_bottom);
                         }
                         else
                         {

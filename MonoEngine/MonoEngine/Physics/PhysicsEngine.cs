@@ -28,7 +28,7 @@ namespace MonoEngine.Physics
             public static int BOUNDINGBOX_ORDERS = 4;
             public static int BOUNDINGBOX_LARGEST = (int)Math.Pow(BOUNDINGBOX_SMALLEST, BOUNDINGBOX_ORDERS);
 
-            public static float MODEL_TRANSLATION_SCALE = 400.0f;
+            public static float MODEL_TRANSLATION_SCALE = 200.0f;
 
             public static Vector3 WORLD_FORCE = new Vector3(0, -9.8f, 0);
 

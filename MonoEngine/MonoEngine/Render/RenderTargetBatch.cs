@@ -63,6 +63,12 @@ namespace MonoEngine.Render
             //open the spritebatch
             GraphicsHelper.spriteBatch.Begin(settings.mode, settings.blend, settings.sampler, settings.depth, settings.rasteriser, settings.effect);
 
+            if (settings.blend != null)
+                GraphicsHelper.graphicsDevice.BlendState = settings.blend;
+            if (settings.depth != null)
+                GraphicsHelper.graphicsDevice.DepthStencilState = settings.depth;
+            if (settings.rasteriser != null)
+                GraphicsHelper.graphicsDevice.RasterizerState = settings.rasteriser;
             if (settings.sampler != null)
                 GraphicsHelper.graphicsDevice.SamplerStates[0] = settings.sampler;
 

@@ -424,8 +424,10 @@ namespace MonoEngine
         {
             // Ahk
             Vector3 translation = transformation.Translation;
-            transformation *= Matrix.CreateFromAxisAngle(axis, angle);
+            //Vector3 scale = transformation.Scale;
+            transformation = Matrix.CreateFromAxisAngle(axis, angle);
             transformation.Translation = translation;
+            //transformation.Scale = scale;
         }
 
         public void Scale(Vector3 scale)

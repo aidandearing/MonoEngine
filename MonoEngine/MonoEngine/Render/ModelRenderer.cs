@@ -36,7 +36,7 @@ namespace MonoEngine.Render
         {
             model.SetEffect(material);
             //model.Draw(Physics.WorldToRender(Camera.Transformation.Transformation + parent.transform.Transformation), Camera.View, Camera.Projection);
-            ((Model)model).Draw(PhysicsEngine.WorldToRender(Camera.MainCamera.transform.Transformation + transform.Transformation), Camera.MainCamera.View, Camera.MainCamera.Projection);
+            ((Model)model).Draw(PhysicsEngine.WorldToRender(transform.Transformation), Camera.MainCamera.View, Camera.MainCamera.Projection);
         }
 
         public static ModelRenderer MakeModelRenderer(string name)
