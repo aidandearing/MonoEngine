@@ -611,6 +611,9 @@
     <None Include="Content\Assets\Models\FrontBasicWallCornerShort.FBX">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Content\Assets\Models\Player.FBX">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Content\Assets\Models\ShortWall.FBX">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
