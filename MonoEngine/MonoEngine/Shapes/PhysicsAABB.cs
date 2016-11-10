@@ -3,30 +3,15 @@ using System;
 
 namespace MonoEngine.Shapes
 {
-    public class AABB : Shape
+    public class PhysicsAABB : Shape
     {
         public Transform transform;
-
         private float diagonal;
         private Vector3 dimensions;
 
-        public AABB(float width, float height) : base()
-        {
-            float halfwidth = width / 2;
-            float halfheight = height / 2;
-
-            points = new Vector3[2];
-            points[0] = new Vector3(-halfwidth, 0, -halfheight);
-            points[1] = new Vector3(halfwidth, 0, halfheight);
-
-            dimensions = new Vector3(width, 0, height);
-            diagonal = points[0].Length();
-        }
-
-        public AABB(Transform transform, float width, float height) : base()
+        public PhysicsAABB(Transform transform, float width, float height) : base()
         {
             this.transform = transform;
-
             float halfwidth = width / 2;
             float halfheight = height / 2;
 
@@ -47,16 +32,11 @@ namespace MonoEngine.Shapes
 
         public override bool OverlapTest(Shape shape, Transform me, Transform other)
         {
-            Transform self = me;
-
-            if (transform != null)
-                self = transform;
-
             // AABB Intersect logic
             if (shape is Circle)
             {
                 // The Circle already knows how to check against an AABB, why code it again?
-                return shape.OverlapTest(this, other, self);
+                return shape.OverlapTest(this, other, me);
             }
             else if (shape is AABB)
             {
@@ -67,16 +47,16 @@ namespace MonoEngine.Shapes
                 AABB shapeAsAABB = shape as AABB;
 
                 // If my right is less than its left I am off its left side
-                if (Right(self).X < shapeAsAABB.Left(other).X)
+                if (Right(me).X < shapeAsAABB.Left(other).X)
                     return false;
                 // If my left is greater than its right I am off its right side
-                if (Left(self).X > shapeAsAABB.Right(other).X)
+                if (Left(me).X > shapeAsAABB.Right(other).X)
                     return false;
                 // If my down is less than its up I am off its top
-                if (Down(self).Z < shapeAsAABB.Up(other).Z)
+                if (Down(me).Z < shapeAsAABB.Up(other).Z)
                     return false;
                 // If my up is greater than its down I am off its bottom
-                if (Up(self).Z > shapeAsAABB.Down(other).Z)
+                if (Up(me).Z > shapeAsAABB.Down(other).Z)
                     return false;
             }
             else
@@ -89,23 +69,18 @@ namespace MonoEngine.Shapes
 
         public override bool Overlap(Vector3 point, Transform me)
         {
-            Transform self = me;
-
-            if (transform != null)
-                self = transform;
-
             // AABB Intersect logic
             // If the point is left of the left, no intersect
-            if (point.X < points[0].X + self.Position.X)
+            if (point.X < points[0].X + me.Position.X)
                 return false;
             // If the point is right of the right, no intersect
-            if (point.X > points[1].X + self.Position.X)
+            if (point.X > points[1].X + me.Position.X)
                 return false;
             // If the point is beneath the bottom, no intersect
-            if (point.Z < points[0].Z + self.Position.Z)
+            if (point.Z < points[0].Z + me.Position.Z)
                 return false;
             // If the point is above the top, no intersect
-            if (point.Z > points[1].Z + self.Position.Z)
+            if (point.Z > points[1].Z + me.Position.Z)
                 return false;
 
             return true;
@@ -113,47 +88,27 @@ namespace MonoEngine.Shapes
 
         public override AABB GetBoundingBox()
         {
-            return this;
+            return new AABB(dimensions.X, dimensions.Z);
         }
 
         public Vector3 Left(Transform me)
         {
-            Transform self = me;
-
-            if (transform != null)
-                self = transform;
-
-            return self.Position + new Vector3(points[0].X, 0, 0);
+            return me.Position + new Vector3(points[0].X, 0, 0);
         }
 
         public Vector3 Up(Transform me)
         {
-            Transform self = me;
-
-            if (transform != null)
-                self = transform;
-
-            return self.Position + new Vector3(0, 0, points[0].Z);
+            return me.Position + new Vector3(0, 0, points[0].Z);
         }
 
         public Vector3 Right(Transform me)
         {
-            Transform self = me;
-
-            if (transform != null)
-                self = transform;
-
-            return self.Position + new Vector3(points[1].X, 0, 0);
+            return me.Position + new Vector3(points[1].X, 0, 0);
         }
 
         public Vector3 Down(Transform me)
         {
-            Transform self = me;
-
-            if (transform != null)
-                self = transform;
-
-            return self.Position + new Vector3(0, 0, points[1].Z);
+            return me.Position + new Vector3(0, 0, points[1].Z);
         }
 
         public Vector3 Width()
@@ -168,22 +123,12 @@ namespace MonoEngine.Shapes
 
         public Vector3 Min(Transform me)
         {
-            Transform self = me;
-
-            if (transform != null)
-                self = transform;
-
-            return self.Position + points[0];
+            return me.Position + points[0];
         }
 
         public Vector3 Max(Transform me)
         {
-            Transform self = me;
-
-            if (transform != null)
-                self = transform;
-
-            return self.Position + points[1];
+            return me.Position + points[1];
         }
 
         public float Diagonal
@@ -250,7 +195,7 @@ namespace MonoEngine.Shapes
             theta = theta % MathHelper.PiOver2;
 
             // Now lets use this angle and the known dimension to calculate the length to the edge
-            return  (knownDim / 2) / (float)Math.Cos(theta);
+            return (knownDim / 2) / (float)Math.Cos(theta);
         }
 
         public override float GetSurfaceArea()

@@ -1,4 +1,5 @@
-﻿using MonoEngine.Game;
+﻿using MonoEngine;
+using MonoEngine.Game;
 using MonoEngine.Physics.Physics2D;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -22,7 +23,7 @@ namespace TestbedMonogame
         {
             if (body == null)
             {
-                GetComponent(new PhysicsBody2D().GetType())
+                body = GetComponent(new PhysicsBody2D().GetType()) as PhysicsBody2D;
             }
 
             // Get input, and use it to control this player
@@ -52,7 +53,7 @@ namespace TestbedMonogame
             {
                 // Player wants to go right
                 keyboardControlled = true;
-                desiredVelocity += new Vector3(-1, 0, 0) * MoveSpeed;
+                desiredVelocity += new Vector3(1, 0, 0) * MoveSpeed;
             }
 
             if (!keyboardControlled)
@@ -60,7 +61,15 @@ namespace TestbedMonogame
                 // Gamepad logic
             }
 
-            body.Velocity = Vector3.Normalize(desiredVelocity) * MoveSpeed;
+            if (desiredVelocity.LengthSquared() > 0)
+            {    
+                //body.transform.parent.Translate(Vector3.Normalize(desiredVelocity) * MoveSpeed * Time.DeltaTime);
+                body.Velocity = Vector3.Normalize(desiredVelocity) * MoveSpeed * Time.DeltaTime;
+            }
+            else
+            {
+                body.Velocity = Vector3.Zero;
+            }
         }
     }
 }

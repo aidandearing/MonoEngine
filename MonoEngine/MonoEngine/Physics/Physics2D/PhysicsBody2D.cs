@@ -117,7 +117,7 @@ namespace MonoEngine.Physics.Physics2D
         {
             get
             {
-                return transform.parent.Position;
+                return transform.Position;
             }
 
             set
@@ -184,7 +184,8 @@ namespace MonoEngine.Physics.Physics2D
             this.transform.parent = parent.transform;
             this.material = material;
             this.shape = shape;
-            //this.shape.transform.parent = this.transform;
+            if (this.shape is AABB)
+                ((AABB)this.shape).transform = this.transform;
             this.flagBodyType = bodyType;
 
             collisionCallbacks = new List<Collision2D.OnCollision>();
@@ -213,7 +214,7 @@ namespace MonoEngine.Physics.Physics2D
                 }
             }
 
-            PhysicsEngine.AddPhysicsBody(this);
+            //PhysicsEngine.AddPhysicsBody(this);
         }
 
         public override void Update()
@@ -245,6 +246,8 @@ namespace MonoEngine.Physics.Physics2D
                 transform.parent.Position += velocity;
 
                 force = Vector3.Zero;
+
+                PhysicsEngine.AddPhysicsBody(this);
             }
 
             List<PhysicsBody2D> collisionTests = PhysicsEngine.GetCollisionPass(this);

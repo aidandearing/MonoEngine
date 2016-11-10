@@ -20,6 +20,7 @@ namespace MonoEngine.Render
 
         internal ModelRenderer(string name, ModelWrapper model, string targetName = null) : base(name)
         {
+            this.material = new Material(new BasicEffect(GraphicsHelper.graphicsDevice));
             this.model = model;
 
             if (targetName == null)

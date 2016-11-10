@@ -8,13 +8,13 @@ namespace MonoEngine.Shapes
         public Vector3 lastOverlap_delta;
         public float lastOverlap_radius;
 
-        public Circle(Transform transform, float radius) : base(transform)
+        public Circle(float radius) : base()
         {
             points = new Vector3[1];
             points[0] = new Vector3(0, 0, radius);
         }
 
-        public override ShapeIntersection[] Intersects(Shape shape)
+        public override ShapeIntersection[] Intersects(Shape shape, Transform me, Transform other)
         {
             // Circle Intersect logic
 
@@ -26,13 +26,13 @@ namespace MonoEngine.Shapes
         /// </summary>
         /// <param name="shape">The shape to test overlap against</param>
         /// <returns>True if they are, false if not</returns>
-        public override bool OverlapTest(Shape shape)
+        public override bool OverlapTest(Shape shape, Transform me, Transform other)
         {
             // Circle Intersect logic
             if (shape is Circle)
             {
                 // Circle overlap Circle
-                Vector3 delta =  transform.Position- shape.transform.Position;
+                Vector3 delta =  me.Position- other.Position;
                 lastOverlap_delta = delta;
                 lastOverlap_radius = Radius + ((Circle)shape).Radius;
 
@@ -45,14 +45,14 @@ namespace MonoEngine.Shapes
             else if (shape is AABB)
             {
                 // Circle intersect AABB
-                Vector3 delta = transform.Position - shape.transform.Position;
+                Vector3 delta = me.Position - other.Position;
                 lastOverlap_delta = delta;
                 //Vector3 dN = Vector3.Normalize(delta);
 
                 if (delta.Length() <= Radius + (shape as AABB).Diagonal)
                 {
                     // The Circle and the AABB bounding circle are overlapping
-                    if (this.GetBoundingBox().OverlapTest(shape))
+                    if (this.GetBoundingBox().OverlapTest(shape, me, other))
                     {
                         return true;
                     }
@@ -92,9 +92,9 @@ namespace MonoEngine.Shapes
             return false;
         }
 
-        public override bool Overlap(Vector3 point)
+        public override bool Overlap(Vector3 point, Transform me)
         {
-            Vector3 delta = point - transform.Position;
+            Vector3 delta = point - me.Position;
 
             if (delta.Length() <= Radius)
             {
@@ -106,7 +106,7 @@ namespace MonoEngine.Shapes
 
         public override AABB GetBoundingBox()
         {
-            return new AABB(transform, points[0].Z * 2, points[0].Z * 2);
+            return new AABB(points[0].Z * 2, points[0].Z * 2);
         }
 
         public float Radius

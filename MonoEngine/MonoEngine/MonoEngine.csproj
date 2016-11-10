@@ -75,6 +75,7 @@
     <Compile Include="Assets\Resources.cs" />
     <Compile Include="Shapes\AABB.cs" />
     <Compile Include="Game\Camera.cs" />
+    <Compile Include="Shapes\PhysicsAABB.cs" />
     <Compile Include="Shapes\Circle.cs" />
     <Compile Include="Physics\Physics2D\Collision2D.cs" />
     <Compile Include="ContentHelper.cs" />
