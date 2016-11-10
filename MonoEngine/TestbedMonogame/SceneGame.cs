@@ -72,8 +72,6 @@ namespace TestbedMonogame
             effect.TextureEnabled = true;
             effect.Texture = Resources.LoadAsset(new Sprite().GetType(), "floor_grass", this) as Sprite;
 
-           
-
             // Kitchen -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
             #region Kitchen
             // All the set up necessary for the world data to know how to look in the kitchen
@@ -1101,6 +1099,7 @@ namespace TestbedMonogame
             #endregion
 
             // World generation ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            #region World Generation
             // 
 
             int width = 32;
@@ -1624,6 +1623,18 @@ namespace TestbedMonogame
                     }
                 }
             }
+            #endregion
+
+            // Player generation ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            #region Player Generation
+            //
+            Transform transform = new Transform(new Matrix());
+            PlayerController player = new PlayerController("Player1", PlayerIndex.One);
+            PhysicsBody2D player_body = new PhysicsBody2D(player, "Player1Body", new Circle(transform, 0.5f), new PhysicsMaterial(), PhysicsEngine.BodyType.SIMPLE);
+            player.transform = transform;
+            player.AddComponent(player_body);
+
+            #endregion
         }
 
         public override void Update()

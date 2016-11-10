@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="Game1.cs" />
     <Compile Include="GameObjectReflectionTest.cs" />
+    <Compile Include="PlayerController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SceneGame.cs" />
@@ -609,9 +610,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Content\Assets\Models\FrontBasicWallCornerShort.FBX">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Content\Assets\Models\Player.FBX">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Content\Assets\Models\ShortWall.FBX">
