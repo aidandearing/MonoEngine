@@ -177,7 +177,7 @@ namespace MonoEngine.Physics.Physics2D
             }
         }
 
-        public PhysicsBody2D() { };
+        public PhysicsBody2D() { }
 
         public PhysicsBody2D(GameObject parent, string name, Shape shape, PhysicsMaterial material, PhysicsEngine.BodyType bodyType) : base(name)
         {
