@@ -1,7 +1,10 @@
 ﻿using MonoEngine;
 using MonoEngine.Assets;
 using MonoEngine.Game;
+using MonoEngine.Physics;
+using MonoEngine.Physics.Physics2D;
 using MonoEngine.Render;
+using MonoEngine.Shapes;
 using MonoEngine.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -29,6 +32,11 @@ namespace TestbedMonogame
         List<Vector2> windows_side_far;
         List<Vector2> windows_side_near;
         List<Vector2> windows_middle;
+
+        AABB wall_bounding_box_top_bottom = new AABB(null, 1.0f, 0.1f);
+        AABB wall_bounding_box_left_right = new AABB(null, 0.1f, 1.0f);
+        AABB door_bounding_box = new AABB(null, 0.1f, 0.1f);
+
 
         public bool isInit = false;
 
@@ -63,6 +71,8 @@ namespace TestbedMonogame
             BasicEffect effect = materials["floor_grass"].effect as BasicEffect;
             effect.TextureEnabled = true;
             effect.Texture = Resources.LoadAsset(new Sprite().GetType(), "floor_grass", this) as Sprite;
+
+           
 
             // Kitchen -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
             #region Kitchen
@@ -1108,6 +1118,8 @@ namespace TestbedMonogame
                     // Walls
                     ModelRenderer wall = null;
 
+                    PhysicsBody2D body = null;
+                    
                     if (walls.ContainsKey(pos))
                     {
                         switch (walls[pos])
@@ -1120,6 +1132,15 @@ namespace TestbedMonogame
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.Pi);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_left", wall_bounding_box_left_right, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(-0.45f, 0.0f, 0.0f);
+                                wall.AddComponent(body);
+
+                                body = new PhysicsBody2D(wall, "bounding_box_bottom", wall_bounding_box_top_bottom, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.0f, 0.0f, -0.45f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.corner_bottom_right:
                                 //      |
@@ -1129,6 +1150,15 @@ namespace TestbedMonogame
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.Pi + MathHelper.PiOver2);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_right", wall_bounding_box_left_right, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.45f, 0.0f, 0.0f);
+                                wall.AddComponent(body);
+
+                                body = new PhysicsBody2D(wall, "bounding_box_bottom", wall_bounding_box_top_bottom, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.0f, 0.0f, -0.45f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.corner_top_left:
                                 //  ______
@@ -1139,6 +1169,15 @@ namespace TestbedMonogame
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_left", wall_bounding_box_left_right, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(-0.45f, 0.0f, 0.0f);
+                                wall.AddComponent(body);
+
+                                body = new PhysicsBody2D(wall, "bounding_box_top", wall_bounding_box_top_bottom, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.0f, 0.0f, 0.45f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.corner_top_right:
                                 //  ______
@@ -1148,170 +1187,352 @@ namespace TestbedMonogame
                                 wall = ModelRenderer.MakeModelRenderer("BasicWallCorner");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_right", wall_bounding_box_left_right, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.45f, 0.0f, 0.0f);
+                                wall.AddComponent(body);
+
+                                body = new PhysicsBody2D(wall, "bounding_box_top", wall_bounding_box_top_bottom, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.0f, 0.0f, 0.45f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.wall_bottom:
                                 wall = ModelRenderer.MakeModelRenderer("BasicWall");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.Pi);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_bottom", wall_bounding_box_top_bottom, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.0f, 0.0f, -0.45f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.wall_left:
                                 wall = ModelRenderer.MakeModelRenderer("BasicWall");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_left", wall_bounding_box_left_right, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(-0.45f, 0.0f, 0.0f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.wall_right:
                                 wall = ModelRenderer.MakeModelRenderer("BasicWall");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.Pi + MathHelper.PiOver2);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_right", wall_bounding_box_left_right, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.45f, 0.0f, 0.0f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.wall_top:
                                 wall = ModelRenderer.MakeModelRenderer("BasicWall");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_top", wall_bounding_box_top_bottom, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.0f, 0.0f, 0.45f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.window_far_bottom:
                                 wall = ModelRenderer.MakeModelRenderer("BasicDoubleWindowRight");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.Pi);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_bottom", wall_bounding_box_top_bottom, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.0f, 0.0f, -0.45f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.window_far_left:
                                 wall = ModelRenderer.MakeModelRenderer("BasicDoubleWindowRight");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_left", wall_bounding_box_left_right, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(-0.45f, 0.0f, 0.0f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.window_far_right:
                                 wall = ModelRenderer.MakeModelRenderer("BasicDoubleWindowRight");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.Pi + MathHelper.PiOver2);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_right", wall_bounding_box_left_right, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.45f, 0.0f, 0.0f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.window_far_top:
                                 wall = ModelRenderer.MakeModelRenderer("BasicDoubleWindowRight");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_top", wall_bounding_box_top_bottom, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.0f, 0.0f, 0.45f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.window_middle_bottom:
                                 wall = ModelRenderer.MakeModelRenderer("BasicWall");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_bottom", wall_bounding_box_top_bottom, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.0f, 0.0f, -0.45f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.window_middle_left:
                                 wall = ModelRenderer.MakeModelRenderer("BasicWall");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_left", wall_bounding_box_left_right, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(-0.45f, 0.0f, 0.0f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.window_middle_right:
                                 wall = ModelRenderer.MakeModelRenderer("BasicWall");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_right", wall_bounding_box_left_right, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.45f, 0.0f, 0.0f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.window_middle_top:
                                 wall = ModelRenderer.MakeModelRenderer("BasicWall");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_top", wall_bounding_box_top_bottom, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.0f, 0.0f, 0.45f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.window_near_bottom:
                                 wall = ModelRenderer.MakeModelRenderer("BasicDoubleWindowLeft");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.Pi);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_bottom", wall_bounding_box_top_bottom, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.0f, 0.0f, -0.45f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.window_near_left:
                                 wall = ModelRenderer.MakeModelRenderer("BasicDoubleWindowLeft");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_left", wall_bounding_box_left_right, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(-0.45f, 0.0f, 0.0f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.window_near_right:
                                 wall = ModelRenderer.MakeModelRenderer("BasicDoubleWindowLeft");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.Pi + MathHelper.PiOver2);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_right", wall_bounding_box_left_right, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.45f, 0.0f, 0.0f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.window_near_top:
                                 wall = ModelRenderer.MakeModelRenderer("BasicDoubleWindowLeft");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_top", wall_bounding_box_top_bottom, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.0f, 0.0f, 0.45f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.window_single_bottom:
                                 wall = ModelRenderer.MakeModelRenderer("BasicSingleWindow");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.Pi);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_bottom", wall_bounding_box_top_bottom, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.0f, 0.0f, -0.45f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.window_single_left:
                                 wall = ModelRenderer.MakeModelRenderer("BasicSingleWindow");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_left", wall_bounding_box_left_right, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(-0.45f, 0.0f, 0.0f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.window_single_right:
                                 wall = ModelRenderer.MakeModelRenderer("BasicSingleWindow");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.Pi + MathHelper.PiOver2);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_right", wall_bounding_box_left_right, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.45f, 0.0f, 0.0f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.window_single_top:
                                 wall = ModelRenderer.MakeModelRenderer("BasicSingleWindow");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_top", wall_bounding_box_top_bottom, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.0f, 0.0f, 0.45f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.corner_out_bottom_left:
                                 wall = ModelRenderer.MakeModelRenderer("FrontBasicWallCorner");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.Pi + MathHelper.PiOver2);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_right", wall_bounding_box_left_right, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.45f, 0.0f, 0.0f);
+                                wall.AddComponent(body);
+
+                                body = new PhysicsBody2D(wall, "bounding_box_bottom", wall_bounding_box_top_bottom, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.0f, 0.0f, -0.45f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.corner_out_bottom_right:
                                 wall = ModelRenderer.MakeModelRenderer("FrontBasicWallCorner");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 //wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_right", wall_bounding_box_left_right, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.45f, 0.0f, 0.0f);
+                                wall.AddComponent(body);
+
+                                body = new PhysicsBody2D(wall, "bounding_box_bottom", wall_bounding_box_top_bottom, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.0f, 0.0f, -0.45f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.corner_out_top_left:
                                 wall = ModelRenderer.MakeModelRenderer("FrontBasicWallCorner");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.Pi);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_left", wall_bounding_box_left_right, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(-0.45f, 0.0f, 0.0f);
+                                wall.AddComponent(body);
+
+                                body = new PhysicsBody2D(wall, "bounding_box_top", wall_bounding_box_top_bottom, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.0f, 0.0f, 0.45f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.corner_out_top_right:
                                 wall = ModelRenderer.MakeModelRenderer("FrontBasicWallCorner");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_right", wall_bounding_box_left_right, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.45f, 0.0f, 0.0f);
+                                wall.AddComponent(body);
+
+                                body = new PhysicsBody2D(wall, "bounding_box_top", wall_bounding_box_top_bottom, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.0f, 0.0f, 0.45f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.door_bottom:
                                 wall = ModelRenderer.MakeModelRenderer("DoorFrame");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_bottom_left", door_bounding_box, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(-0.45f, 0.0f, -0.45f);
+                                wall.AddComponent(body);
+
+                                body = new PhysicsBody2D(wall, "bounding_box_bottom_right", door_bounding_box, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.45f, 0.0f, -0.45f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.door_left:
                                 wall = ModelRenderer.MakeModelRenderer("DoorFrame");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_bottom_left", door_bounding_box, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(-0.45f, 0.0f, -0.45f);
+                                wall.AddComponent(body);
+
+                                body = new PhysicsBody2D(wall, "bounding_box_top_left", door_bounding_box, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(-0.45f, 0.0f, 0.45f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.door_right:
                                 wall = ModelRenderer.MakeModelRenderer("DoorFrame");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Rotate(Vector3.Up, MathHelper.PiOver2);
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_bottom_right", door_bounding_box, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(-0.45f, 0.0f, 0.45f);
+                                wall.AddComponent(body);
+
+                                body = new PhysicsBody2D(wall, "bounding_box_top_right", door_bounding_box, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.45f, 0.0f, 0.45f);
+                                wall.AddComponent(body);
                                 break;
                             case Walls.door_top:
                                 wall = ModelRenderer.MakeModelRenderer("DoorFrame");
                                 wall.Name = "wall" + x.ToString() + "," + y.ToString();
                                 wall.transform.Position = position;
+
+                                // Body Definitions
+                                body = new PhysicsBody2D(wall, "bounding_box_top_left", door_bounding_box, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(-0.45f, 0.0f, 0.45f);
+                                wall.AddComponent(body);
+
+                                body = new PhysicsBody2D(wall, "bounding_box_top_right", door_bounding_box, new PhysicsMaterial(), PhysicsEngine.BodyType.STATIC);
+                                body.transform.Position = new Vector3(0.45f, 0.0f, 0.45f);
+                                wall.AddComponent(body);
                                 break;
                         }
+                        
                     }
 
                     //if (wall != null)
