@@ -76,6 +76,11 @@ namespace TestbedMonogame
             effect.TextureEnabled = true;
             effect.Texture = Resources.LoadAsset(new Sprite().GetType(), "floor_grass", this) as Sprite;
 
+            materials.Add("wall_brick", new Material(new BasicEffect(GraphicsHelper.graphicsDevice)));
+            effect = materials["wall_brick"].effect as BasicEffect;
+            effect.TextureEnabled = true;
+            effect.Texture = Resources.LoadAsset(new Sprite().GetType(), "wall_brick", this) as Sprite;
+
             // Kitchen -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
             #region Kitchen
             // All the set up necessary for the world data to know how to look in the kitchen
@@ -1904,13 +1909,13 @@ namespace TestbedMonogame
                                 floor.material = materials["floor_walk"];
 
                                 if (wall != null)
-                                    wall.material = materials["wall_hall"];
+                                    wall.material = materials["wall_brick"];
                                 break;
                             case Rooms.road:
                                 floor.material = materials["floor_road"];
 
                                 if (wall != null)
-                                    wall.material = materials["wall_hall"];
+                                    wall.material = materials["wall_brick"];
                                 break;
                             case Rooms.bathroom:
                                 floor.material = materials["floor_bath"];
@@ -1931,7 +1936,7 @@ namespace TestbedMonogame
                         floor.material = materials["floor_grass"];
 
                         if (wall != null)
-                            wall.material = materials["wall_hall"];
+                            wall.material = materials["wall_brick"];
                     }
 
                     GameObjectManager.AddGameObject(floor);  

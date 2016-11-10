@@ -359,7 +359,7 @@ namespace TestbedMonogame
 
             title = new UIText("Title", new UIAlignment(UIAlignment.Alignment.TopLeft), new UIAlignment(UIAlignment.Alignment.Center), UIObject.flags.None, "microtype", "I am poor and hungry", 128);
 
-            logo = new UIImage("Logo", new Rectangle(0, 0, 100, 100), new UIAlignment(UIAlignment.Alignment.BottomRight), new UIAlignment(UIAlignment.Alignment.Center), UIObject.flags.None, "monogameLogo");
+            //logo = new UIImage("Logo", new Rectangle(0, 0, 100, 100), new UIAlignment(UIAlignment.Alignment.BottomRight), new UIAlignment(UIAlignment.Alignment.Center), UIObject.flags.None, "monogameLogo");
         }
 
         public override void Update()
