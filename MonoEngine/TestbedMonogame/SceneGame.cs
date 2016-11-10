@@ -56,7 +56,11 @@ namespace TestbedMonogame
             // All the mostly generic scene set up, that I hope to be able to get rid of completely with the prefab system.
             // TODO Update this comment after completing the prefab system
 
-            GameObjectManager.AddGameObject(Camera.Isometric("mainCamera", new Vector3(0, 0, 0f), 2, -10000.0f, 10000.0f));
+            Camera camera = Camera.Isometric("mainCamera", new Vector3(0, 0, 0f), 2, -10000.0f, 10000.0f);
+            CameraController controller = new CameraController("cameraController", PlayerIndex.One);
+            controller.camera = camera;
+            camera.AddComponent(controller);
+            GameObjectManager.AddGameObject(camera);
             //GameObjectManager.AddGameObject(Camera.Perspective("mainCamera", new Vector3(1000, 2000, 1000f), Vector3.Zero, 0.1f, 10000.0f));
 
             floors = new Dictionary<Vector2, Rooms>();

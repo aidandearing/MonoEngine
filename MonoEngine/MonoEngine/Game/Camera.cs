@@ -9,6 +9,8 @@ namespace MonoEngine.Game
         // TODO A variety of safer static methods to handle main camera and other camera based stuff
         public static Camera MainCamera;
 
+        public Camera() { }
+
         public Camera(string name, Matrix view, Matrix projection) : base(name)
         {
             // Isometric stuff
@@ -24,12 +26,16 @@ namespace MonoEngine.Game
                 MainCamera = this;
         }
 
-        private Matrix view;
+        public Matrix view;
         public Matrix View
         {
             get
             {
                 return view;
+            }
+            set
+            {
+                view = value;
             }
         }
         private Matrix projection;
@@ -38,6 +44,10 @@ namespace MonoEngine.Game
             get
             {
                 return projection;
+            }
+            set
+            {
+                projection =  value;
             }
         }
 
