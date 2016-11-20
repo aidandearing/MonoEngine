@@ -28,8 +28,6 @@ namespace MonoEngine.UI
         {
             uiBehaviours = new List<UIBehaviour>();
             deadBehaviours = new List<UIBehaviour>();
-            //creates a render target the size of the screen for rendering UI with standard format and no depth buffer
-            Resources.LoadRenderTarget2D("UI", SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, false, Microsoft.Xna.Framework.Graphics.SurfaceFormat.Color, Microsoft.Xna.Framework.Graphics.DepthFormat.None, 0, Microsoft.Xna.Framework.Graphics.RenderTargetUsage.DiscardContents);
         }
 
         public void AddUIBehaviour(UIBehaviour behaviour)

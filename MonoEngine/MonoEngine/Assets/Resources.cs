@@ -45,42 +45,6 @@ namespace MonoEngine.Assets
             return null;
         }
 
-        private Camera LoadCamera(XmlReader reader)
-        {
-            return null;
-        }
-
-        private ModelWrapper LoadModel(XmlReader reader)
-        {
-            return null;
-        }
-
-        private ModelRenderer LoadModelRenderer(XmlReader reader)
-        {
-            return null;
-        }
-
-        private PhysicsBody2D LoadPhysicsBody2D(XmlReader reader)
-        {
-            return null;
-        }
-
-        private PhysicsMaterial LoadPhysicsMaterial(XmlReader reader)
-        {
-            return null;
-        }
-
-        private SpriteRenderer LoadSpriteRenderer(XmlReader reader)
-        {
-            return null;
-        }
-
-        private UIObject LoadUIObject(XmlReader reader)
-        {
-            // Take the reader, and make a UIObject from it
-            return null;
-        }
-
         private static Resources instance;
         private Resources()
         {
@@ -103,11 +67,11 @@ namespace MonoEngine.Assets
             resourceManagers.Add(type, new ResourceManager("Assets/Textures", type, loaderS));
 
             type = new RenderTarget2DWrapper().GetType();
-            resourceManager_renderTarget2D = new ResourceManager("Assets/Shaders", type, loaderS);
+            resourceManager_renderTarget2D = new ResourceManager("Assets/Shaders", type, null);
             resourceManagers.Add(type, resourceManager_renderTarget2D);
 
-            type = new EffectWrapper().GetType();
-            LoaderEffect loaderE = new LoaderEffect(type);
+            type = new Material().GetType();
+            LoaderMaterial loaderE = new LoaderMaterial(type);
             resourceManagers.Add(type, new ResourceManager("Assets/Shaders", type, loaderE));
         }
 
@@ -151,7 +115,6 @@ namespace MonoEngine.Assets
 
         public static RenderTarget2DWrapper GetRenderTarget2D(string name)
         {
-            
             if (instance.resourceManager_renderTarget2D.ContainsResource(name))
             {
                 return instance.resourceManager_renderTarget2D.GetResource(name) as RenderTarget2DWrapper;
@@ -162,7 +125,7 @@ namespace MonoEngine.Assets
             }
         }
 
-        public static RenderTarget2DWrapper LoadRenderTarget2D(string name, Scene parent, int width, int height, bool mipMap, SurfaceFormat surfaceFormat, DepthFormat depthFormat, int multiSampleCount, RenderTargetUsage usage)
+        public static RenderTarget2DWrapper LoadRenderTarget2D(string name, Scene parent, int width, int height, bool mipMap, SurfaceFormat surfaceFormat, DepthFormat depthFormat, int multiSampleCount, RenderTargetUsage usage, RenderTargetSettings settings)
         {
             RenderTarget2DWrapper target = new RenderTarget2DWrapper(new RenderTarget2D(GraphicsHelper.graphicsDevice, width, height, mipMap, surfaceFormat, depthFormat, multiSampleCount, usage));
             ResourceManager manager = instance.resourceManagers[target.GetType()];
@@ -177,21 +140,23 @@ namespace MonoEngine.Assets
             else
             {
                 manager.AddResource(name, target);
-                RenderTargetBatch batch = new RenderTargetBatch(name, target);
+                RenderTargetBatch batch = new RenderTargetBatch(name, target, settings);
                 RenderManager.AddRenderTargetBatch(batch);
                 return target;
             }
+            RenderTarget2DWrapper wrapper = manager.GetResource(name) as RenderTarget2DWrapper;
+            Type type = wrapper.GetType();
 
             if (parent != null)
             {
-                parent.assets.assets[new RenderTarget2DWrapper().GetType()].Add(name);
+                parent.assets.AddAsset(name, type);
             }
             else
             {
                 // TODO: Log a warning that unbound assets will not unload when a scene switch occurs
             }
 
-            return manager.GetResource(name) as RenderTarget2DWrapper;
+            return wrapper;
         }
 
         public static void UnloadScene(Scene newScene)

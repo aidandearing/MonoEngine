@@ -41,16 +41,19 @@ namespace MonoEngine.Assets
                 }
             }
 
+            Font font = new Font(sizes.ToArray(), fonts.ToArray(), name);
+            Type type = font.GetType();
+
             if (parent != null)
             {
-                parent.assets.assets[type].Add(name);
+                parent.assets.AddAsset(name, type);
             }
             else
             {
                 // TODO: Log a warning that unbound assets will not unload when a scene switch occurs
             }
 
-            return new Font(sizes.ToArray(), fonts.ToArray(), name);
+            return font;
         }
     }
 }

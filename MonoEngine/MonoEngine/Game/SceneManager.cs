@@ -21,6 +21,11 @@ namespace MonoEngine.Game
         {
 
         }
+
+        public override void Update(GameTime time)
+        {
+            activeScene.Update();
+        }
         
         // TODO: MAKE THIS THREADED!
         public static void LoadScene(string name)

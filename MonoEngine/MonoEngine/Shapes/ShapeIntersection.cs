@@ -20,13 +20,13 @@ namespace MonoEngine.Shapes
         {
             ShapeIntersection intersection = null;
 
-            if (shapeA.OverlapTest(shapeB))
-            {
-                Vector3 inter = shapeA.transform.Position - shapeB.transform.Position;
-                Vector3 norm = Vector3.Normalize(inter);
-                float depth = Vector3.Dot(Vector3.Normalize(shapeA.transform.Position), norm);
-                intersection = new ShapeIntersection(inter, norm, depth);
-            }
+            //if (shapeA.OverlapTest(shapeB))
+            //{
+            //    Vector3 inter = shapeA.transform.Position - shapeB.transform.Position;
+            //    Vector3 norm = Vector3.Normalize(inter);
+            //    float depth = Vector3.Dot(Vector3.Normalize(shapeA.transform.Position), norm);
+            //    intersection = new ShapeIntersection(inter, norm, depth);
+            //}
 
             return intersection;
         }

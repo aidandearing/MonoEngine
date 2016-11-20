@@ -16,14 +16,24 @@ namespace MonoEngine.Render
         //public Model model { get; set; }
         public Font Font { get; set; }
         public string Text { get; set; }
-        public int Size { get; set; }
+
+        private int size;
+        public int Size
+        {
+            get { return size; }
+            set { size = value; font = Font.GetFont(size); }
+        }
+
         public Vector2 Position { get; set; }
         public Color Colour { get; set; }
+
+        private SpriteFont font;
         private RenderTargetBatch batch;
 
         private TextRenderer(string name, Font font, string text, int size, string targetName = null) : base(name)
         {
             Text = text;
+            Font = font;
             Size = size;
             Colour = Color.White;
             Position = Vector2.Zero;
@@ -40,11 +50,11 @@ namespace MonoEngine.Render
 
         public void Draw()
         {
-            GraphicsHelper.spriteBatch.DrawString(Font.GetFont(Size), Text, Position, Colour);
+            GraphicsHelper.spriteBatch.DrawString(Font.GetFont(Size), Text, Position, Colour, 0, Vector2.Zero, (float)Size/(float)Font.GetSize(Size), SpriteEffects.None, 0);
         }
-        public static TextRenderer MakeTextRenderer(string name, string asset)
-        {
 
+        public static TextRenderer MakeTextRenderer(string name, string asset, string targetName = null)
+        {
             return new TextRenderer(name, Resources.LoadAsset(new Font().GetType(), asset, SceneManager.activeScene) as Font, "text", 12);
         }
     }

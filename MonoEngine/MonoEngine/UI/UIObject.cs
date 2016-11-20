@@ -37,6 +37,7 @@ namespace MonoEngine.UI
 
             origin = alignment.GetAlignment(this, this);
         }
+
         public UIObject(string name, UIAlignment boundsAlign, UIAlignment alignment, flags flag)
         {
             //default values (this will be overwritten in derived classes)

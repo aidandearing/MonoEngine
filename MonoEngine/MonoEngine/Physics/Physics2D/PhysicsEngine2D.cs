@@ -117,7 +117,14 @@ namespace MonoEngine.Physics.Physics2D
         /// <param name="body">The body to be added</param>
         internal void AddBody(PhysicsBody2D body)
         {
-            bodies_All.Add(body);
+            if (!bodies_All.Contains(body))
+            {
+                bodies_All.Add(body);
+            }
+            else
+            {
+                AddChunk(body);
+            }
 
             //if (body.flagBodyType.HasFlag(BodyType.STATIC))
             //{
@@ -133,9 +140,10 @@ namespace MonoEngine.Physics.Physics2D
                 AddChunk(body);
             }
 
-            if (!body.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
+            if (!body.flagBodyType.HasFlag(BodyType.STATIC))
             {
-                bodies_Active.Add(body);
+                if (!bodies_Active.Contains(body))
+                    bodies_Active.Add(body);
             }
         }
 
@@ -297,9 +305,7 @@ namespace MonoEngine.Physics.Physics2D
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            Console.WriteLine(Time.DeltaTime);
-            Console.WriteLine(bounds.Count);
+           
 
             foreach (PhysicsBody2D body in bodies_Active)
             {
@@ -310,7 +316,9 @@ namespace MonoEngine.Physics.Physics2D
             foreach (PhysicsBody2D body in bodies_Dead)
             {
                 bodies_All.Remove(body);
-                bodies_Active.Remove(body);
+
+                if (bodies_Active.Contains(body))
+                    bodies_Active.Remove(body);
 
                 // If they have registered callbacks remove them
                 if (registery_CollisionCallbacks.ContainsKey(body))
@@ -318,15 +326,15 @@ namespace MonoEngine.Physics.Physics2D
                     registery_CollisionCallbacks.Remove(body);
                 }
 
-                if (body.flagBodyType.HasFlag(BodyType.STATIC))
-                {
+                //if (body.flagBodyType.HasFlag(BodyType.STATIC))
+                //{
                     foreach (PhysicsBoundingChunk2D chunk in body.chunks)
                     {
                         chunk.RemoveBody(body);
                     }
 
                     body.chunks = null;
-                }
+                //}
             }
         }
         // End of GameComponent /////////////////////////////////////////////////////////////////////////////////////////////////////

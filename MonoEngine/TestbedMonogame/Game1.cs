@@ -20,13 +20,6 @@ namespace TestbedMonogame
     /// </summary>
     public class Game1 : Game
     {
-        // TODO: REMOVE THIS GROSSNESS
-        BasicEffect effect;
-        float h = 0;
-        float s = 1;
-        float v = 1;
-        // TODO: GROSSNESS TO HERE
-
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         public Game1()
@@ -45,8 +38,8 @@ namespace TestbedMonogame
             Window.Title = "I am Poor and Hungry";
 
             // Scaleable resolution functionality
-            graphics.PreferredBackBufferWidth = 960;
-            graphics.PreferredBackBufferHeight = 540;
+            graphics.PreferredBackBufferWidth = 1920;
+            graphics.PreferredBackBufferHeight = 1080;
 
             GraphicsHelper.screen = new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
 
@@ -64,10 +57,15 @@ namespace TestbedMonogame
             //graphics.ToggleFullScreen();
 
             this.Components.Add(Time.Instance(this));
+            this.Components.Add(Random.Instance(this));
             this.Components.Add(GameObjectManager.Instance(this));
+            this.Components.Add(SceneManager.Instance(this));
             this.Components.Add(SoundManager.Instance(this));
             this.Components.Add(SongManager.Instance(this));
             this.Components.Add(PhysicsEngine.Instance(this, PhysicsEngine.EngineTypes.Physics2D));
+
+            SceneManager.activeScene = new SceneTitle();
+            //SceneManager.activeScene = new SceneGame();
 
             //PhysicsEngine.PhysicsSettings.WORLD_FORCE = new Vector3(0, -9.8f, 0);
         }
@@ -96,65 +94,12 @@ namespace TestbedMonogame
             spriteBatch = new SpriteBatch(GraphicsDevice);
             GraphicsHelper.spriteBatch = spriteBatch;
             GraphicsHelper.graphicsDevice = GraphicsDevice;
-            this.Components.Add(RenderManager.Instance(this));
 
-            GameObject obj = new GameObject("wall");
-            ModelRenderer renderer = ModelRenderer.MakeModelRenderer("BasicWall");
-
-            // This is a hideous pipeline. How do I make it prettier?
-            // Obviously I can default to supplying models with a BasicEffect
-            // Do I want to hide Effect behind Materials?
-            // There isn't much point to it, besides giving Effect a different name, as far as I can see it.
-            // But then how do I best solve this?
-            // Okay, back to the beginning
-
-            // First, default to giving them a basic effect -> Monogame already does this
-            // Second, give them an easier pipeline for getting textures to load. -> Monogame seems to know how to import their textures via fbx
-            // Third, how do I give them an easy to use piece of xml that allows them to simply define a material for a model?
-            // Fourth, how do I connect that material to the model in a simple way?
-
-            // In xml I picture you define a modelrenderer, and give it a model, and material, and off it goes, easy, lol.
-            // In actuality it should be similarly easy.
-            // Effect has Parameter["STRING NAME"].SetValue(SOME VALUE), this shouldn't be hard to unwrap a bit, into some xml.
-
-            // Turns out I need to wrap Effect behind a layer because it doesn't know how to serialise, and I need it to. Time to make a Material class that safely exposes its Effect to the Serialiser
-            effect = renderer.Model.GetEffect()[0] as BasicEffect;
-            effect.Texture = Resources.LoadAsset(new Sprite().GetType(), "metal_relief_fancy", SceneManager.activeScene) as Sprite;
-            effect.TextureEnabled = true;
-            effect.LightingEnabled = true;
-            //renderer.Model.SetEffect(effect);
-
-            obj.AddComponent(renderer);
-
-            PhysicsBody2D body = new PhysicsBody2D(obj, "wall", new AABB(obj.transform, 1, 1), new PhysicsMaterial(1, 0, 1), PhysicsEngine.BodyType.SIMPLE);
-            obj.AddComponent(body);
-            obj.AddComponent(new Camera("camera"));
-
-            GameObjectManager.AddGameObject(obj);
-
-            //obj = new GameObject("floor");
-            //obj.transform.Translate(new Vector3(0f, 0, 0));
-            //obj.AddComponent(ModelRenderer.MakeModelRenderer(obj, "FloorTile"));
-            //body = new PhysicsBody2D(obj, "floorA", new Circle(obj.transform, 0.5f), new PhysicsMaterial(1,0,1f), PhysicsEngine.BodyType.STATIC);
-            //body.Velocity = new Vector3(0.01f, 0, 0);
-            //body.RegisterCollisionCallback(new Collision2D.OnCollision(OnCollision2DBody));
-            //obj.AddComponent(body);
-
-            //GameObjectManager.AddGameObject(obj);
-
-            obj = new GameObject("floor2");
-            obj.transform.Translate(new Vector3(2f, 0, 0));
-            renderer = ModelRenderer.MakeModelRenderer("FloorTile");
-            obj.AddComponent(renderer);
-            body = new PhysicsBody2D(obj, "floorB", new Circle(obj.transform, 0.5f), new PhysicsMaterial(1, 0, 1f), PhysicsEngine.BodyType.SIMPLE);
-            //body.Velocity = new Vector3(-0.01f, 0, 0);
-            //body.RegisterCollisionCallback(new Collision2D.OnCollision(OnCollision2DBody));
-            obj.AddComponent(body);
-
-            GameObjectManager.AddGameObject(obj);
-
-            UIText textObj = new UIText("test", new UIAlignment(UIAlignment.Alignment.BottomCenter), new UIAlignment(UIAlignment.Alignment.Center), UIObject.flags.None, "blood", "Hello Beautiful", 24);
-            UIImage imgObj = new UIImage("logo", new Rectangle(0, 0, 100, 100), new UIAlignment(UIAlignment.Alignment.BottomRight), new UIAlignment(UIAlignment.Alignment.Center), UIObject.flags.None, "monogameLogo");
+            RenderManager renderManager = RenderManager.Instance(this);
+            renderManager.Initialize();
+            this.Components.Add(renderManager);
+            
+            //GameObjectManager.AddGameObject(Camera.Orthographic("mainCamera", new Vector3(0, 0, 1f), Vector3.Zero));
         }
 
         /// <summary>
@@ -179,69 +124,7 @@ namespace TestbedMonogame
 
             // TODO: Add your update logic here
 
-            // TODO: REMOVE THIS GROSSNESS
-            h = (h + 180.0f * Time.DeltaTime) % 360.0f;
-
-            float r = 0;
-            float g = 0;
-            float b = 0;
-
-            int i;
-            float f, p, q, t;
-            if (s == 0)
-            {
-                // achromatic (grey)
-                r = g = b = v;
-                return;
-            }
-            // sector 0 to 5
-            float h_t = h / 60;             
-            i = (int)System.Math.Floor(h_t);
-            // factorial part of h
-            f = h_t - i;                    
-            p = v * (1 - s);
-            q = v * (1 - s * f);
-            t = v * (1 - s * (1 - f));
-
-            switch (i)
-            {
-                case 0:
-                    r = v;
-                    g = t;
-                    b = p;
-                    break;
-                case 1:
-                    r = q;
-                    g = v;
-                    b = p;
-                    break;
-                case 2:
-                    r = p;
-                    g = v;
-                    b = t;
-                    break;
-                case 3:
-                    r = p;
-                    g = q;
-                    b = v;
-                    break;
-                case 4:
-                    r = t;
-                    g = p;
-                    b = v;
-                    break;
-                default:
-                    r = v;
-                    g = p;
-                    b = q;
-                    break;
-            }
             base.Update(gameTime);
-
-            r = g = b = 1;
-            effect.AmbientLightColor = new Vector3(r, g, b);
-            // TODO: GROSSNESS GOES TO HERE
-
         }
 
         /// <summary>

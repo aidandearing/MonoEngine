@@ -13,11 +13,8 @@ namespace MonoEngine.Assets
         public int[] fontSizes;
         public SpriteFont[] fontStyles;
         public string fontName;
-
-        /// <summary>
-        /// NEVER USE THIS, IT IS USED SPECIFICALLY TO GET THE RUNTIME TYPE OF AN INSTANCE OF FONT, AND NOTHING ELSE
-        /// </summary>
-        internal Font() { }
+        
+        public Font() { }
 
         public Font(int[] fontSizes, SpriteFont[] fontStyles, string fontName)
         {
@@ -38,6 +35,18 @@ namespace MonoEngine.Assets
                 }
             }
             return null;
+        }
+
+        public int GetSize(int size)
+        {
+            for (int i = 0; i < fontSizes.Length; i++)
+            {
+                if (size <= fontSizes[i] || i == fontSizes.Length - 1)
+                {
+                    return fontSizes[i];
+                }
+            }
+            return 1;
         }
     }
 }

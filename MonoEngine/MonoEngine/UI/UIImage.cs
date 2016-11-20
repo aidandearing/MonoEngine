@@ -16,12 +16,12 @@ namespace MonoEngine.UI
     {
         public SpriteRenderer spriteRenderer;
 
-        public UIImage(string name, Rectangle bounds, UIAlignment boundsAlign, UIAlignment alignment, flags flags, string imageName) : base(name, bounds, boundsAlign, alignment, flags)
+        public UIImage(string name, Rectangle bounds, UIAlignment boundsAlign, UIAlignment alignment, flags flags, string imageName, string targetName = null) : base(name, bounds, boundsAlign, alignment, flags)
         {
-            spriteRenderer = SpriteRenderer.MakeSpriteRenderer(name, imageName);
+            spriteRenderer = SpriteRenderer.MakeSpriteRenderer(name, imageName, targetName);
             spriteRenderer.Name = name;
             spriteRenderer.sprite = Resources.LoadAsset(new Sprite().GetType(), imageName, SceneManager.activeScene) as Sprite;
-            spriteRenderer.sprite.destinationRect = new Rectangle((int)origin.X, (int)origin.Y, this.bounds.Width, this.bounds.Height);
+            spriteRenderer.sprite.DestinationRect = new Rectangle((int)origin.X, (int)origin.Y, this.bounds.Width, this.bounds.Height);
         }
     }
 }

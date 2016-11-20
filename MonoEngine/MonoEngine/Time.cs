@@ -53,7 +53,7 @@ namespace MonoEngine
 
             deltaTime_last = deltaTime;
             deltaTime = gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
-            elapsedTime = gameTime.TotalGameTime.Milliseconds / 1000.0f;
+            elapsedTime += deltaTime;
         }
     }
 }

@@ -99,7 +99,7 @@ namespace MonoEngine.Physics.Physics2D
 
         public bool BoundsTest(PhysicsBody2D body)
         {
-            return bounds[0].OverlapTest(body.shape);
+            return bounds[0].OverlapTest(body.shape, bounds[0].transform, body.transform);
         }
 
         /// <summary>
@@ -137,15 +137,17 @@ namespace MonoEngine.Physics.Physics2D
             {
                 foreach (AABB bounds in orderToIndex[i])
                 {
-                    if (bounds.OverlapTest(body.shape))
+                    if (bounds.OverlapTest(body.shape, bounds.transform, body.transform))
                     {
                         if (body.flagBodyType.HasFlag(PhysicsEngine.BodyType.STATIC))
                         {
-                            statics[bounds].Add(body);
+                            if (!statics[bounds].Contains(body))
+                                statics[bounds].Add(body);
                         }
                         else
                         {
-                            dynamics[bounds].Add(body);
+                            if (!dynamics[bounds].Contains(body))
+                                dynamics[bounds].Add(body);
                         }
                         body.chunks.Add(this);
                         added = true;
@@ -188,7 +190,7 @@ namespace MonoEngine.Physics.Physics2D
             {
                 foreach (AABB bounds in orderToIndex[i])
                 {
-                    if (bounds.OverlapTest(body.shape))
+                    if (bounds.OverlapTest(body.shape, bounds.transform, body.transform))
                     {
                         bodies.AddRange(statics[bounds]);
                         bodies.AddRange(dynamics[bounds]);

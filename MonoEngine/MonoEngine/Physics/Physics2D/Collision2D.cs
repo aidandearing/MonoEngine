@@ -103,7 +103,7 @@ namespace MonoEngine.Physics.Physics2D
         /// <returns>Whether a collision is occuring or not</returns>
         public bool Evaluate()
         {
-            bool test = BodyA.shape.OverlapTest(BodyB.shape);
+            bool test = BodyA.shape.OverlapTest(BodyB.shape, BodyA.transform, BodyB.transform);
 
             // If the test returns true, collision is occuring
 

@@ -4,19 +4,20 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoEngine.Assets
 {
-    class LoaderEffect : ResourceManagerLoader
+    class LoaderMaterial : ResourceManagerLoader
     {
-        public LoaderEffect(Type type) : base(type) { }
+        public LoaderMaterial(Type type) : base(type) { }
 
         public override object LoadAsset(string path, string name, Scene parent)
         {
             // Load a model from a name at the Assets/Models/ + name.xnb pathwa
             // Needs to try to get the model at that name in the models path & load it
-            EffectWrapper effect = new EffectWrapper(ContentHelper.Content.Load<Effect>("Assets/Shaders/" + name));
+            Material effect = new Material(ContentHelper.Content.Load<Effect>("Assets/Shaders/" + name));
+            Type type = effect.GetType();
 
             if (parent != null)
             {
-                parent.assets.assets[type].Add(name);
+                parent.assets.AddAsset(name, type);
             }
             else
             {

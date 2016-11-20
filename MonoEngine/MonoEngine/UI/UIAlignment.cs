@@ -45,7 +45,7 @@ namespace MonoEngine.UI
                     break;
                 case Alignment.TopCenter:
                     if (obj != parent)
-                        pos.X = other.Center.X - (obj.bounds.Width / 2);
+                        pos.X = other.Center.X - (obj.bounds.Width / 2.0f);
                     else
                         pos.X = other.Center.X;
                     pos.Y = other.Top;
@@ -60,15 +60,15 @@ namespace MonoEngine.UI
                 case Alignment.CenterLeft:
                     pos.X = other.Left;
                     if (obj != parent)
-                        pos.Y = other.Center.Y - (obj.bounds.Height / 2);
+                        pos.Y = other.Center.Y - (obj.bounds.Height / 2.0f);
                     else
                         pos.Y = other.Center.Y;
                     break;
                 case Alignment.Center:
                     if (obj != parent)
                     {
-                        pos.X = other.Center.X - (obj.bounds.Width / 2);
-                        pos.Y = other.Center.Y - (obj.bounds.Height / 2);
+                        pos.X = other.Center.X - (obj.bounds.Width / 2.0f);
+                        pos.Y = other.Center.Y - (obj.bounds.Height / 2.0f);
                     }
                     else
                     {
@@ -79,7 +79,7 @@ namespace MonoEngine.UI
                 case Alignment.CenterRight:
                     pos.X = other.Right - (obj.bounds.Width);
                     if (obj != parent)
-                        pos.Y = other.Center.Y - (obj.bounds.Height / 2);
+                        pos.Y = other.Center.Y - (obj.bounds.Height / 2.0f);
                     else
                         pos.Y = other.Center.Y;
                     break;
@@ -95,7 +95,7 @@ namespace MonoEngine.UI
                     break;
                 case Alignment.BottomCenter:
                     if (obj != parent)
-                        pos.X = other.Center.X - (obj.bounds.Width / 2);
+                        pos.X = other.Center.X - (obj.bounds.Width / 2.0f);
                     else
                         pos.X = other.Center.X;
                     pos.Y = other.Bottom - (obj.bounds.Height);

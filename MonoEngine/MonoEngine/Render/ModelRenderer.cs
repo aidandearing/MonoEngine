@@ -7,6 +7,8 @@ namespace MonoEngine.Render
 {
     public class ModelRenderer : GameObject
     {
+        public Material material;
+
         private ModelWrapper model;
         public ModelWrapper Model
         {
@@ -18,6 +20,7 @@ namespace MonoEngine.Render
 
         internal ModelRenderer(string name, ModelWrapper model, string targetName = null) : base(name)
         {
+            this.material = new Material(new BasicEffect(GraphicsHelper.graphicsDevice));
             this.model = model;
 
             if (targetName == null)
@@ -32,8 +35,9 @@ namespace MonoEngine.Render
 
         public void Draw()
         {
+            model.SetEffect(material);
             //model.Draw(Physics.WorldToRender(Camera.Transformation.Transformation + parent.transform.Transformation), Camera.View, Camera.Projection);
-            ((Model)model).Draw(PhysicsEngine.WorldToRender(Camera.MainCamera.transform.Transformation + transform.Transformation), Camera.MainCamera.View, Camera.MainCamera.Projection);
+            ((Model)model).Draw(PhysicsEngine.WorldToRender(transform.Transformation), Camera.MainCamera.View, Camera.MainCamera.Projection);
         }
 
         public static ModelRenderer MakeModelRenderer(string name)

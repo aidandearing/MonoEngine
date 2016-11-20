@@ -15,11 +15,12 @@ namespace MonoEngine.Render
     {
         public delegate void RenderTargetDrawCallback();
 
-        public SortedList<int,RenderTargetDrawCallback> callbacks;
-        
+        public SortedList<int, RenderTargetDrawCallback> callbacks;
+
         private Dictionary<string, RenderTargetBatch> renderTargetBatches;
 
         private bool isInit;
+
         private static RenderManager instance;
         public static RenderManager Instance(Microsoft.Xna.Framework.Game game)
         {
@@ -30,33 +31,36 @@ namespace MonoEngine.Render
 
         public RenderManager(Microsoft.Xna.Framework.Game game) : base(game)
         {
-            callbacks = new SortedList<int,RenderTargetDrawCallback>();
+            callbacks = new SortedList<int, RenderTargetDrawCallback>();
             renderTargetBatches = new Dictionary<string, RenderTargetBatch>();
         }
+
         public override void Initialize()
         {
             if (isInit)
                 return;
 
-            Resources.LoadRenderTarget2D("default", SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, true, SurfaceFormat.Color, DepthFormat.Depth16, 0, RenderTargetUsage.DiscardContents);
-
-            Resources.LoadRenderTarget2D("UI", SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents);
-
-            Resources.LoadRenderTarget2D("screen", SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, true, SurfaceFormat.Color, DepthFormat.Depth16, 0, RenderTargetUsage.DiscardContents);
-
-            RenderTargetRenderer.MakeRenderTargetRenderer("default", 0);
-
-            RenderTargetRenderer.MakeRenderTargetRenderer("UI", 1);
-
             isInit = true;
+
+            Resources.LoadRenderTarget2D("default", SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, true, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents, new RenderTargetSettings()
+            {
+                depth = DepthStencilState.Default,//new DepthStencilState() { DepthBufferEnable = true, DepthBufferWriteEnable = true },
+                rasteriser = new RasterizerState() { DepthClipEnable = true, CullMode = CullMode.CullCounterClockwiseFace },
+            });
+
+            Resources.LoadRenderTarget2D("UI", SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents, new RenderTargetSettings());
+
+            Resources.LoadRenderTarget2D("screen", SceneManager.activeScene, GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, true, SurfaceFormat.Color, DepthFormat.Depth16, 0, RenderTargetUsage.DiscardContents, new RenderTargetSettings());
+
+            RenderTargetRenderer.MakeRenderTargetRenderer("default", new RenderTargetSettings(), 0);
+
+            RenderTargetRenderer.MakeRenderTargetRenderer("UI", new RenderTargetSettings(), 10);
         }
 
         public static RenderTargetBatch RegisterDrawCallback(string name, RenderTargetBatch.DrawCallback callback)
         {
-            if (!instance.isInit)
-            {
-                instance.Initialize();
-            }
+            instance.Initialize();
+
             instance.renderTargetBatches[name].RegisterDrawCallBack(callback);
 
             return instance.renderTargetBatches[name];
@@ -66,10 +70,12 @@ namespace MonoEngine.Render
         {
             instance.renderTargetBatches[name].UnRegisterDrawCallBack(callback);
         }
-        
+
         public static void RegisterDrawCallback(RenderTargetDrawCallback callback, RenderTargetRenderer renderTargetRenderer)
         {
-            instance.callbacks.Add(renderTargetRenderer.Priority,callback);
+            instance.Initialize();
+
+            instance.callbacks.Add(renderTargetRenderer.Priority, callback);
         }
 
         public static void UnRegisterDrawCallback(RenderTargetDrawCallback callback, RenderTargetRenderer renderTargetRenderer)
@@ -101,10 +107,12 @@ namespace MonoEngine.Render
             {
                 batch.Value.Draw();
             }
+
             foreach (KeyValuePair<int, RenderTargetDrawCallback> draw in callbacks)
             {
-                draw.Value(); 
+                draw.Value();
             }
+
             //this is the final draw that guarantees that the "screen" draws to the screen
             GraphicsHelper.graphicsDevice.SetRenderTarget(null);
 
@@ -112,7 +120,5 @@ namespace MonoEngine.Render
             GraphicsHelper.spriteBatch.Draw(Resources.GetRenderTarget2D("screen"), GraphicsHelper.screen, Color.White);
             GraphicsHelper.spriteBatch.End();
         }
-
-        
     }
 }

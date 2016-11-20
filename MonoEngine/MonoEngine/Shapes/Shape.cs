@@ -6,17 +6,17 @@ namespace MonoEngine.Shapes
     {
         public const int VERTICELIMIT = 16;
 
-        public Transform transform;
+        //public Transform transform;
         protected Vector3[] points = new Vector3[VERTICELIMIT];
 
-        public Shape(Transform transform)
+        public Shape()
         {
-            this.transform = transform;
+            //this.transform = transform;
         }
 
-        public Shape(Transform transform, Vector3[] points)
+        public Shape(Vector3[] points)
         {
-            this.transform = transform;
+            //this.transform = transform;
 
             if (points.Length <= VERTICELIMIT)
             {
@@ -31,25 +31,25 @@ namespace MonoEngine.Shapes
             }
         }
 
-        public virtual ShapeIntersection[] Intersects(Shape shape)
+        public virtual ShapeIntersection[] Intersects(Shape shape, Transform me, Transform other)
         {
             // SAT
             return null;
         }
 
-        public virtual bool OverlapTest(Shape shape)
+        public virtual bool OverlapTest(Shape shape, Transform me, Transform other)
         {
             // SAT
             return true;
         }
 
-        public virtual Shape Overlap(Shape shape)
+        public virtual Shape Overlap(Shape shape, Transform me, Transform other)
         {
             // SAT
             return null;
         }
 
-        public virtual bool Overlap(Vector3 point)
+        public virtual bool Overlap(Vector3 point, Transform me)
         {
             // ???
             return true;
