@@ -358,6 +358,7 @@ namespace TestbedMonogame
             skyline_glow[4] = new UIImage("Skyline4_glow", GraphicsHelper.screen, new UIAlignment(UIAlignment.Alignment.Center), new UIAlignment(UIAlignment.Alignment.Center), UIObject.flags.None, "skyline_4_glow", "UI_nearest");
 
             title = new UIText("Title", new UIAlignment(UIAlignment.Alignment.TopLeft), new UIAlignment(UIAlignment.Alignment.Center), UIObject.flags.None, "microtype", "I am poor and hungry", 128);
+            //title.bounds = new Rectangle(title.bounds.X + 16, title.bounds.Y + 16, title.bounds.Width, title.bounds.Height);
 
             //logo = new UIImage("Logo", new Rectangle(0, 0, 100, 100), new UIAlignment(UIAlignment.Alignment.BottomRight), new UIAlignment(UIAlignment.Alignment.Center), UIObject.flags.None, "monogameLogo");
         }
@@ -368,7 +369,7 @@ namespace TestbedMonogame
 
             ((Effect)materials[0]).Parameters["S"].SetValue(Random.Range());
 
-            float elapsed = (Time.ElapsedTime % 300.0F) / 300.0F;
+            float elapsed = (Time.ElapsedTime % 60.0f) / 60.0f;
             sky_top.spriteRenderer.sprite.Colour = sky_top_gradient.Evaluate(elapsed);
             sky_stars.spriteRenderer.sprite.Colour = sky_stars_gradient.Evaluate(elapsed);
             sky_bottom.spriteRenderer.sprite.Colour = sky_bottom_gradient.Evaluate(elapsed);

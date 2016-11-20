@@ -57,9 +57,9 @@ namespace TestbedMonogame
             // TODO Update this comment after completing the prefab system
 
             Camera camera = Camera.Isometric("mainCamera", new Vector3(0, 0, 0f), 2, -10000.0f, 10000.0f);
-            CameraController controller = new CameraController("cameraController", PlayerIndex.One);
-            controller.camera = camera;
-            camera.AddComponent(controller);
+            //CameraController controller = new CameraController("cameraController", PlayerIndex.One);
+            //controller.camera = camera;
+            //camera.AddComponent(controller);
             GameObjectManager.AddGameObject(camera);
             //GameObjectManager.AddGameObject(Camera.Perspective("mainCamera", new Vector3(1000, 2000, 1000f), Vector3.Zero, 0.1f, 10000.0f));
 
@@ -1953,17 +1953,17 @@ namespace TestbedMonogame
             #region Player Generation
             //
 
-            //PlayerController player = new PlayerController("Player1", PlayerIndex.One);
-            //player.transform.Position = new Vector3(2, 0, 9);
-            //PhysicsBody2D player_body = new PhysicsBody2D(player, "Player1Body", new Circle(0.5f), new PhysicsMaterial(), PhysicsEngine.BodyType.KINEMATIC);
-            //player.AddComponent(player_body);
-            //ModelRenderer player_model = ModelRenderer.MakeModelRenderer("Player");
-            //player.AddComponent(player_model);
+            PlayerController player = new PlayerController("Player1", PlayerIndex.One);
+            player.transform.Position = new Vector3(2, 0, 9);
+            PhysicsBody2D player_body = new PhysicsBody2D(player, "Player1Body", new Circle(0.5f), new PhysicsMaterial(), PhysicsEngine.BodyType.KINEMATIC);
+            player.AddComponent(player_body);
+            ModelRenderer player_model = ModelRenderer.MakeModelRenderer("Player");
+            player.AddComponent(player_model);
 
-            //player_body.RegisterCollisionCallback(new Collision2D.OnCollision(PlayerCollide));
+            player_body.RegisterCollisionCallback(new Collision2D.OnCollision(PlayerCollide));
 
-            //PhysicsEngine.AddPhysicsBody(player_body);
-            //GameObjectManager.AddGameObject(player);
+            PhysicsEngine.AddPhysicsBody(player_body);
+            GameObjectManager.AddGameObject(player);
             #endregion
         }
 
